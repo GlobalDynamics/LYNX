@@ -70,6 +70,13 @@
 					response.sendRedirect("gradepreview.jsp");
 				}
 				
+				else if(((String) request.getParameter("type")).equals("rGrade"))
+				{
+					int gradeID = Integer.parseInt(request.getParameter("courses"));
+					Grade.removeGrade(gradeID);
+					response.sendRedirect("gradepreview1.jsp");
+				}
+				
 			}
 			
 			

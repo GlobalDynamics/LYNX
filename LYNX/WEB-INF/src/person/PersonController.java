@@ -347,6 +347,36 @@ public class PersonController extends lynx.Manager {
 		}
 
 	}
+	
+	
+	public static int getStudentsWithGradesCount() throws SQLException {
+		con = cpds.getConnection();
+
+		SQL = "SELECT COUNT(*) AS total_rows  FROM student s\r\n" + 
+				"												INNER JOIN person p ON p.personID = s.personID\r\n" + 
+				"												INNER JOIN enrollment e ON e.studentID = s.studentID\r\n" + 
+				"											WHERE EXISTS (SELECT enrollment.studentID FROM enrollment WHERE enrollment.studentID = s.studentID)\r\n" + 
+				"											AND EXISTS(SELECT grade.enrollmentID FROM grade WHERE grade.enrollmentID = e.enrollmentID)";
+		System.out.println(SQL);
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return 0;
+
+			} else {
+				rs.first();
+				return rs.getInt("total_rows");
+			}
+
+		} finally {
+			con.close();
+			stmt.close();
+		}
+
+	}
 
 	public static int getTeacherCount() throws SQLException {
 		con = cpds.getConnection();
@@ -533,6 +563,53 @@ public class PersonController extends lynx.Manager {
 				"				INNER JOIN person p ON p.personID = s.personID\r\n" + 
 				"				WHERE EXISTS (SELECT enrollment.studentID FROM enrollment WHERE enrollment.studentID = s.studentID)\r\n" + 
 				"				ORDER BY p.lastName";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		System.out.println(SQL);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return null;
+
+			} else {
+				rs.beforeFirst();
+
+				int i = 0;
+				while (rs.next()) {
+
+					stu[i] = new Student(rs.getInt("studentID"),
+							rs.getInt("personID"), rs.getInt("accountID"),
+							rs.getString("firstName"), rs.getString("lastName"));
+
+					System.out.println(stu[i].getName());
+					i++;
+				}
+
+				return stu;
+
+			}
+		} finally {
+			stmt.close();
+			con.close();
+			rs.close();
+
+		}
+
+	}
+	
+	public static Student[] getStudentWithGrades() throws SQLException {
+		int totalPeople = getStudentsWithEnrolCount();
+		System.out.println(totalPeople);
+		Student[] stu = new Student[totalPeople];
+		Connection con = cpds.getConnection();
+
+		SQL = "SELECT s.studentID,s.personID, s.accountID, p.firstName, p.lastName  FROM student s\r\n" + 
+				"								INNER JOIN person p ON p.personID = s.personID\r\n" + 
+				"								INNER JOIN enrollment e ON e.studentID = s.studentID\r\n" + 
+				"							WHERE EXISTS (SELECT enrollment.studentID FROM enrollment WHERE enrollment.studentID = s.studentID)\r\n" + 
+				"							AND EXISTS(SELECT grade.enrollmentID FROM grade WHERE grade.enrollmentID = e.enrollmentID)\r\n" + 
+				"								ORDER BY p.lastName";
 		PreparedStatement stmt = con.prepareStatement(SQL,
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		System.out.println(SQL);

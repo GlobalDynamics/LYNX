@@ -36,4 +36,25 @@ public class Grade extends Manager {
 
 		
 	}
+	
+	public static void removeGrade(int gradeID) throws SQLException
+	{
+	
+			con = cpds.getConnection();
+			con.setAutoCommit(false);
+			SQL = "DELETE FROM grade WHERE gradeID = ?";
+			PreparedStatement stmt = con.prepareStatement(SQL);
+			System.out.println(SQL);
+			stmt.setInt(1, gradeID);
+			try {
+				stmt.executeUpdate();
+				con.commit();
+			} finally {
+				con.close();
+				stmt.close();
+			}
+
+
+		
+	}
 }

@@ -8,12 +8,21 @@
 		int studentID = -1;
 		if (login.equals("1")) {
 			String username = (String) session.getAttribute("username");
-			
+			String type = null;
+			String url = null;
 			if(request.getParameter("type") != null)
 			{
 				if(((String) request.getParameter("type")).equals("aGrade"))
 				{
 					studentID = Integer.parseInt(request.getParameter("students"));
+					type = (String) request.getParameter("type");
+					url = "entergrade.jsp";
+				}
+				else if(((String) request.getParameter("type")).equals("rGrade"))
+				{
+					studentID = Integer.parseInt(request.getParameter("students"));
+					type = (String) request.getParameter("type");
+					url = "CourseController.jsp";
 				}
 				else
 				{
@@ -159,9 +168,14 @@
 							<li><a href="addsubject.jsp">Add a subject</a></li>
 							<li><a href="editsubject.jsp">Edit a subject</a></li>
 							<li><a href="removesubject.jsp">Remove a subject</a></li>
-							<li><a href="gradepreview.jsp">Manage Grades</a></li>
+							
 						</ul></li>
-					<li><a href="#">Enrollment</a>
+					<li><a href="#">Grades</a> 
+ <ul class = "submenu"> 
+  <li><a href="gradepreview.jsp">Add Grades</a></li> 
+  <li><a href="gradepreview1.jsp">Remove Grades</a></li> 
+  </ul></li> 
+  <li><a href="#">Enrollment</a>
 						<ul class="submenu">
 							<li><a href="enrollcourse.jsp">Enroll in Course</a></li>
 							<li><a href="withdrawcourse.jsp">Withdraw from Course</a></li>
@@ -193,8 +207,8 @@
                
             <div class="clear"></div>
             
-             <form name = "ap" id = "ap" method = "post" action = "entergrade.jsp">
-						<input type="hidden" name="type" id = "type" value="aGrade">
+             <form name = "ap" id = "ap" method = "post" action = "<%=url%>">
+						<input type="hidden" name="type" id = "type" value="<%=type%>">
             <div class="one-half">
             	<div class="box">
                 	<div class="inner">
@@ -202,24 +216,52 @@
                         <div class="contents">
             			
             <div class="row">
+            <%
+            	if(type.equals("rGrade"))
+            	{
+            		%>
+            		<p>Select a course remove grade from.</p>
+            		 <%
+            	}
+            	else if(type.equals("aGrade"))
+            	{
+            		%>
+            		<p>Select a course to enter a grade for.</p>
+            		<%
+            	}
+            %>
             
-            <p>Select a course to enter a grade for.</p>
                             	<label>Select a course:</label> <div class="field-box">
                                 	<select id = "courses" name = "courses" data-placeholder="No Data" style="width:350px;" class="chzn-select" tabindex="6">
                                        <%
                                        System.out.println(studentID);
-                                       Enrollment[] test = CourseController.getCoursesIsEnrolled(studentID);
-                                       if(test != null)
+                                       Enrollment[] test = null;
+                                       if(type.equals("rGrade"))
                                        {
-                                    	   for(Enrollment value : test)
+                                    	   test = CourseController.getCoursesWithGrades(studentID);
+                                    	   if(test != null)
                                            {
-                                        	   out.println("<option id = \"" + value.getEnroll() + "\"  value = \"" + value.getEnroll() + "\">" + value.getName() + "</option>");
+                                        	   for(Enrollment value : test)
+                                               {
+                                            	   out.println("<option id = \"" + value.getGrade() + "\"  value = \"" + value.getGrade() + "\">" + value.getName() + "</option>");
+                                               }
                                            }
                                        }
-                                       else
+                                       else if(type.equals("aGrade"))
                                        {
-                                    	   out.println("<p>There are no people to link to students");
+                                    	   test = CourseController.getCoursesIsEnrolled(studentID);
+                                    	   if(test != null)
+                                           {
+                                        	   for(Enrollment value : test)
+                                               {
+                                            	   out.println("<option id = \"" + value.getEnroll() + "\"  value = \"" + value.getEnroll() + "\">" + value.getName() + "</option>");
+                                               }
+                                           }
                                        }
+                                       
+                                       
+                                    
+                                     
                                        
                                       
                                        

@@ -7,6 +7,7 @@ public class Enrollment {
 	private int calendarID;
 	private String courseName;
 	private String shortName;
+	private int gradeID;
 	
 	public Enrollment(int eid,int cid, int sid, int caid, String name, String sname)
 	{
@@ -16,6 +17,17 @@ public class Enrollment {
 		 calendarID = caid;
 		 courseName = name;
 		 shortName = sname;
+	}
+	
+	public Enrollment(int eid,int cid, int sid, int caid, String name, String sname, int gid)
+	{
+		 enrollmentID = eid;
+		 courseID = cid;
+		 studentID = sid;
+		 calendarID = caid;
+		 courseName = name;
+		 shortName = sname;
+		 gradeID = gid;
 	}
 	
 	public String getName()
@@ -30,6 +42,10 @@ public class Enrollment {
 	public String getCourse()
 	{
 		return String.valueOf(courseID);
+	}
+	public String getGrade()
+	{
+		return String.valueOf(gradeID);
 	}
 
 }

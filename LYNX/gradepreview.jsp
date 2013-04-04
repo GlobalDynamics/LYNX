@@ -140,9 +140,14 @@
 							<li><a href="addsubject.jsp">Add a subject</a></li>
 							<li><a href="editsubject.jsp">Edit a subject</a></li>
 							<li><a href="removesubject.jsp">Remove a subject</a></li>
-							<li><a href="gradepreview.jsp">Manage Grades</a></li>
+							
 						</ul></li>
-					<li><a href="#">Enrollment</a>
+					<li><a href="#">Grades</a> 
+ <ul class = "submenu"> 
+  <li><a href="gradepreview.jsp">Add Grades</a></li> 
+  <li><a href="gradepreview1.jsp">Remove Grades</a></li> 
+  </ul></li> 
+  <li><a href="#">Enrollment</a>
 						<ul class="submenu">
 							<li><a href="enrollcourse.jsp">Enroll in Course</a></li>
 							<li><a href="withdrawcourse.jsp">Withdraw from Course</a></li>
@@ -166,7 +171,7 @@
             <div class="three-fourths breadcrumb">
             	<span><a href="#" class="icon entypo home"></a></span>
                 <span class="middle"></span>
-                <span><a href="#">Courses</a></span>
+                <span><a href="#">Grades</a></span>
                 <span class="middle"></span>
                 <span><a href="#">Manage Grades</a></span>
                 <span class="end"></span>

@@ -394,6 +394,49 @@ public class CourseController extends lynx.Manager{
 
 	}
 	
+	public static Enrollment[] getCoursesWithGrades(int studentID) throws SQLException {
+		int totalPeople = getCourseCountEnrolled(studentID);
+		System.out.println(totalPeople);
+		Enrollment[] people = new Enrollment[totalPeople];
+		Connection con = cpds.getConnection();
+
+		SQL = "SELECT c.courseID,c.subjectID,c.teacherID,c.name,c.shortName, s.name AS subjectName, e.enrollmentID, e.studentID, e.calendarID, g.gradeID   \r\n" + 
+				"															FROM course c\r\n" + 
+				"														INNER JOIN [subject] s ON s.subjectID = c.subjectID \r\n" + 
+				"															INNER JOIN enrollment e ON e.courseID = c.courseID\r\n" + 
+				"															INNER JOIN grade g ON g.enrollmentID = e.enrollmentID\r\n" + 
+				"																WHERE EXISTS (SELECT enrollment.courseID, enrollment.studentID FROM enrollment WHERE enrollment.courseID = c.courseID) AND e.studentID = ?\r\n" + 
+				"																AND EXISTS (SELECT grade.enrollmentID FROM grade WHERE grade.enrollmentID = e.enrollmentID)";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, studentID);
+		System.out.println(SQL);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return null;
+
+			} else {
+				rs.beforeFirst();
+
+				int i = 0;
+				while (rs.next()) {
+					people[i] = new Enrollment(rs.getInt("enrollmentID"), rs.getInt("courseID"), rs.getInt("studentID"), rs.getInt("calendarID"), rs.getString("name"), rs.getString("shortName"), rs.getInt("gradeID"));
+					i++;
+				}
+				return people;
+
+			}
+		} finally {
+			stmt.close();
+			con.close();
+			rs.close();
+
+		}
+
+	}
+	
 	private static int checkSubjectByID(int subjectID) throws SQLException {
 
 		con = cpds.getConnection();
