@@ -1,25 +1,13 @@
-<%@ page import="course.CourseController" %>
-<%@ page import="schedule.Calendar" %>
 <%@ page import="schedule.CalendarController" %>
-<%@ page import="person.PersonController" %>
-<%@ page import="person.Teacher" %>
-<%@ page import="course.Subject;" %>
+<%@ page import="schedule.Calendar;" %>
 <%
 	if (session.getAttribute("login") == null) {
 		response.sendRedirect("login.jsp");
 	} else {
 		String login = (String) session.getAttribute("login");
-		String calendarID = null;
+
 		if (login.equals("1")) {
 			String username = (String) session.getAttribute("username");
-			if((String) request.getParameter("calendars") == null)
-					{
-						response.sendRedirect("addcourse1.jsp");
-					}
-			else
-			{
-				calendarID = (String) request.getParameter("calendars");
-			}
 	%>
 
 	
@@ -87,7 +75,10 @@
         <header id="header">
             
             
-       
+            	
+                
+                
+           
             <section id="userinfo">
 					<span class="welcome">Welcome <strong><%=username%></strong>.
 						
@@ -188,82 +179,34 @@
                
             <div class="clear"></div>
             
-             <form name = "ap" id = "ap" method = "post" action = "CourseController.jsp">
+             <form name = "ap" id = "ap" method = "post" action = "addcourse.jsp">
 						<input type="hidden" name="type" id = "type" value="aCourse">
-						<input type="hidden" name="calendars" id = "calendars" value="<%=calendarID%>">
-						
-						
             <div class="one-half">
             	<div class="box">
                 	<div class="inner">
-                    	<div class="titlebar"><span>Add a Course</span></div>
+                    	<div class="titlebar"><span>Select Calendar year</span></div>
                         <div class="contents">
             			
-            					
-            					<div class="row">
-            					<p>Enter the name of the Course</p>
-                            	<label>Name:</label> <div class="field-box"><input id = "cname" name = "cname" type="text" class="large"></div>
-                                <div class="clear"></div>
-                            	</div>
-                            	
-                            	
-                            	<div class="row">
-            					<p>Enter the short name of the Course</p>
-                            	<label>Short Name:</label> <div class="field-box"><input id = "sname" name = "sname" type="text" class="large"></div>
-                                <div class="clear"></div>
-                            	</div>
-                                    
-                                   <div class="row">
-
-									<p>Select a subject for the course</p>
-									<label>Select a subject for the course</label>
-									<div class="field-box">
-										<select id="subjects" name="subjects"
-											data-placeholder="No Data" style="width: 350px;"
-											class="chzn-select" tabindex="6">
-											<%
-												Subject[] test = null;
-												if(calendarID != null)
-												{
-													test = CourseController.getSubjects(Integer.parseInt(calendarID));
-													if (test != null) {
-														for (Subject value : test) {
-															out.println("<option id = \"" + value.getSubject()
-																	+ "\"  value = \"" + value.getSubject()
-																	+ "\">" + value.getName() + "</option>");
-														}
-													} else {
-														
-													}
-												}
-												
-											%>
-
-										</select>
-
-										<div class="clear"></div>
-									</div>
-									</div>
-                                
-                                <div class="row">
+            <div class="row">
             
-            				<p>Select a teacher that will teach the course.</p>
-                            	<label>Select a teacher to add to the Course</label> <div class="field-box">
-                                	<select id = "teachers" name = "teachers" data-placeholder="No Data" style="width:350px;" class="chzn-select" tabindex="6">
+            					<p>Select calendar year to add course to</p>
+                            	<label>Select a calendar:</label> <div class="field-box">
+                                	<select id = "calendars" name = "calendars" data-placeholder="No Data" style="width:350px;" class="chzn-select" tabindex="6">
                                        <%
                                        
-                                      Teacher[] test1 = PersonController.getTeachers();
-                                       if(test1 != null)
+                                      Calendar[] test = CalendarController.getCalendars();
+                                       if(test != null)
                                        {
-                                    	   for(Teacher value : test1)
+                                    	   for(Calendar value : test)
                                            {
-                                        	   out.println("<option id = \"" + value.getTeacher() + "\"  value = \"" + value.getTeacher() + "\">" + value.getName() + "</option>");
+                                        	   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
                                            }
                                        }
                                        else
                                        {
-                                    	  
+                                    	   out.println("<p>There are no people to link to students");
                                        }
+                                       
                                       
                                        
                                        %>
@@ -272,16 +215,10 @@
                                 </div>
                                 <div class="clear"></div>
                             </div>
-
-                                <div class="clear"></div>
-                            </div>
-                             
-                             
-                            </div>
-                            <div class="bar-big">
+                             <div class="bar-big">
                              <%
 
-                                       if(test1 != null && test != null)
+                                       if(test != null)
                                        {
                                     	   
                                     	   %>
@@ -297,9 +234,10 @@
                              %>
                                                          
                             </div>
+                             </div>
                             </div>
                             </div>
-                          
+                            </div>
                             </form>
 			
 

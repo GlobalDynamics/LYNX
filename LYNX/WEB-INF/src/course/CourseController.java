@@ -133,6 +133,33 @@ public class CourseController extends lynx.Manager{
 
 	}
 	
+	
+	public static int getSubjectCountFromCalendar(int calendarID) throws SQLException {
+		con = cpds.getConnection();
+
+		SQL = "SELECT COUNT(*) as total_rows FROM [subject] WHERE calendarID = ?";
+		System.out.println(SQL);
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, calendarID);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return 0;
+
+			} else {
+				rs.first();
+				return rs.getInt("total_rows");
+			}
+
+		} finally {
+			con.close();
+			stmt.close();
+		}
+
+	}
+	
 	public static int getCourseCount() throws SQLException {
 		con = cpds.getConnection();
 
@@ -250,6 +277,42 @@ public class CourseController extends lynx.Manager{
 	}
 	
 	
+	public static Subject[] getSubjects(int calendarID) throws SQLException {
+		int totalPeople = getSubjectCountFromCalendar(calendarID);
+		System.out.println(totalPeople);
+		Subject[] people = new Subject[totalPeople];
+		Connection con = cpds.getConnection();
+
+		SQL = "SELECT subjectID,calendarID,name FROM subject WHERE calendarID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, calendarID);
+		System.out.println(SQL);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return null;
+
+			} else {
+				rs.beforeFirst();
+
+				int i = 0;
+				while (rs.next()) {
+					people[i] = new Subject(rs.getString("name"), rs.getInt("subjectID"), rs.getInt("calendarID"));
+					i++;
+				}
+				return people;
+
+			}
+		} finally {
+			stmt.close();
+			con.close();
+			rs.close();
+
+		}
+
+	}
 	
 	
 	public static Course[] getCourses() throws SQLException {
