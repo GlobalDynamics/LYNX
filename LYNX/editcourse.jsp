@@ -1,5 +1,6 @@
 <%@ page import="course.CourseController" %>
 <%@ page import="schedule.Calendar" %>
+<%@ page import="schedule.CalendarController" %>
 <%@ page import="person.PersonController" %>
 <%@ page import="person.Teacher" %>
 <%@ page import="course.Subject" %>
@@ -283,6 +284,35 @@
                                 </div>
                                 <div class="clear"></div>
                             </div>
+                            
+                            <div class="row">
+            
+            			<p>Select a calendar to add the course to</p>
+                            	<label>Select a calendar:</label> <div class="field-box">
+                                	<select id = "calendars" name = "calendars" data-placeholder="No Data" style="width:350px;" class="chzn-select" tabindex="6">
+                                       <%
+                                       
+                                      Calendar[] test3 = CalendarController.getCalendars();
+                                       if(test3 != null)
+                                       {
+                                    	   for(Calendar value : test3)
+                                           {
+                                        	   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
+                                           }
+                                       }
+                                       else
+                                       {
+                                    	   out.println("<p>There are no people to link to students");
+                                       }
+                                       
+                                      
+                                       
+                                       %>
+                                        
+                                    </select>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
                                 
                                 
                                 <div class="clear"></div>
@@ -293,7 +323,7 @@
                             <div class="bar-big">
                              <%
 
-                                       if(test1 != null && test != null)
+                                       if(test1 != null && test != null && test3 != null && test2 != null)
                                        {
                                     	   
                                     	   %>

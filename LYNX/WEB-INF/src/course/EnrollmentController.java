@@ -122,13 +122,14 @@ public class EnrollmentController extends Manager {
 		Schedule[] people = new Schedule[totalPeople];
 		Connection con = cpds.getConnection();
 
-		SQL = "SELECT s.studentID, c.name AS courseName, c.shortName, su.name AS subjectName, ISNULL(g.grade,'') AS grade, p.firstName + ' '+ p.lastName AS personName\r\n" + 
+		SQL = "SELECT s.studentID, c.name AS courseName, c.shortName, su.name AS subjectName, ISNULL(g.grade,'') AS grade, p.firstName + ' '+ p.lastName AS personName, ca.name AS calendarName\r\n" + 
 				"\r\n" + 
 				"FROM student s\r\n" + 
 				"INNER JOIN person p ON p.personID = s.personID\r\n" + 
 				"INNER JOIN enrollment e ON e.studentID = s.studentID\r\n" + 
 				"INNER JOIN course c ON c.courseID = e.courseID\r\n" + 
-				"INNER JOIN subject su ON c.subjectID = su.subjectID\r\n" + 
+				"INNER JOIN [subject] su ON c.subjectID = su.subjectID\r\n" + 
+				"INNER JOIN calendar ca ON ca.calendarID = e.calendarID\r\n" + 
 				"LEFT OUTER JOIN grade g ON g.enrollmentID = e.enrollmentID\r\n" + 
 				"WHERE e.calendarID = ? AND s.studentID = ?";
 		PreparedStatement stmt = con.prepareStatement(SQL,
@@ -147,7 +148,7 @@ public class EnrollmentController extends Manager {
 
 				int i = 0;
 				while (rs.next()) {
-					people[i] = new Schedule(rs.getString("personName"), rs.getString("courseName"), rs.getString("shortName"), rs.getString("subjectName"), rs.getString("grade"));
+					people[i] = new Schedule(rs.getString("personName"), rs.getString("courseName"), rs.getString("shortName"), rs.getString("subjectName"), rs.getString("grade"), rs.getString("calendarName"));
 					i++;
 				}
 				return people;

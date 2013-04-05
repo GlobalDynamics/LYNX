@@ -18,30 +18,7 @@ public class CourseController extends lynx.Manager{
 	private static Connection con;
 	private static String SQL;
 	private static ResultSet rs;
-//	public static void addCourse()
-//	{
-//		{
-//			if (checkPersonByID(personID) != 0
-//					&& CreateAccount.getAccountByPersonID(personID) != 0) {
-//				con = cpds.getConnection();
-//				con.setAutoCommit(false);
-//				SQL = "INSERT INTO student (personID,accountID) \n"
-//						+ "SELECT personID, accountID \n" + "FROM   person \n"
-//						+ "WHERE personID = ?";
-//				PreparedStatement stmt = con.prepareStatement(SQL);
-//				System.out.println(SQL);
-//				stmt.setInt(1, personID);
-//				try {
-//					stmt.executeUpdate();
-//					con.commit();
-//				} finally {
-//					con.close();
-//					stmt.close();
-//				}
-//
-//			}
-//		}
-//	}
+
 	
 	public static void addSubject(String name, int calendarID) throws SQLException
 	{
@@ -516,19 +493,20 @@ public class CourseController extends lynx.Manager{
 	}
 	
 	
-	public static void createCourse(String name, String shortName, int subjectID, int teacherID) throws SQLException
+	public static void createCourse(String name, String shortName, int subjectID, int teacherID, int calendarID) throws SQLException
 	{
 	
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
-			SQL = "INSERT INTO course (name,shortName,subjectID,teacherID)\r\n" + 
-					"VALUES (?,?,?,?)";
+			SQL = "INSERT INTO course (name,shortName,subjectID,teacherID, calendarID)\r\n" + 
+					"VALUES (?,?,?,?,?)";
 			PreparedStatement stmt = con.prepareStatement(SQL);
 			System.out.println(SQL);
 			stmt.setString(1, name);
 			stmt.setString(2, shortName);
 			stmt.setInt(3,subjectID);
 			stmt.setInt(4, teacherID);
+			stmt.setInt(5, calendarID);
 			try {
 				stmt.executeUpdate();
 				con.commit();
@@ -569,14 +547,14 @@ public class CourseController extends lynx.Manager{
 	
 	
 	
-	public static void editCourse(int courseID, String name, String shortName, int subjectID, int teacherID)
+	public static void editCourse(int courseID, String name, String shortName, int subjectID, int teacherID, int calendarID)
 			throws SQLException, NoSuchAlgorithmException, IOException
 
 	{
 		if (checkCourseByID(courseID) != 0 && checkSubjectByID(subjectID) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
-			SQL = "UPDATE COURSE SET subjectID = ?, teacherID = ?, name = ?, shortName = ?\r\n" + 
+			SQL = "UPDATE COURSE SET subjectID = ?, teacherID = ?, name = ?, shortName = ?, calendarID = ?\r\n" + 
 					"WHERE courseID = ?";
 			PreparedStatement stmt = con.prepareStatement(SQL);
 			System.out.println(SQL);
@@ -584,7 +562,8 @@ public class CourseController extends lynx.Manager{
 			stmt.setInt(2,teacherID);
 			stmt.setString(3, name);
 			stmt.setString(4,shortName);
-			stmt.setInt(5, courseID);
+			stmt.setInt(5,calendarID);
+			stmt.setInt(6, courseID);
 			try {
 				stmt.executeUpdate();
 				con.commit();

@@ -37,9 +37,10 @@
 				{
 					int subjectID = Integer.parseInt(request.getParameter("subjects"));
 					int teacherID = Integer.parseInt(request.getParameter("teachers"));
+					int calendarID = Integer.parseInt(request.getParameter("calendars"));
 					String name = (String) request.getParameter("cname");
 					String sname = (String) request.getParameter("sname");
-					CourseController.createCourse(name,sname,subjectID,teacherID);
+					CourseController.createCourse(name,sname,subjectID,teacherID, calendarID);
 					response.sendRedirect("addcourse.jsp");
 				}
 				
@@ -55,9 +56,10 @@
 					int courseID = Integer.parseInt(request.getParameter("courses"));
 					int subjectID = Integer.parseInt(request.getParameter("subjects"));
 					int teacherID = Integer.parseInt(request.getParameter("teachers"));
+					int calendarID = Integer.parseInt(request.getParameter("calendars"));
 					String name = (String) request.getParameter("cname");
 					String sname = (String) request.getParameter("sname");
-					CourseController.editCourse(courseID,name,sname,subjectID,teacherID);
+					CourseController.editCourse(courseID,name,sname,subjectID,teacherID,calendarID);
 					response.sendRedirect("editcourse.jsp");
 				}
 				

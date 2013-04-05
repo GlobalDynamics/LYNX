@@ -249,10 +249,28 @@
                                 </div>
                                 <div class="clear"></div>
                             </div>
-     						<div class="bar-big">
+     						
+                             <%	
+                             
+
+                                       if(test != null)
+                                       {
+                                    	   
+                                    	   %>
+                                    	   <div class="bar-big">
                         	<input type="submit" value="Submit">
                             <input type="reset" value="Reset">
-                    	</div>
+                            </div>
+                             <%
+                                       }
+                                       else
+                                       {
+                                    	   
+                                       }
+                             
+                             %>
+                                                         
+                            
                         
                 	</div>
                 	</div>
@@ -277,6 +295,7 @@
 	                                    <th scope="col">Name</th>
 	                                    <th scope="col">Course</th>
 	                                    <th scope="col">Subject</th>
+	                                    <th scope="col">Calendar</th>
 	                                    <th scope="col">Grade</th>
 	                                </tr>
 	                            </thead>
@@ -293,6 +312,7 @@
                                         	   out.println("<td>" + value.getName() + "</td>");
                                         	   out.println("<td>" + value.getCourse() + "</td>");
                                         	   out.println("<td>" + value.getSubject() + "</td>");
+                                        	   out.println("<td>" + value.getCalendar() + "</td>");
                                         	   out.println("<td>" + value.getGrade() + "</td>");
                                         	   out.println("</tr>");
                                            }

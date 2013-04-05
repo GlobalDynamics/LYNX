@@ -6,14 +6,16 @@ public class Schedule {
 	private String shortName;
 	private String subject;
 	private String grade;
+	private String calendarName;
 	
-	public Schedule(String n, String cname, String sname, String sub, String g)
+	public Schedule(String n, String cname, String sname, String sub, String g, String c)
 	{
 		 name = n;
 		 courseName = cname;
 		 shortName = sname;
 		 subject = sub;
 		 grade = g;
+		 calendarName = c;
 	}
 	public String getName()
 	{
@@ -30,5 +32,9 @@ public class Schedule {
 	public String getGrade()
 	{
 		return grade;
+	}
+	public String getCalendar()
+	{
+		return calendarName;
 	}
 }
