@@ -185,6 +185,32 @@ public class CourseController extends lynx.Manager{
 
 	}
 	
+	public static int getCourseCount(int calendarID) throws SQLException {
+		con = cpds.getConnection();
+
+		SQL = "SELECT COUNT(*) as total_rows FROM Course WHERE calendarID = ?";
+		System.out.println(SQL);
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, calendarID);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return 0;
+
+			} else {
+				rs.first();
+				return rs.getInt("total_rows");
+			}
+
+		} finally {
+			con.close();
+			stmt.close();
+		}
+
+	}
+	
 	public static int getCourseCountEnrolled(int studentID) throws SQLException {
 		con = cpds.getConnection();
 
@@ -326,6 +352,47 @@ public class CourseController extends lynx.Manager{
 				"INNER JOIN [subject] s ON s.subjectID = c.subjectID";
 		PreparedStatement stmt = con.prepareStatement(SQL,
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		System.out.println(SQL);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return null;
+
+			} else {
+				rs.beforeFirst();
+
+				int i = 0;
+				while (rs.next()) {
+					people[i] = new Course(rs.getInt("courseID"), rs.getInt("subjectID"), rs.getString("name"), rs.getString("shortName"), rs.getInt("teacherID"), rs.getString("subjectName"));
+					i++;
+				}
+				return people;
+
+			}
+		} finally {
+			stmt.close();
+			con.close();
+			rs.close();
+
+		}
+
+	}
+	
+	
+	public static Course[] getCourses(int calendarID) throws SQLException {
+		int totalPeople = getCourseCount(calendarID);
+		System.out.println(totalPeople);
+		Course[] people = new Course[totalPeople];
+		Connection con = cpds.getConnection();
+
+		SQL = "SELECT c.courseID,c.subjectID,c.teacherID,c.name,c.shortName, s.name AS subjectName\r\n" + 
+				"FROM course c\r\n" + 
+				"INNER JOIN [subject] s ON s.subjectID = c.subjectID \n" +
+				"WHERE c.calendarID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, calendarID);
 		System.out.println(SQL);
 		try {
 			rs = stmt.executeQuery();

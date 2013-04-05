@@ -160,8 +160,8 @@
 
 					<li><a href="#">Courses</a>
 						<ul class="submenu">
-							<li><a href="addcourse.jsp">Add a Course</a></li>
-							<li><a href="editcourse.jsp">Edit a course</a></li>
+							<li><a href="addcourse1.jsp">Add a Course</a></li>
+							<li><a href="editcourse1.jsp">Edit a course</a></li>
 							<li><a href="transfercourse.jsp">Transfer Course</a></li>
 							<li><a href="removecourse.jsp">Remove course</a></li>
 							<li><a href="addsubject.jsp">Add a subject</a></li>

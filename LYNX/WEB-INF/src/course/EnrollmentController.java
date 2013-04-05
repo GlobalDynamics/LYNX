@@ -20,13 +20,14 @@ public class EnrollmentController extends Manager {
 		con = cpds.getConnection();
 		con.setAutoCommit(false);
 		SQL = "INSERT INTO enrollment(courseID,studentID,calendarID)\r\n" + 
-				"SELECT  DISTINCT ?,?, [subject].calendarID\r\n" + 
-				"FROM    [subject], course\r\n" + 
-				"WHERE   course.subjectID = [subject].subjectID";
+				"SELECT  DISTINCT ?,?, course.calendarID\r\n" + 
+				"FROM course\r\n" + 
+				"WHERE course.courseID = ?";
 		PreparedStatement stmt = con.prepareStatement(SQL);
 		System.out.println(SQL);
 		stmt.setInt(1, courseID);
 		stmt.setInt(2,studentID);
+		stmt.setInt(3, courseID);
 		try {
 			stmt.executeUpdate();
 			con.commit();
