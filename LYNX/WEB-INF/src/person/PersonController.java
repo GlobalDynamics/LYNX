@@ -599,7 +599,7 @@ public class PersonController extends lynx.Manager {
 	}
 	
 	public static Student[] getStudentWithGrades() throws SQLException {
-		int totalPeople = getStudentsWithEnrolCount();
+		int totalPeople = getStudentsWithGradesCount();
 		System.out.println(totalPeople);
 		Student[] stu = new Student[totalPeople];
 		Connection con = cpds.getConnection();

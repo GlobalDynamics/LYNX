@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import schedule.Schedule;
+
 import lynx.Manager;
 
 public class EnrollmentController extends Manager {
@@ -83,6 +85,79 @@ public class EnrollmentController extends Manager {
 		} finally {
 			con.close();
 			stmt.close();
+		}
+	}
+	
+	public static int getCourses(int studentID, int calendarID) throws SQLException {
+		con = cpds.getConnection();
+
+		SQL = "SELECT COUNT(*) as total_rows FROM enrollment WHERE studentID = ? AND calendarID = ?";
+		System.out.println(SQL);
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, studentID);
+		stmt.setInt(2, calendarID);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return 0;
+
+			} else {
+				rs.first();
+				return rs.getInt("total_rows");
+			}
+
+		} finally {
+			con.close();
+			stmt.close();
+		}
+
+	}
+	
+	public static Schedule[] getSchedule(int studentID, int calendarID) throws SQLException
+	{
+		int totalPeople = getCourses(studentID,calendarID);
+		System.out.println(totalPeople);
+		Schedule[] people = new Schedule[totalPeople];
+		Connection con = cpds.getConnection();
+
+		SQL = "SELECT s.studentID, c.name AS courseName, c.shortName, su.name AS subjectName, ISNULL(g.grade,'') AS grade, p.firstName + ' '+ p.lastName AS personName\r\n" + 
+				"\r\n" + 
+				"FROM student s\r\n" + 
+				"INNER JOIN person p ON p.personID = s.personID\r\n" + 
+				"INNER JOIN enrollment e ON e.studentID = s.studentID\r\n" + 
+				"INNER JOIN course c ON c.courseID = e.courseID\r\n" + 
+				"INNER JOIN subject su ON c.subjectID = su.subjectID\r\n" + 
+				"LEFT OUTER JOIN grade g ON g.enrollmentID = e.enrollmentID\r\n" + 
+				"WHERE e.calendarID = ? AND s.studentID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		System.out.println(SQL);
+		stmt.setInt(1, calendarID);
+		stmt.setInt(2, studentID);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return null;
+
+			} else {
+				rs.beforeFirst();
+
+				int i = 0;
+				while (rs.next()) {
+					people[i] = new Schedule(rs.getString("personName"), rs.getString("courseName"), rs.getString("shortName"), rs.getString("subjectName"), rs.getString("grade"));
+					i++;
+				}
+				return people;
+
+			}
+		} finally {
+			stmt.close();
+			con.close();
+			rs.close();
+
 		}
 	}
 }
