@@ -101,11 +101,7 @@
     
     	<!-- Header -->
         <header id="header">
-            
-            
-            	
-                
-                
+   
             
             <section id="userinfo">
 					<span class="welcome">Welcome <strong><%=username%></strong>.
@@ -270,7 +266,7 @@
                                     </select>
                                 </div>
                                 <div class="clear"></div>
-                            </div>
+                            
                              <div class="bar-big">
                              <%
 
@@ -289,6 +285,7 @@
                              
                              %>
                                                          
+                            </div>
                             </div>
                              </div>
                             </div>

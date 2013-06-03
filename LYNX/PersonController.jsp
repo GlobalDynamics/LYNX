@@ -36,7 +36,7 @@
 							}
 							else
 							{
-								session.setAttribute("error","Field length exceeds limit.");
+								session.setAttribute("error","Invalid data was entered.");
 								response.sendRedirect("addperson.jsp");
 							}
 					 

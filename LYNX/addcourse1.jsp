@@ -186,6 +186,14 @@
                 	<div class="inner">
                     	<div class="titlebar"><span>Select Calendar year</span></div>
                         <div class="contents">
+                        	<%
+									if (session.getAttribute("error") != null) {
+								%>
+								<p><%=session.getAttribute("error")%></p>
+								<%
+									session.removeAttribute("error");
+											}
+								%>
             			
             <div class="row">
             

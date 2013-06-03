@@ -198,18 +198,27 @@
                 	<div class="inner">
                     	<div class="titlebar"><span>Add a Course</span></div>
                         <div class="contents">
+                        
+                        		<%
+									if (session.getAttribute("error") != null) {
+								%>
+								<p><%=session.getAttribute("error")%></p>
+								<%
+									session.removeAttribute("error");
+											}
+								%>
             			
             					
             					<div class="row">
             					<p>Enter the name of the Course</p>
-                            	<label>Name:</label> <div class="field-box"><input id = "cname" name = "cname" type="text" class="large"></div>
+                            	<label>Name:</label> <div class="field-box"><input id = "cname" name = "cname" type="text" maxlength = "50" class="large"></div>
                                 <div class="clear"></div>
                             	</div>
                             	
                             	
                             	<div class="row">
             					<p>Enter the short name of the Course</p>
-                            	<label>Short Name:</label> <div class="field-box"><input id = "sname" name = "sname" type="text" class="large"></div>
+                            	<label>Short Name:</label> <div class="field-box"><input id = "sname" name = "sname" type="text" maxlength = "10"class="large"></div>
                                 <div class="clear"></div>
                             	</div>
                                     

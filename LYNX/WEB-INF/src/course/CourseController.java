@@ -139,7 +139,16 @@ public class CourseController extends lynx.Manager {
 			stmt.close();
 		}
 	}
-
+	
+	public static int validateCourseDate(int name, int sname)
+	{
+		if(name <=50 && name >0 && sname >0 & sname <=10)
+		{
+			return 1;
+		}
+		return 0;
+	}
+	
 	public static String getCourse(int enrollID) throws SQLException {
 		con = cpds.getConnection();
 
@@ -381,11 +390,13 @@ public class CourseController extends lynx.Manager {
 		Enrollment[] people = new Enrollment[totalPeople];
 		Connection con = cpds.getConnection();
 
-		SQL = "SELECT c.courseID,c.subjectID,c.teacherID,c.name,c.shortName, s.name AS subjectName, e.enrollmentID, e.studentID, e.calendarID\r\n"
-				+ "								FROM course c\r\n"
-				+ "							INNER JOIN [subject] s ON s.subjectID = c.subjectID \r\n"
-				+ "								INNER JOIN enrollment e ON e.courseID = c.courseID\r\n"
-				+ "								WHERE EXISTS (SELECT enrollment.courseID, enrollment.studentID FROM enrollment WHERE enrollment.courseID = c.courseID) AND e.studentID = ?";
+		SQL = "SELECT c.courseID,c.subjectID,c.teacherID,c.name,c.shortName, s.name AS subjectName, e.enrollmentID, e.studentID, e.calendarID\r\n" + 
+				"FROM course c\r\n" + 
+				"INNER JOIN [subject] s ON s.subjectID = c.subjectID \r\n" + 
+				"INNER JOIN enrollment e ON e.courseID = c.courseID\r\n" + 
+				"WHERE EXISTS (SELECT enrollment.courseID, enrollment.studentID FROM enrollment WHERE enrollment.courseID = c.courseID) \r\n" + 
+				"AND NOT EXISTS(SELECT grade.enrollmentID FROM grade WHERE grade.enrollmentID=e.enrollmentID)\r\n" + 
+				"AND e.studentID = ?";
 		PreparedStatement stmt = con.prepareStatement(SQL,
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		stmt.setInt(1, studentID);

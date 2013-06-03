@@ -35,13 +35,23 @@
 				
 				else if(((String) request.getParameter("type")).equals("aCourse"))
 				{
+					
 					int subjectID = Integer.parseInt(request.getParameter("subjects"));
 					int teacherID = Integer.parseInt(request.getParameter("teachers"));
 					int calendarID = Integer.parseInt(request.getParameter("calendars"));
 					String name = (String) request.getParameter("cname");
 					String sname = (String) request.getParameter("sname");
-					CourseController.createCourse(name,sname,subjectID,teacherID, calendarID);
-					response.sendRedirect("addcourse.jsp");
+					if(CourseController.validateCourseDate(name.length(), sname.length()) == 1)
+					{
+						CourseController.createCourse(name,sname,subjectID,teacherID, calendarID);
+						response.sendRedirect("addcourse.jsp");
+					}
+					else
+					{
+						session.setAttribute("error", "Invalid data was entered.");
+						response.sendRedirect("addcourse1.jsp");
+					}
+					
 				}
 				
 				else if(((String) request.getParameter("type")).equals("rCourse"))
