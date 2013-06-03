@@ -111,6 +111,7 @@ public class CourseController extends lynx.Manager {
 			SQL = "SELECT COUNT(*) as total_rows FROM Course WHERE calendarID = ?";
 		} else if (type == countType.STUDENT_ENROLLMENT_COUNT) {
 			SQL = "SELECT COUNT(*) as total_rows FROM enrollment WHERE studentID = ?";
+		}
 
 		System.out.println(SQL);
 		PreparedStatement stmt = con.prepareStatement(SQL,
