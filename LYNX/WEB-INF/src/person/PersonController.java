@@ -9,15 +9,9 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import course.CourseController;
-
 import account.Authenticate;
 import account.CreateAccount;
-
-import lynx.Manager;
+import lynx.ITypes.*;
 
 public class PersonController extends lynx.Manager {
 	private static Connection con;
@@ -37,7 +31,8 @@ public class PersonController extends lynx.Manager {
 	{
 		int test = CreateAccount.getAccountByUserName(username);
 		System.out.println(test);
-		if (checkPerson(CreateAccount.getAccountByUserName(username)) == 0) {
+		if (checkByID(CreateAccount.getAccountByUserName(username),
+				checkType.ACCOUNT) == 0) {
 			CreateAccount.createAccount(password1, password2, username);
 
 			con = cpds.getConnection();
@@ -56,7 +51,7 @@ public class PersonController extends lynx.Manager {
 			DateFormat DOB = new SimpleDateFormat("yyyy-MM-dd");
 			java.sql.Date convertedDate = new java.sql.Date(DOB.parse(date)
 					.getTime());
-			
+
 			// java.sql.Date sqlToday = new java.sql.Date(convertedDate);
 			stmt.setDate(8, convertedDate);
 			try {
@@ -74,18 +69,17 @@ public class PersonController extends lynx.Manager {
 			NoSuchAlgorithmException, IOException
 
 	{
-		if (checkPersonByID(personID) != 0
+		if (checkByID(personID, checkType.PERSON) != 0
 				&& CreateAccount.getAccountByPersonID(personID) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
 			SQL = "DELETE FROM person WHERE personID = ? "
-					+ "\nDELETE FROM accounts WHERE personID = ?" +
-					"\nDELETE FROM teacher WHERE personID = ?" +
-					"\nDELETE enrollment \r\n" + 
-					"FROM enrollment a\r\n" + 
-					"INNER JOIN student s ON s.personID = ?" +
-					"\nDELETE FROM student WHERE personID = ?";
-			
+					+ "\nDELETE FROM accounts WHERE personID = ?"
+					+ "\nDELETE FROM teacher WHERE personID = ?"
+					+ "\nDELETE enrollment \r\n" + "FROM enrollment a\r\n"
+					+ "INNER JOIN student s ON s.personID = ?"
+					+ "\nDELETE FROM student WHERE personID = ?";
+
 			PreparedStatement stmt = con.prepareStatement(SQL);
 			System.out.println(SQL);
 			stmt.setInt(1, personID);
@@ -111,7 +105,7 @@ public class PersonController extends lynx.Manager {
 			ParseException
 
 	{
-		if (checkPersonByID(personID) != 0
+		if (checkByID(personID, checkType.PERSON) != 0
 				&& CreateAccount.getAccountByPersonID(personID) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
@@ -165,14 +159,23 @@ public class PersonController extends lynx.Manager {
 
 	}
 
-	private static int checkPerson(int accountID) throws SQLException {
-
+	private static int checkByID(int id, checkType type) throws SQLException {
+		SQL = null;
 		con = cpds.getConnection();
 		con.setAutoCommit(false);
-		SQL = "SELECT count(*) over (partition by 1) total_rows FROM person WHERE accountID = ?";
+		if (type == checkType.ACCOUNT) {
+			SQL = "SELECT count(*) over (partition by 1) total_rows FROM person WHERE accountID = ?";
+		} else if (type == checkType.PERSON) {
+			SQL = "SELECT count(*) over (partition by 1) total_rows FROM person WHERE personID = ?";
+		} else if (type == checkType.STUDENT) {
+			SQL = "SELECT count(*) over (partition by 1) total_rows FROM student WHERE studentID = ?";
+		} else if (type == checkType.TEACHER) {
+			SQL = "SELECT count(*) over (partition by 1) total_rows FROM teacher WHERE teacherID = ?";
+		}
+
 		PreparedStatement stmt = con.prepareStatement(SQL);
 		System.out.println(SQL);
-		stmt.setInt(1, accountID);
+		stmt.setInt(1, id);
 		try {
 			rs = stmt.executeQuery();
 			con.commit();
@@ -192,223 +195,29 @@ public class PersonController extends lynx.Manager {
 		return 1;
 	}
 
-	private static int checkPersonByID(int personID) throws SQLException {
-
+	public static int getCount(countType type) throws SQLException {
 		con = cpds.getConnection();
-		con.setAutoCommit(false);
-		SQL = "SELECT count(*) over (partition by 1) total_rows FROM person WHERE personID = ?";
-		PreparedStatement stmt = con.prepareStatement(SQL);
-		System.out.println(SQL);
-		stmt.setInt(1, personID);
-		try {
-			rs = stmt.executeQuery();
-			con.commit();
-		} finally {
-			if (!rs.isBeforeFirst()) {
-				stmt.close();
-				con.close();
-				return 0;
-			} else {
-				stmt.close();
-				con.close();
-				rs.close();
-			}
-
+		if (type == countType.PEOPLE) {
+			SQL = "SELECT COUNT(*) as total_rows FROM person";
+		} else if (type == countType.STUDENTS) {
+			SQL = "SELECT COUNT(*) as total_rows FROM student";
+		} else if (type == countType.ENROLLED) {
+			SQL = "SELECT COUNT(*) as total_rows FROM student \r\n"
+					+ "WHERE EXISTS (SELECT enrollment.studentID FROM enrollment WHERE student.studentID = enrollment.studentID)";
+		} else if (type == countType.STUDENT_GRADES) {
+			SQL = "SELECT COUNT(*) AS total_rows  FROM student s\r\n"
+					+ "INNER JOIN person p ON p.personID = s.personID\r\n"
+					+ "INNER JOIN enrollment e ON e.studentID = s.studentID\r\n"
+					+ "WHERE EXISTS (SELECT enrollment.studentID FROM enrollment WHERE enrollment.studentID = s.studentID)\r\n"
+					+ "AND EXISTS(SELECT grade.enrollmentID FROM grade WHERE grade.enrollmentID = e.enrollmentID)";
+		} else if (type == countType.TEACHERS) {
+			SQL = "SELECT COUNT(*) as total_rows FROM teacher";
+		} else if (type == countType.AVAILABLE_PEOPLE) {
+			SQL = "SELECT COUNT(*) as total_rows FROM person p\r\n"
+					+ "WHERE NOT EXISTS (SELECT personID FROM student s WHERE s.personID = p.personID)\r\n"
+					+ "AND NOT EXISTS (SELECT personID FROM teacher t WHERE t.personID = p.personID)";
 		}
 
-		return 1;
-	}
-
-	private static int checkStudentByID(int studentID) throws SQLException {
-
-		con = cpds.getConnection();
-		con.setAutoCommit(false);
-		SQL = "SELECT count(*) over (partition by 1) total_rows FROM student WHERE studentID = ?";
-		PreparedStatement stmt = con.prepareStatement(SQL);
-		System.out.println(SQL);
-		stmt.setInt(1, studentID);
-		try {
-			rs = stmt.executeQuery();
-			con.commit();
-		} finally {
-			if (!rs.isBeforeFirst()) {
-				stmt.close();
-				con.close();
-				return 0;
-			} else {
-				stmt.close();
-				con.close();
-				rs.close();
-			}
-
-		}
-
-		return 1;
-	}
-
-	private static int checkTeacherByID(int teacherID) throws SQLException {
-
-		con = cpds.getConnection();
-		con.setAutoCommit(false);
-		SQL = "SELECT count(*) over (partition by 1) total_rows FROM teacher WHERE teacherID = ?";
-		PreparedStatement stmt = con.prepareStatement(SQL);
-		System.out.println(SQL);
-		stmt.setInt(1, teacherID);
-		try {
-			rs = stmt.executeQuery();
-			con.commit();
-		} finally {
-			if (!rs.isBeforeFirst()) {
-				stmt.close();
-				con.close();
-				return 0;
-			} else {
-				stmt.close();
-				con.close();
-				rs.close();
-			}
-
-		}
-
-		return 1;
-	}
-
-	public static int getPeopleCount() throws SQLException {
-		con = cpds.getConnection();
-
-		SQL = "SELECT COUNT(*) as total_rows FROM person";
-		System.out.println(SQL);
-		PreparedStatement stmt = con.prepareStatement(SQL,
-				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-		try {
-			rs = stmt.executeQuery();
-
-			if (!rs.isBeforeFirst()) {
-				return 0;
-
-			} else {
-				rs.first();
-				return rs.getInt("total_rows");
-			}
-
-		} finally {
-			con.close();
-			stmt.close();
-		}
-
-	}
-
-	public static int getStudentCount() throws SQLException {
-		con = cpds.getConnection();
-
-		SQL = "SELECT COUNT(*) as total_rows FROM student";
-		System.out.println(SQL);
-		PreparedStatement stmt = con.prepareStatement(SQL,
-				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-		try {
-			rs = stmt.executeQuery();
-
-			if (!rs.isBeforeFirst()) {
-				return 0;
-
-			} else {
-				rs.first();
-				return rs.getInt("total_rows");
-			}
-
-		} finally {
-			con.close();
-			stmt.close();
-		}
-
-	}
-	public static int getStudentsWithEnrolCount() throws SQLException {
-		con = cpds.getConnection();
-
-		SQL = "SELECT COUNT(*) as total_rows FROM student \r\n" + 
-				"								WHERE EXISTS (SELECT enrollment.studentID FROM enrollment WHERE student.studentID = enrollment.studentID)";
-		System.out.println(SQL);
-		PreparedStatement stmt = con.prepareStatement(SQL,
-				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-		try {
-			rs = stmt.executeQuery();
-
-			if (!rs.isBeforeFirst()) {
-				return 0;
-
-			} else {
-				rs.first();
-				return rs.getInt("total_rows");
-			}
-
-		} finally {
-			con.close();
-			stmt.close();
-		}
-
-	}
-	
-	
-	public static int getStudentsWithGradesCount() throws SQLException {
-		con = cpds.getConnection();
-
-		SQL = "SELECT COUNT(*) AS total_rows  FROM student s\r\n" + 
-				"												INNER JOIN person p ON p.personID = s.personID\r\n" + 
-				"												INNER JOIN enrollment e ON e.studentID = s.studentID\r\n" + 
-				"											WHERE EXISTS (SELECT enrollment.studentID FROM enrollment WHERE enrollment.studentID = s.studentID)\r\n" + 
-				"											AND EXISTS(SELECT grade.enrollmentID FROM grade WHERE grade.enrollmentID = e.enrollmentID)";
-		System.out.println(SQL);
-		PreparedStatement stmt = con.prepareStatement(SQL,
-				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-		try {
-			rs = stmt.executeQuery();
-
-			if (!rs.isBeforeFirst()) {
-				return 0;
-
-			} else {
-				rs.first();
-				return rs.getInt("total_rows");
-			}
-
-		} finally {
-			con.close();
-			stmt.close();
-		}
-
-	}
-
-	public static int getTeacherCount() throws SQLException {
-		con = cpds.getConnection();
-
-		SQL = "SELECT COUNT(*) as total_rows FROM teacher";
-		System.out.println(SQL);
-		PreparedStatement stmt = con.prepareStatement(SQL,
-				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-		try {
-			rs = stmt.executeQuery();
-
-			if (!rs.isBeforeFirst()) {
-				return 0;
-
-			} else {
-				rs.first();
-				return rs.getInt("total_rows");
-			}
-
-		} finally {
-			con.close();
-			stmt.close();
-		}
-
-	}
-
-	public static int getPeopleWithoutconnectionCount() throws SQLException {
-		con = cpds.getConnection();
-
-		SQL = "SELECT COUNT(*) as total_rows FROM person p\r\n"
-				+ "WHERE NOT EXISTS (SELECT personID FROM student s WHERE s.personID = p.personID)\r\n"
-				+ "AND NOT EXISTS (SELECT personID FROM teacher t WHERE t.personID = p.personID)";
 		System.out.println(SQL);
 		PreparedStatement stmt = con.prepareStatement(SQL,
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -431,7 +240,7 @@ public class PersonController extends lynx.Manager {
 	}
 
 	public static Person[] getPeople() throws SQLException {
-		int totalPeople = getPeopleCount();
+		int totalPeople = getCount(countType.PEOPLE);
 		System.out.println(totalPeople);
 		Person[] people = new Person[totalPeople];
 		Connection con = cpds.getConnection();
@@ -468,7 +277,7 @@ public class PersonController extends lynx.Manager {
 	}
 
 	public static Person[] getPeopleWithoutStudent() throws SQLException {
-		int totalPeople = getPeopleWithoutconnectionCount();
+		int totalPeople = getCount(countType.AVAILABLE_PEOPLE);
 		if (totalPeople == 0) {
 			return null;
 		}
@@ -510,7 +319,7 @@ public class PersonController extends lynx.Manager {
 	}
 
 	public static Student[] getStudents() throws SQLException {
-		int totalPeople = getStudentCount();
+		int totalPeople = getCount(countType.STUDENTS);
 		System.out.println(totalPeople);
 		Student[] stu = new Student[totalPeople];
 		Connection con = cpds.getConnection();
@@ -552,17 +361,17 @@ public class PersonController extends lynx.Manager {
 		}
 
 	}
-	
+
 	public static Student[] getStudentsWithEnrollment() throws SQLException {
-		int totalPeople = getStudentsWithEnrolCount();
+		int totalPeople = getCount(countType.ENROLLED);
 		System.out.println(totalPeople);
 		Student[] stu = new Student[totalPeople];
 		Connection con = cpds.getConnection();
 
-		SQL = "SELECT s.studentID,s.personID, s.accountID, p.firstName, p.lastName  FROM student s\r\n" + 
-				"				INNER JOIN person p ON p.personID = s.personID\r\n" + 
-				"				WHERE EXISTS (SELECT enrollment.studentID FROM enrollment WHERE enrollment.studentID = s.studentID)\r\n" + 
-				"				ORDER BY p.lastName";
+		SQL = "SELECT s.studentID,s.personID, s.accountID, p.firstName, p.lastName  FROM student s\r\n"
+				+ "				INNER JOIN person p ON p.personID = s.personID\r\n"
+				+ "				WHERE EXISTS (SELECT enrollment.studentID FROM enrollment WHERE enrollment.studentID = s.studentID)\r\n"
+				+ "				ORDER BY p.lastName";
 		PreparedStatement stmt = con.prepareStatement(SQL,
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		System.out.println(SQL);
@@ -597,19 +406,19 @@ public class PersonController extends lynx.Manager {
 		}
 
 	}
-	
+
 	public static Student[] getStudentWithGrades() throws SQLException {
-		int totalPeople = getStudentsWithGradesCount();
+		int totalPeople = getCount(countType.STUDENT_GRADES);
 		System.out.println(totalPeople);
 		Student[] stu = new Student[totalPeople];
 		Connection con = cpds.getConnection();
 
-		SQL = "SELECT s.studentID,s.personID, s.accountID, p.firstName, p.lastName  FROM student s\r\n" + 
-				"								INNER JOIN person p ON p.personID = s.personID\r\n" + 
-				"								INNER JOIN enrollment e ON e.studentID = s.studentID\r\n" + 
-				"							WHERE EXISTS (SELECT enrollment.studentID FROM enrollment WHERE enrollment.studentID = s.studentID)\r\n" + 
-				"							AND EXISTS(SELECT grade.enrollmentID FROM grade WHERE grade.enrollmentID = e.enrollmentID)\r\n" + 
-				"								ORDER BY p.lastName";
+		SQL = "SELECT s.studentID,s.personID, s.accountID, p.firstName, p.lastName  FROM student s\r\n"
+				+ "								INNER JOIN person p ON p.personID = s.personID\r\n"
+				+ "								INNER JOIN enrollment e ON e.studentID = s.studentID\r\n"
+				+ "							WHERE EXISTS (SELECT enrollment.studentID FROM enrollment WHERE enrollment.studentID = s.studentID)\r\n"
+				+ "							AND EXISTS(SELECT grade.enrollmentID FROM grade WHERE grade.enrollmentID = e.enrollmentID)\r\n"
+				+ "								ORDER BY p.lastName";
 		PreparedStatement stmt = con.prepareStatement(SQL,
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		System.out.println(SQL);
@@ -646,7 +455,7 @@ public class PersonController extends lynx.Manager {
 	}
 
 	public static Teacher[] getTeachers() throws SQLException {
-		int totalPeople = getTeacherCount();
+		int totalPeople = getCount(countType.TEACHERS);
 		System.out.println(totalPeople);
 		Teacher[] tc = new Teacher[totalPeople];
 		Connection con = cpds.getConnection();
@@ -724,7 +533,7 @@ public class PersonController extends lynx.Manager {
 			NoSuchAlgorithmException, IOException
 
 	{
-		if (checkPersonByID(personID) != 0
+		if (checkByID(personID, checkType.PERSON) != 0
 				&& CreateAccount.getAccountByPersonID(personID) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
@@ -749,7 +558,7 @@ public class PersonController extends lynx.Manager {
 			NoSuchAlgorithmException, IOException
 
 	{
-		if (checkStudentByID(studentID) != 0) {
+		if (checkByID(studentID, checkType.STUDENT) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
 			SQL = "DELETE FROM student WHERE studentID = ?";
@@ -771,7 +580,8 @@ public class PersonController extends lynx.Manager {
 			throws SQLException, NoSuchAlgorithmException, IOException
 
 	{
-		if (checkStudentByID(studentID) != 0 && checkPersonByID(personID) != 0) {
+		if (checkByID(studentID, checkType.STUDENT) != 0
+				&& checkByID(personID, checkType.PERSON) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
 			SQL = "UPDATE student  SET student.personID = ?, student.accountID = p.accountID\r\n"
@@ -797,7 +607,7 @@ public class PersonController extends lynx.Manager {
 			NoSuchAlgorithmException, IOException
 
 	{
-		if (checkPersonByID(personID) != 0
+		if (checkByID(personID, checkType.PERSON) != 0
 				&& CreateAccount.getAccountByPersonID(personID) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
@@ -822,7 +632,7 @@ public class PersonController extends lynx.Manager {
 			NoSuchAlgorithmException, IOException
 
 	{
-		if (checkTeacherByID(teacherID) != 0) {
+		if (checkByID(teacherID, checkType.TEACHER) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
 			SQL = "DELETE FROM teacher WHERE teacherID = ?";
@@ -839,12 +649,13 @@ public class PersonController extends lynx.Manager {
 
 		}
 	}
-	
+
 	public static void editTeacher(int teacherID, int personID)
 			throws SQLException, NoSuchAlgorithmException, IOException
 
 	{
-		if (checkTeacherByID(teacherID) != 0 && checkPersonByID(personID) != 0) {
+		if (checkByID(teacherID, checkType.TEACHER) != 0
+				&& checkByID(personID, checkType.PERSON) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
 			SQL = "UPDATE teacher SET teacher.personID = ?, teacher.accountID = p.accountID\r\n"
