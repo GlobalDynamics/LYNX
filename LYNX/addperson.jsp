@@ -213,33 +213,43 @@
                 	<div class="inner">
 						<form name = "ap" id = "ap" method = "post" action = "PersonController.jsp">
 						<input type="hidden" name="type" id = "type" value="aPerson">
+						
                     	<div class="titlebar"><span class="icon entypo white browser"></span> <span class="w-icon">Standard Fields</span></div>
                         <div class="contents">
                         	
+                        	<%
+						if(session.getAttribute("error") !=null)
+						{
+							%>
+							<p><%=session.getAttribute("error")%></p>
+							<%
+							session.removeAttribute("error");
+						}
+						%>
 
                             <div class="row">
-                            	<label>First Name</label> <div class="field-box"><input id = "fname" name = "fname" type="text" class="large"></div>
+                            	<label>First Name</label> <div class="field-box"><input id = "fname" name = "fname" type="text"  maxlength = "50" class="large"></div>
                                 <div class="clear"></div>
                             </div>
                             
                             <div class="row">
-                            	<label>Last Name</label> <div class="field-box"><input id = "lname" name = "lname" type="text" class="large"></div>
+                            	<label>Last Name</label> <div class="field-box"><input id = "lname" name = "lname" type="text" maxlength = "50" class="large"></div>
                                 <div class="clear"></div>
                             </div>
                             
                             <div class="row">
-                            	<label>Middle Name</label> <div class="field-box"><input id = "mname" name = "mname" type="text" class="large"></div>
+                            	<label>Middle Name</label> <div class="field-box"><input id = "mname" name = "mname" type="text" maxlength = "50" class="large"></div>
                                 <div class="clear"></div>
                             </div>
                             
                             
                             <div class="row">
-                            	<label>Suffix</label> <div class="field-box"><input id = "suffix" name = "suffix" type="text" class="tiny"> </div>
+                            	<label>Suffix</label> <div class="field-box"><input id = "suffix" name = "suffix" type="text" maxlength = "4" class="tiny"> </div>
                                 <div class="clear"></div>
                             </div>
                             
                             <div class="row">
-                            	<label>Gender</label> <div class="field-box"><input id = "gender" name = "gender" type="text" class="tiny"> </div>
+                            	<label>Gender</label> <div class="field-box"><input id = "gender" name = "gender" type="text" maxlength = "2" class="tiny"> </div>
                                 <div class="clear"></div>
                             </div>
                        

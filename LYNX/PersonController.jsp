@@ -19,17 +19,27 @@
 			{
 				if(((String) request.getParameter("type")).equals("aPerson"))
 				{
-					 fname = (String) request.getParameter("fname");
-					 lname = (String) request.getParameter("lname");
-					 mname = (String) request.getParameter("mname");
-					 suf = (String) request.getParameter("suffix");
-					 gen = (String) request.getParameter("gender");
-					 birth = (String) request.getParameter("birth");
-					 username = request.getParameter("username");
-					 password1 = request.getParameter("password1");
-					 password2 = request.getParameter("password2");
-					PersonController.addPerson(fname,  lname,  mname,  suf, 1, 1, gen, birth,password1,password2,username);
-					response.sendRedirect("addperson.jsp");
+					
+						fname = (String) request.getParameter("fname");
+						 lname = (String) request.getParameter("lname");
+						 mname = (String) request.getParameter("mname");
+						 suf = (String) request.getParameter("suffix");
+						 gen = (String) request.getParameter("gender");
+						 birth = (String) request.getParameter("birth");
+						 username = request.getParameter("username");
+						 password1 = request.getParameter("password1");
+						 password2 = request.getParameter("password2");
+						 if(PersonController.validateData(fname.length(), lname.length(), mname.length(), suf.length(), gen.length(), birth) == 1)
+							{
+							 PersonController.addPerson(fname,  lname,  mname,  suf, 1, 1, gen, birth,password1,password2,username);
+								response.sendRedirect("addperson.jsp");
+							}
+							else
+							{
+								session.setAttribute("error","Field length exceeds limit.");
+								response.sendRedirect("addperson.jsp");
+							}
+					 
 				}
 				else if(((String) request.getParameter("type")).equals("rPerson"))
 				{

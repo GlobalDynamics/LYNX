@@ -259,9 +259,7 @@
 									<div class="clear"></div>
 								</div>
 
-
-							</div>
-							<div class="bar-big">
+								<div class="bar-big">
 								<%
 									if (test != null && test2 != null) {
 								%>
@@ -274,6 +272,8 @@
 								%>
 
 							</div>
+							</div>
+							
 						</div>
 					</div>
 				</div>

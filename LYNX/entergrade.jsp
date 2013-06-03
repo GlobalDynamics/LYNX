@@ -225,17 +225,19 @@
                             	</div>
                             	
                                 <div class="clear"></div>
-                            </div>
-                             
-                             
-                            </div>
-                            <div class="bar-big">
+                                
+                                <div class="bar-big">
                              
                         	<input type="submit" value="Submit">
                             <input type="reset" value="Reset">
                              
                                                          
                             </div>
+                            </div>
+                             
+                             
+                            </div>
+                            
                             </div>
                             </div>
                           
