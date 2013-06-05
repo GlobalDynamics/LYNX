@@ -37,7 +37,7 @@
 							else
 							{
 								session.setAttribute("error","Invalid data was entered.");
-								response.sendRedirect("addperson.jsp");
+								response.sendRedirect("result.jsp");
 							}
 					 
 				}
@@ -59,10 +59,21 @@
 					 username = request.getParameter("username");
 					 password1 = request.getParameter("password1");
 					 password2 = request.getParameter("password2");
-					PersonController.editPerson(personID, fname, lname, mname,
-							 suf, 1, 1, gen,  birth,
-							 password1,  password2, username);
-					response.sendRedirect("epreview.jsp");
+					 
+					 if(PersonController.validateData(fname.length(), lname.length(), mname.length(), suf.length(), gen.length(), birth) == 1)
+						{
+						 PersonController.editPerson(personID, fname, lname, mname,
+								 suf, 1, 1, gen,  birth,
+								 password1,  password2, username);
+						response.sendRedirect("epreview.jsp");
+						}
+						else
+						{
+							session.setAttribute("error","Invalid data was entered.");
+							response.sendRedirect("result.jsp");
+						}
+					 
+					
 				}
 			}
 			

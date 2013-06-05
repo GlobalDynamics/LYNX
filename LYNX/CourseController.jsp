@@ -49,7 +49,7 @@
 					else
 					{
 						session.setAttribute("error", "Invalid data was entered.");
-						response.sendRedirect("addcourse1.jsp");
+						response.sendRedirect("result.jsp");
 					}
 					
 				}
