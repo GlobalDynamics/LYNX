@@ -182,8 +182,7 @@
 				<!-- Breadcrumb -->
 				<div class="three-fourths breadcrumb">
 					<span><a href="#" class="icon entypo home"></a></span> <span
-						class="middle"></span> <span><a href="#">Admin
-							Template</a></span> <span class="middle"></span> <span><a href="#">Dashboard</a></span>
+						class="middle"></span> <span><a href="#">Home</a></span> <span class="middle"></span> <span><a href="#">Result</a></span>
 					<span class="end"></span>
 				</div>
 				<!-- /Breadcrumb -->
