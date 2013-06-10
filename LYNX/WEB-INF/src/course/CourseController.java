@@ -83,10 +83,12 @@ public class CourseController extends lynx.Manager {
 
 		con = cpds.getConnection();
 		con.setAutoCommit(false);
-		SQL = "DELETE FROM [subject] WHERE calendarID = ?";
+		SQL = "DELETE FROM [subject] WHERE calendarID = ?\r\n" + 
+				"DELETE FROM [course] WHERE calendarID = ?";
 		PreparedStatement stmt = con.prepareStatement(SQL);
 		System.out.println(SQL);
 		stmt.setInt(1, calendarID);
+		stmt.setInt(2, calendarID);
 		try {
 			stmt.executeUpdate();
 			con.commit();

@@ -16,7 +16,7 @@
 			String username = (String) session.getAttribute("username");
 			if((String) request.getParameter("calendars") == null)
 			{
-				response.sendRedirect("editcourse1.jsp");
+				//response.sendRedirect("editcourse1.jsp");
 			}
 			else
 			{
@@ -97,6 +97,52 @@
 						<div class="links">
 							 <a href="logout.jsp"
 								class="logout">Logout</a>
+								<br>
+								<form name = "ap" id = "ap" method = "post" action = "editcourse.jsp">
+								<div class="field-box">
+								<select id = "calendars" name = "calendars" data-placeholder="No Data" onchange="this.form.submit();" style="width:350px;" class="chzn-select" tabindex="6">
+                                       <%
+                                       
+                                      Calendar[] calendars = CalendarController.getCalendars();
+                                       if(calendars != null)
+                                       {
+                                    	   for(Calendar value : calendars)
+                                           {
+                                    		   if(calendarID != null)
+                                    		   {
+                                    			   if(value.getID().equals(calendarID))
+                                        		   {
+                                        			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\" selected>" + value.getName() + "</option>");
+                                        		   }
+                                        		   else
+                                        		   {
+                                        			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
+                                        		   }  
+                                    		   }
+                                    		   else
+                                    		   {
+                                    			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
+                                    		   }
+                                    		  
+                                        	   
+                                           }
+                                    	   if(calendars.length ==1 || (calendars != null && calendarID == null))
+                                           {
+                                        	   calendarID = calendars[0].getID();
+                                           }
+                                       }
+                                       else
+                                       {
+                                    	   
+                                       }
+                                      
+                                      
+                                       
+                                       %>
+                                        
+                                    </select>
+                                    </div>
+                                    </form>
 						</div>
 						
 					</div>
@@ -143,7 +189,7 @@
 
 					<li><a href="#">Courses</a>
 						<ul class="submenu">
-							<li><a href="addcourse1.jsp">Add a Course</a></li>
+							<li><a href="addcourse.jsp">Add a Course</a></li>
 							<li><a href="editcourse1.jsp">Edit a course</a></li>
 							<li><a href="transfercourse.jsp">Transfer Course</a></li>
 							<li><a href="removecourse.jsp">Remove course</a></li>

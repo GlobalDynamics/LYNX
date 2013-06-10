@@ -1,13 +1,25 @@
 <%@ page import="course.CourseController" %>
-<%@ page import="course.Subject;" %>
+<%@ page import="course.Subject" %>
+<%@ page import="schedule.CalendarController" %>
+<%@ page import="schedule.Calendar" %>
 <%
 	if (session.getAttribute("login") == null) {
 		response.sendRedirect("login.jsp");
 	} else {
 		String login = (String) session.getAttribute("login");
 
+		String calendarID = null;
 		if (login.equals("1")) {
 			String username = (String) session.getAttribute("username");
+			if((String) request.getParameter("calendars") == null)
+					{
+						//response.sendRedirect("addcourse1.jsp");
+					}
+			else
+			{
+				
+				calendarID = (String) request.getParameter("calendars");
+			}
 	%>
 
 	
@@ -87,6 +99,53 @@
 						<div class="links">
 							 <a href="logout.jsp"
 								class="logout">Logout</a>
+								<br>
+								<form name = "ap" id = "ap" method = "post" action = "addsubject.jsp">
+								
+								<div class="field-box">
+								<select id = "calendars" name = "calendars" data-placeholder="No Data" onchange="this.form.submit();" style="width:350px;" class="chzn-select" tabindex="6">
+                                       <%
+                                       
+                                      Calendar[] calendars = CalendarController.getCalendars();
+                                       if(calendars != null)
+                                       {
+                                    	   for(Calendar value : calendars)
+                                           {
+                                    		   if(calendarID != null)
+                                    		   {
+                                    			   if(value.getID().equals(calendarID))
+                                        		   {
+                                        			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\" selected>" + value.getName() + "</option>");
+                                        		   }
+                                        		   else
+                                        		   {
+                                        			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
+                                        		   }  
+                                    		   }
+                                    		   else
+                                    		   {
+                                    			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
+                                    		   }
+                                    		  
+                                        	   
+                                           }
+                                    	   if(calendars.length ==1 || (calendars != null && calendarID == null))
+                                           {
+                                        	   calendarID = calendars[0].getID();
+                                           }
+                                       }
+                                       else
+                                       {
+                                    	  
+                                       }
+                                       
+                                      
+                                       
+                                       %>
+                                        
+                                    </select>
+                                    </div>
+                                    </form>
 						</div>
 						
 					</div>
@@ -133,7 +192,7 @@
 
 					<li><a href="#">Courses</a>
 						<ul class="submenu">
-							<li><a href="addcourse1.jsp">Add a Course</a></li>
+							<li><a href="addcourse.jsp">Add a Course</a></li>
 							<li><a href="editcourse1.jsp">Edit a course</a></li>
 							<li><a href="transfercourse.jsp">Transfer Course</a></li>
 							<li><a href="removecourse.jsp">Remove course</a></li>
@@ -181,6 +240,7 @@
             
              <form name = "ap" id = "ap" method = "post" action = "CourseController.jsp">
 						<input type="hidden" name="type" id = "type" value="rSubject">
+						<input type="hidden" name="calendars" id = "calendars" value="<%=calendarID%>">
             <div class="one-half">
             	<div class="box">
                 	<div class="inner">
@@ -191,28 +251,31 @@
             
             <p>Removing a Subject will remove all courses linked to this Subject.</p>
                             	<label>Select a subject to remove</label> <div class="field-box">
-                                	<select id = "subjects" name = "subjects" data-placeholder="No Data" style="width:350px;" class="chzn-select" tabindex="6">
-                                       <%
-                                       
-                                      Subject[] test = CourseController.getSubjects();
-                                       if(test != null)
-                                       {
-                                    	   for(Subject value : test)
-                                           {
-                                        	   out.println("<option id = \"" + value.getSubject() + "\"  value = \"" + value.getSubject() + "\">" + value.getName() + "</option>");
-                                           }
-                                       }
-                                       else
-                                       {
-                                    	   out.println("<p>There are no people to link to students");
-                                       }
-                                       
-                                      
-                                       
-                                       %>
-                                        
-                                    </select>
-                                </div>
+										<select id="subjects" name="subjects"
+											data-placeholder="No Data" style="width: 350px;"
+											class="chzn-select" tabindex="6">
+											<%
+												Subject[] test = null;
+												if(calendarID != null)
+												{
+													test = CourseController.getSubjects(Integer.parseInt(calendarID));
+													if (test != null) {
+														for (Subject value : test) {
+															out.println("<option id = \"" + value.getSubject()
+																	+ "\"  value = \"" + value.getSubject()
+																	+ "\">" + value.getName() + "</option>");
+														}
+													} else {
+														
+													}
+												}
+												
+											%>
+
+										</select>
+
+										<div class="clear"></div>
+									</div>
                                 <div class="clear"></div>
                             </div>
                              <div class="bar-big">

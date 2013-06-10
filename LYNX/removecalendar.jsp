@@ -87,9 +87,35 @@
 						<div class="links">
 							 <a href="logout.jsp"
 								class="logout">Logout</a>
+								<br>
+								<div class="field-box">
+								<select id = "calendarsTest" name = "calendarsTest" data-placeholder="No Data" style="width:350px;" class="chzn-select" tabindex="6">
+                                       <%
+                                       
+                                      Calendar[] test1 = CalendarController.getCalendars();
+                                       if(test1 != null)
+                                       {
+                                    	   for(Calendar value : test1)
+                                           {
+                                        	   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
+                                           }
+                                       }
+                                       else
+                                       {
+                                    	   out.println("<p>There are no people to link to students");
+                                       }
+                                       
+                                      
+                                       
+                                       %>
+                                        
+                                    </select>
+                                    </div>
 						</div>
+                                
 						
 					</div>
+					
 				</section>
             <section id="responsive-nav">
                 <select id="nav_select">
@@ -133,7 +159,7 @@
 
 					<li><a href="#">Courses</a>
 						<ul class="submenu">
-							<li><a href="addcourse1.jsp">Add a Course</a></li>
+							<li><a href="addcourse.jsp">Add a Course</a></li>
 							<li><a href="editcourse1.jsp">Edit a course</a></li>
 							<li><a href="transfercourse.jsp">Transfer Course</a></li>
 							<li><a href="removecourse.jsp">Remove course</a></li>
@@ -162,8 +188,12 @@
 				</ul>
 				<!-- /Nav menu -->
 
-				<div class="blocks-separator"></div>
+				<div class="blocks-separator">
+				
+				</div>
 			</nav> <!-- Sidebar -->
+			
+			
 
         <section id="playground">
         	
