@@ -60,7 +60,7 @@
 						 phone = (String) request.getParameter("phone");
 						 email = ((String) request.getParameter("email") != null) ?(String) request.getParameter("email") : "";
 						 String personValidate = PersonController.validateData(fname.length(), lname.length(), mname.length(), suf.length(), gen.length(), birth);
-						 String secure = (String) Security.complexityTest(password1, password2);
+						 String secure = Security.complexityTest(password1, password2);
 						 String address = AddressController.validateAddress(street.length(), zip.length(), city.length(), country.length(), direction.length(), state.length(), apt.length(), house.length(), phone.length());
 						 if(personValidate == "true" && secure == "true" && address =="true")
 							{

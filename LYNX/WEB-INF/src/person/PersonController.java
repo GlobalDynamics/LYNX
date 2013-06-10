@@ -10,7 +10,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import account.Account;
 import account.Authenticate;
 import account.CreateAccount;
 import lynx.ITypes.*;
