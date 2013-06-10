@@ -11,9 +11,9 @@ import java.sql.Statement;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 public class Manager {
-	public static String con = "jdbc:jtds:sqlserver://localhost/lynx;instance=SQLEXPRESS";
+	public static String con = "jdbc:jtds:sqlserver://U0171723-W7A/lynx;instance=SQL2012";
 	private static String userName = "test";
-	private static String password = "test";
+	private static String password = "Britnie7";
 	public static ComboPooledDataSource cpds = new ComboPooledDataSource();
 	public static String SQL;
 

@@ -137,7 +137,7 @@
 						<ul class="submenu">
 							<li><a href="addperson.jsp">Add a Person</a></li>
 							<li><a href="epreview.jsp">Edit a Person</a></li>
-							<li><a href="removeperson.jsp">Remove Person</a></li>
+							<li><a href="removeperson.jsp">Remove Person</a></li> <li><a href="link.jsp">Link Accounts</a></li>
 						</ul></li>
 
 					<li><a href="#">Courses</a>

@@ -15,8 +15,16 @@
 				{
 					String name = (String) request.getParameter("sname");
 					int calendarID = Integer.parseInt(request.getParameter("calendars"));
-					CourseController.addSubject(name,calendarID);
-					response.sendRedirect("addsubject.jsp");
+					if(CourseController.validateSubject(name.length()) ==1)
+					{
+						CourseController.addSubject(name,calendarID);
+						response.sendRedirect("addsubject.jsp");
+					}
+					else
+					{
+						session.setAttribute("error", "Invalid data was entered.");
+						response.sendRedirect("result.jsp");
+					}
 				}
 				else if(((String) request.getParameter("type")).equals("rSubject"))
 				{
@@ -29,8 +37,17 @@
 				{
 					int subjectID = Integer.parseInt(request.getParameter("subjects"));
 					String name = (String) request.getParameter("sname");
-					CourseController.editSubject(subjectID,name);
-					response.sendRedirect("editsubject.jsp");
+					
+					if(CourseController.validateSubject(name.length()) ==1)
+					{
+						CourseController.editSubject(subjectID,name);
+						response.sendRedirect("editsubject.jsp");
+					}
+					else
+					{
+						session.setAttribute("error", "Invalid data was entered.");
+						response.sendRedirect("result.jsp");
+					}
 				}
 				
 				else if(((String) request.getParameter("type")).equals("aCourse"))
@@ -71,15 +88,35 @@
 					String sname = (String) request.getParameter("sname");
 					CourseController.editCourse(courseID,name,sname,subjectID,teacherID,calendarID);
 					response.sendRedirect("editcourse.jsp");
+					
+					if(CourseController.validateCourseDate(name.length(), sname.length()) == 1)
+					{
+						CourseController.editCourse(courseID,name,sname,subjectID,teacherID,calendarID);
+						response.sendRedirect("addcourse.jsp");
+					}
+					else
+					{
+						session.setAttribute("error", "Invalid data was entered.");
+						response.sendRedirect("result.jsp");
+					}
 				}
 				
 				else if(((String) request.getParameter("type")).equals("aGrade"))
 				{
 					int enrollmentID = Integer.parseInt(request.getParameter("enroll"));
 					String grade = (String) request.getParameter("grade");
-					Grade.addGrade(enrollmentID,grade);
-					session.setAttribute("enroll",null);
-					response.sendRedirect("gradepreview.jsp");
+					if(CourseController.validateGrade(grade.length()) == 1)
+					{
+						Grade.addGrade(enrollmentID,grade);
+						session.setAttribute("enroll",null);
+						response.sendRedirect("gradepreview.jsp");
+					}
+					else
+					{
+						session.setAttribute("error", "Invalid data was entered.");
+						response.sendRedirect("result.jsp");
+					}
+					
 				}
 				
 				else if(((String) request.getParameter("type")).equals("rGrade"))

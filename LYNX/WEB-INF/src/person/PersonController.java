@@ -9,6 +9,8 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import account.Account;
 import account.Authenticate;
 import account.CreateAccount;
 import lynx.ITypes.*;
@@ -34,7 +36,7 @@ public class PersonController extends lynx.Manager {
 		if (checkByID(CreateAccount.getAccountByUserName(username),
 				checkType.ACCOUNT) == 0) {
 			CreateAccount.createAccount(password1, password2, username);
-
+			
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
 			SQL = "INSERT INTO person(accountID,addressID,lastName,firstName,middleName,suffix,gender,birthDate) "
@@ -159,15 +161,15 @@ public class PersonController extends lynx.Manager {
 
 	}
 	
-	public static int validateData(int fname,int lname, int mname, int suf, int gen, String date) throws ParseException
+	public static String validateData(int fname,int lname, int mname, int suf, int gen, String date) throws ParseException
 	{
 	
 
 		if(fname <= 50 && lname <= 50 && mname <50 && suf <= 4 && gen <=2  && fname > 0 && lname > 0 && mname > 0 && suf > 0 && gen > 0 && isValidDate(date.replace("-", "")))
 		{
-			return 1;
+			return "true";
 		}
-		return 0;
+		return "The demographic infomation is either to long or to short";
 	}
 	
 	public static boolean isValidDate(String dateString) {
@@ -279,6 +281,10 @@ public class PersonController extends lynx.Manager {
 			SQL = "SELECT COUNT(*) as total_rows FROM person p\r\n"
 					+ "WHERE NOT EXISTS (SELECT personID FROM student s WHERE s.personID = p.personID)\r\n"
 					+ "AND NOT EXISTS (SELECT personID FROM teacher t WHERE t.personID = p.personID)";
+		}
+		else if(type == countType.ACCOUNTS)
+		{
+			SQL = "SELECT COUNT(*) as total_rows FROM accounts";
 		}
 
 		System.out.println(SQL);

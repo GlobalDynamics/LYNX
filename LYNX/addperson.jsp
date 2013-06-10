@@ -161,7 +161,8 @@
 					<ul class="submenu">
 						<li><a href="addperson.jsp">Add a Person</a></li>
 						<li><a href="epreview.jsp">Edit a Person</a></li>
-						<li><a href="removeperson.jsp">Remove Person</a></li>
+						<li><a href="removeperson.jsp">Remove Person</a></li> <li><a href="link.jsp">Link Accounts</a></li>
+						
 					</ul></li>
 
 				<li><a href="#">Courses</a>
@@ -211,17 +212,17 @@
 					class="end"></span>
 			</div>
 			<div class="clear"></div>
-
+			<form name="ap" id="ap" method="post"
+							action="PersonController.jsp">
+							<input type="hidden" name="type" id="type" value="aPerson">
 			<div class="one-half">
 				<div class="box">
 					<div class="inner">
-						<form name="ap" id="ap" method="post"
-							action="PersonController.jsp">
-							<input type="hidden" name="type" id="type" value="aPerson">
+						
 
 							<div class="titlebar">
 								<span class="icon entypo white browser"></span> <span
-									class="w-icon">Standard Fields</span>
+									class="w-icon">Demographic Infomation</span>
 							</div>
 							<div class="contents">
 
@@ -290,6 +291,117 @@
 									<div class="clear"></div>
 								</div>
 
+								
+
+							</div>
+							
+						
+					</div>
+				</div>
+			</div>
+			
+			
+			
+			
+			<div class="one-half">
+				<div class="box">
+					<div class="inner">
+					
+					<div class="titlebar">
+								<span class="icon entypo white browser"></span> <span
+									class="w-icon">Address</span>
+							</div>
+							<div class="contents">
+							
+								<div class="row">
+									<label>House Number</label>
+									<div class="field-box">
+										<input id="house" name="house" type="text"
+											maxlength = "10" class="large">
+									</div>
+									<div class="clear"></div>
+								</div>
+								
+								<div class="row">
+									<label>Apartment Number</label>
+									<div class="field-box">
+										<input id="apt" name="apt" type="text"
+											maxlength = "10" class="large">
+									</div>
+									<div class="clear"></div>
+								</div>
+								
+								<div class="row">
+									<label>Street</label>
+									<div class="field-box">
+										<input id="street" name="street" type="text" maxlength = "100" class="large">
+									</div>
+									<div class="clear"></div>
+								</div>
+								
+								<div class="row">
+									<label>State</label>
+									<div class="field-box">
+										<input id="state" name="state" type="text"
+											maxlength = "15" class="large">
+									</div>
+									<div class="clear"></div>
+								</div>
+								
+								<div class="row">
+									<label>City</label>
+									<div class="field-box">
+										<input id="city" name="city" type="text"
+											maxlength = "20" class="large">
+									</div>
+									<div class="clear"></div>
+								</div>
+								
+								<div class="row">
+									<label>Direction</label>
+									<div class="field-box">
+										<input id="dir" name="dir" type="text"
+											maxlength = "1" class="large">
+									</div>
+									<div class="clear"></div>
+								</div>
+								
+								<div class="row">
+									<label>Zip Code</label>
+									<div class="field-box">
+										<input id="zip" name="zip" type="text"
+											maxlength = "10" class="large">
+									</div>
+									<div class="clear"></div>
+								</div>
+								
+								<div class="row">
+									<label>Country</label>
+									<div class="field-box">
+										<input id="country" name="country" type="text"
+											maxlength = "20" class="large">
+									</div>
+									<div class="clear"></div>
+								</div>
+								
+					
+					</div>
+					
+					</div>
+				</div>
+			</div>
+			
+			
+			
+			<div class="one-half">
+				<div class="box">
+					<div class="inner">
+					
+					<div class="titlebar">
+								<span class="icon entypo white browser"></span> <span
+									class="w-icon">Account Infomation</span>
+							</div>
+							<div class="contents">
 								<div class="row">
 									<label>User Name</label>
 									<div class="field-box">
@@ -301,7 +413,7 @@
 								<div class="row">
 									<label>Password</label>
 									<div class="field-box">
-										<input id="password1" name="password1" type="text"
+										<input id="password1" name="password1" type="password"
 											class="large">
 									</div>
 									<div class="clear"></div>
@@ -310,23 +422,78 @@
 								<div class="row">
 									<label>Confirm Password</label>
 									<div class="field-box">
-										<input id="password2" name="password2" type="text"
+										<input id="password2" name="password2" type="password"
 											class="large">
 									</div>
 									<div class="clear"></div>
 								</div>
-
+								
+					
+						
+					
+					
+					
+				</div>
+			</div>
+			</div>
+			</div>
+			
+			
+			<div class="one-half">
+				<div class="box">
+					<div class="inner">
+					
+					<div class="titlebar">
+								<span class="icon entypo white browser"></span> <span
+									class="w-icon">Contact Infomation</span>
 							</div>
+							<div class="contents">
+								<div class="row">
+									<label>Phone Number</label>
+									<div class="field-box">
+										<input id="phone" name="phone" type="text"
+											maxlength = "11" class="large">
+									</div>
+									
+									</div>
+									<div class="row">
+									<label>E-Mail Address</label>
+									<div class="field-box">
+										<input id="email" name="email" type="text"
+											maxlength = "50" class="large">
+									</div>
+									</div>
+								
+					
+					
+					
+					
+					
+				</div>
+			</div>
+			</div>
+			</div>
+			
+			
+			<div class="full-width">
+				<div class="box">
+					<div class="inner">
+					
+							<div class="contents">
+							
 							<div class="bar-big">
 								<input type="submit" value="Submit"> <input type="reset"
 									value="Reset">
 
 							</div>
-						</form>
-					</div>
+								
 				</div>
 			</div>
-
+			</div>
+			</div>
+			
+			
+</form>
 		</section>
 	</div>
 	<!-- /Container -->

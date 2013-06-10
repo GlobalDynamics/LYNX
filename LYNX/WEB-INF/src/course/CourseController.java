@@ -39,6 +39,22 @@ public class CourseController extends lynx.Manager {
 		}
 
 	}
+	public static int validateSubject(int name)
+	{
+		if(name > 0 && name <= 50)
+		{
+			return 1;
+		}
+		return 0;
+	}
+	public static int validateGrade(int grade)
+	{
+		if(grade > 0 && grade <=1)
+		{
+			return 1;
+		}
+		return 0;
+	}
 
 	public static void removeSubject(int subjectID) throws SQLException,
 			ParseException {

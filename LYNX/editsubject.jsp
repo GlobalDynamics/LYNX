@@ -137,7 +137,7 @@
 					<ul class="submenu">
 						<li><a href="addperson.jsp">Add a Person</a></li>
 						<li><a href="epreview.jsp">Edit a Person</a></li>
-						<li><a href="removeperson.jsp">Remove Person</a></li>
+						<li><a href="removeperson.jsp">Remove Person</a></li> <li><a href="link.jsp">Link Accounts</a></li>
 					</ul></li>
 
 				<li><a href="#">Courses</a>
@@ -228,7 +228,7 @@
 									
 										<label>New Subject Name:</label>
 										<div class="field-box">
-											<input id="sname" name="sname" type="text" class="large">
+											<input id="sname" name="sname" type="text" maxlength = "50" class="large">
 										</div>
 										<div class="clear"></div>
 									</div>
