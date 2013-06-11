@@ -130,6 +130,9 @@ public class CourseController extends lynx.Manager {
 		} else if (type == countType.STUDENT_ENROLLMENT_COUNT) {
 			SQL = "SELECT COUNT(*) as total_rows FROM enrollment WHERE studentID = ?";
 		}
+		else if (type == countType.COURSES_FROM_SUBJECTS) {
+			SQL = "SELECT COUNT(*) as total_rows FROM course WHERE subjectID = ?";
+		}
 
 		System.out.println(SQL);
 		PreparedStatement stmt = con.prepareStatement(SQL,
@@ -137,7 +140,8 @@ public class CourseController extends lynx.Manager {
 		if (type == countType.SUBJECT_CALENDAR
 				|| type == countType.COURSES_CALENDAR
 				|| type == countType.STUDENT_ENROLLMENT_COUNT
-				|| type == countType.COURSE_ENROLLMENT_COUNT) {
+				|| type == countType.COURSE_ENROLLMENT_COUNT
+				||type ==countType.COURSES_FROM_SUBJECTS) {
 			stmt.setInt(1, id);
 		}
 
@@ -342,6 +346,46 @@ public class CourseController extends lynx.Manager {
 							rs.getInt("subjectID"), rs.getString("name"),
 							rs.getString("shortName"), rs.getInt("teacherID"),
 							rs.getString("subjectName"));
+					i++;
+				}
+				return people;
+
+			}
+		} finally {
+			stmt.close();
+			con.close();
+			rs.close();
+
+		}
+
+	}
+	
+	public static Course[] getCoursesBySubject(int subjectID) throws SQLException {
+		int totalPeople = getCount(countType.COURSES_FROM_SUBJECTS, subjectID);
+		System.out.println(totalPeople);
+		Course[] people = new Course[totalPeople];
+		Connection con = cpds.getConnection();
+
+		SQL = "SELECT  c.courseID,c.name, c.shortName, c.subjectID  FROM course c\r\n" + 
+				"WHERE c.subjectID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, subjectID);
+		System.out.println(SQL);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return null;
+
+			} else {
+				rs.beforeFirst();
+
+				int i = 0;
+				while (rs.next()) {
+					people[i] = new Course(rs.getInt("courseID"),
+							rs.getInt("subjectID"), rs.getString("name"),
+							rs.getString("shortName"));
 					i++;
 				}
 				return people;

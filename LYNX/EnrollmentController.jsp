@@ -14,6 +14,8 @@
 				{
 					int studentID = Integer.parseInt(request.getParameter("students"));
 					int courseID = Integer.parseInt(request.getParameter("courses"));
+					System.out.println(courseID);
+					System.out.println(studentID);
 					if(EnrollmentController.checkStudentEnroll(courseID,studentID) != 1)
 					{
 						EnrollmentController.enrollCourse(courseID,studentID);
@@ -23,7 +25,7 @@
 					else
 					{
 						session.setAttribute("enroll","Student is already enrolled in this course.");
-						response.sendRedirect("enrollcourse.jsp");
+						response.sendRedirect("result.jsp");
 					}
 					
 				}

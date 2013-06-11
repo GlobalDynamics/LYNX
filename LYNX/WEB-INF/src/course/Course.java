@@ -20,6 +20,13 @@ public class Course extends Manager {
 		teacherID = tid;
 		subjectName = suname;
 	}
+	public Course(int c, int s, String n, String sname)
+	{
+		courseID = c;
+		subjectID = s;
+		name = n;
+		shortName = sname;
+	}
 	public String getCourse()
 	{
 		return String.valueOf(courseID);
