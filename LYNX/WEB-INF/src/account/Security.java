@@ -20,8 +20,12 @@ public class Security {
 				  }
 						  
 			}
-			return "Password is not complex enough.";
+			return "Password is not complex enough. ";
 		}
-		return "Invalid passwords.";
+		return "Passwords do not match. ";
+	}
+	public static boolean isEmpty(String pass1, String pass2)
+	{
+		return (pass1.isEmpty() && pass2.isEmpty() ? true:false);
 	}
 }

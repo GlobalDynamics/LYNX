@@ -13,6 +13,7 @@ public class Person extends Manager {
 	private String birthDate;
 	private  int personID;
 	private String username;
+
 	public Person(String fname, String lname, String mname, int pID, String suf, int aID, int adID, String gnr, String date,String usr)
 	{
 		  firstName = fname;
@@ -68,5 +69,9 @@ public class Person extends Manager {
 	{
 		return username;
 		
+	}
+	public String getAddress()
+	{
+		return String.valueOf(addressID);
 	}
 }

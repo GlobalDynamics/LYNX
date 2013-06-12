@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 
 public class CreateAccount extends lynx.Manager {
@@ -84,6 +85,30 @@ public class CreateAccount extends lynx.Manager {
 			rs.close();
 		}
 
+	}
+	
+	public static void editAccount(int personID, String password1, String password2, String userName) throws SQLException, UnsupportedEncodingException, NoSuchAlgorithmException
+	{
+		if(Security.isEmpty(password1, password2) || Security.complexityTest(password1, password2) != "true")
+			return;
+				
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		SQL = "UPDATE accounts SET hash = ?,salt = ? WHERE personID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
+		String[] finalpass = Authenticate.auth(password1, password2,
+				userName);
+		stmt.setString(1, finalpass[0]);
+		stmt.setString(2, finalpass[1]);
+		stmt.setInt(3, personID);
+		try {
+			stmt.executeUpdate();
+			con.commit();
+		} finally {
+			con.close();
+			stmt.close();
+		}
+		
 	}
 
 }

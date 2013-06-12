@@ -1,5 +1,6 @@
 <%@ page import="account.Login" %>
 <%@ page import="account.Security" %>
+<%@ page import="account.CreateAccount" %>
 <%@ page import="person.PersonController" %>
 <%@ page import="person.AddressController" %>
 <%
@@ -64,9 +65,11 @@
 						 String address = AddressController.validateAddress(street.length(), zip.length(), city.length(), country.length(), direction.length(), state.length(), apt.length(), house.length(), phone.length());
 						 if(personValidate == "true" && secure == "true" && address =="true")
 							{
-							 PersonController.addPerson(fname,  lname,  mname,  suf, 1, 1, gen, birth,password1,password2,username);
-							 AddressController.createAddress(street, zip, city, country, direction, state, apt, house, phone, email);
-								response.sendRedirect("addperson.jsp");
+							 int addressID = AddressController.createAddress(street, zip, city, country, direction, state, apt, house, phone, email);
+							 PersonController.addPerson(fname,  lname,  mname,  suf, 1, addressID, gen, birth,password1,password2,username);
+							 
+							 //PersonController.editPerson(personID, fname,  lname,  mname,  suf, 1, 1, gen, birth,password1,password2,username);
+							response.sendRedirect("addperson.jsp");
 							}
 							else
 							{
@@ -84,6 +87,8 @@
 				else if(((String) request.getParameter("type")).equals("ePerson"))
 				{
 					int personID = Integer.parseInt(request.getParameter("personID"));
+					int addressID = Integer.parseInt(request.getParameter("addressID"));
+					
 					fname = (String) request.getParameter("fname");
 					 lname = (String) request.getParameter("lname");
 					 mname = (String) request.getParameter("mname");
@@ -102,19 +107,25 @@
 						zip = (String) request.getParameter("zip");
 						country = (String) request.getParameter("country");
 						direction = (String) request.getParameter("dir");
+						house = ((String) request.getParameter("house") != null) ? (String) request.getParameter("house"): "";
+						apt = ((String) request.getParameter("apt") != null) ? (String) request.getParameter("apt"): "";
 						
 						//contact
 						
-						 phone = (String) request.getParameter("phone");
-						 email = (String) request.getParameter("email");
+						  phone = (String) request.getParameter("phone");
+						 email = ((String) request.getParameter("email") != null) ?(String) request.getParameter("email") : "";
 					 
 					 String personValidate = PersonController.validateData(fname.length(), lname.length(), mname.length(), suf.length(), gen.length(), birth);
-					 String secure = (String) Security.complexityTest(password1, password2);
-					 if(personValidate == "true" && secure == "true")
+					 String secure = Security.complexityTest(password1, password2);
+					 secure = (Security.isEmpty(password1, password2) || Security.complexityTest(password1, password2) == "true") ? "true":secure;
+					 String address = AddressController.validateAddress(street.length(), zip.length(), city.length(), country.length(), direction.length(), state.length(), apt.length(), house.length(), phone.length());
+					 if(personValidate == "true" && secure == "true" && address == "true")
 						{
 						 PersonController.editPerson(personID, fname, lname, mname,
-								 suf, 1, 1, gen,  birth,
+								 suf, gen,  birth,
 								 password1,  password2, username);
+						 CreateAccount.editAccount(personID, password1, password2, username);
+						 AddressController.editAddress(addressID, street, zip, city, country, direction, state, apt, house, phone, email);
 						response.sendRedirect("epreview.jsp");
 						}
 						else

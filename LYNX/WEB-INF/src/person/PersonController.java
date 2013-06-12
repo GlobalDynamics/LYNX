@@ -43,7 +43,7 @@ public class PersonController extends lynx.Manager {
 			PreparedStatement stmt = con.prepareStatement(SQL);
 			System.out.println(SQL);
 			stmt.setInt(1, CreateAccount.getAccountByUserName(username));
-			stmt.setInt(2, 1);
+			stmt.setInt(2, adID);
 			stmt.setString(3, lname);
 			stmt.setString(4, fname);
 			stmt.setString(5, mname);
@@ -100,7 +100,7 @@ public class PersonController extends lynx.Manager {
 	}
 
 	public static void editPerson(int personID, String fname, String lname,
-			String mname, String suf, int aID, int adID, String gnr,
+			String mname, String suf, String gnr,
 			String date, String password1, String password2, String userName)
 			throws SQLException, NoSuchAlgorithmException, IOException,
 			ParseException
@@ -110,28 +110,22 @@ public class PersonController extends lynx.Manager {
 				&& CreateAccount.getAccountByPersonID(personID) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
-			SQL = "UPDATE person SET addressID = ?, lastName = ?,firstName = ?,middleName = ?,suffix = ?,gender = ?,birthDate = ? "
-					+ "WHERE personID = ?"
-					+ "\n UPDATE accounts SET hash = ?,salt = ? WHERE personID = ?";
+			SQL = "UPDATE person SET lastName = ?,firstName = ?,middleName = ?,suffix = ?,gender = ?,birthDate = ? "
+					+ "WHERE personID = ?";
 			PreparedStatement stmt = con.prepareStatement(SQL);
 			System.out.println(SQL);
-			stmt.setInt(1, 1);
-			stmt.setString(2, lname);
-			stmt.setString(3, fname);
-			stmt.setString(4, mname);
-			stmt.setString(5, suf);
-			stmt.setString(6, gnr);
+			stmt.setString(1, lname);
+			stmt.setString(2, fname);
+			stmt.setString(3, mname);
+			stmt.setString(4, suf);
+			stmt.setString(5, gnr);
 			DateFormat DOB = new SimpleDateFormat("yyyy-MM-dd");
 			java.sql.Date convertedDate = new java.sql.Date(DOB.parse(date)
 					.getTime());
 			;
-			stmt.setDate(7, convertedDate);
-			stmt.setInt(8, personID);
-			String[] finalpass = Authenticate.auth(password1, password2,
-					userName);
-			stmt.setString(9, finalpass[0]);
-			stmt.setString(10, finalpass[1]);
-			stmt.setInt(11, personID);
+			stmt.setDate(6, convertedDate);
+			stmt.setInt(7, personID);
+			
 			try {
 				stmt.executeUpdate();
 				con.commit();
@@ -566,7 +560,7 @@ public class PersonController extends lynx.Manager {
 	public static Person getPerson(int personID) throws SQLException {
 		Connection con = cpds.getConnection();
 		con.setAutoCommit(false);
-		SQL = "SELECT person.personID, person.accountID,firstName,lastName,middleName,suffix,gender,birthDate, a.username FROM person \r\n"
+		SQL = "SELECT person.personID, person.accountID,firstName,lastName,middleName,suffix,gender,birthDate, a.username, person.addressID FROM person \r\n"
 				+ "INNER JOIN accounts a ON a.personID = person.personID\r\n"
 				+ "WHERE person.personID = ?";
 		PreparedStatement stmt = con.prepareStatement(SQL,
@@ -584,7 +578,7 @@ public class PersonController extends lynx.Manager {
 				return new Person(rs.getString("firstName"),
 						rs.getString("lastName"), rs.getString("middleName"),
 						rs.getInt("personID"), rs.getString("suffix"),
-						rs.getInt("accountID"), 1, rs.getString("gender"),
+						rs.getInt("accountID"), rs.getInt("addressID"), rs.getString("gender"),
 						rs.getString("birthDate"), rs.getString("username"));
 
 			}

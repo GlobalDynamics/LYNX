@@ -1,5 +1,6 @@
 <%@ page import="account.Login" %>
 <%@ page import="person.PersonController" %>
+<%@ page import="person.AddressController" %>
 <%@ page import="person.Address" %>
 <%@ page import="person.Person" %>
 <%
@@ -15,6 +16,20 @@
 		String birth = null;
 		String user = null;
 		int personID = -1;
+		int addressID = -1;
+		
+		String street = null;
+		String state = null;
+		String city = null;
+		String zip = null;
+		String country = null;
+		String direction = null;
+		String house = "";
+		
+		String apt = "";
+		
+		String phone = null;
+		String email = "";
 
 		if (login.equals("1")) {
 			String username = (String) session.getAttribute("username");
@@ -24,6 +39,8 @@
 				{
 					Person temp = PersonController.getPerson(Integer.parseInt(request.getParameter("people")));
 					 personID = Integer.parseInt(temp.getID());
+					 addressID = Integer.parseInt(temp.getAddress());
+					 Address ad = AddressController.getAddress(addressID);
 					 fname = temp.getFirstName();
 					 lname = temp.getLastName();
 					 mname = temp.getMiddleName();
@@ -31,6 +48,22 @@
 					 gen = temp.getGender();
 					 birth = temp.getBirth();
 					 user = temp.getUser();
+					 
+					 
+					 //Address
+					 
+					street = ad.street;
+					state = ad.state;
+					city = ad.city;
+					zip = ad.zipcode;
+					apt = ad.apt;
+					house = ad.house;
+					country = ad.country;
+					direction = ad.direction;
+					phone = ad.phone;
+					email = ad.email;
+					 
+					 
 					//PersonController.editPerson(personID,fname,  lname,  mname,  suf, 1, 1, gen, birth,password1,password2);
 				}
 			}
@@ -219,7 +252,8 @@
                 	<div class="inner">
 						
 						<input type="hidden" name="type" id = "type" value="ePerson">
-						<input type="hidden" name="personID" id = "type" value="<%=personID%>">
+						<input type="hidden" name="personID" id = "personID" value="<%=personID%>">
+						<input type="hidden" name="addressID" id = "addressID" value="<%=addressID%>">
                     	<div class="titlebar"><span class="icon entypo white browser"></span> <span class="w-icon">Standard Fields</span></div>
                         <div class="contents">
                         	
@@ -282,7 +316,7 @@
 									<label>House Number</label>
 									<div class="field-box">
 										<input id="house" name="house" type="text"
-											maxlength = "10" class="large">
+											maxlength = "10" class="large" value =  "<%=house%>">
 									</div>
 									<div class="clear"></div>
 								</div>
@@ -291,7 +325,7 @@
 									<label>Apartment Number</label>
 									<div class="field-box">
 										<input id="apt" name="apt" type="text"
-											maxlength = "10" class="large">
+											maxlength = "10" class="large" value =  "<%=apt%>">
 									</div>
 									<div class="clear"></div>
 								</div>
@@ -299,7 +333,7 @@
 								<div class="row">
 									<label>Street</label>
 									<div class="field-box">
-										<input id="street" name="street" type="text" maxlength = "100" class="large">
+										<input id="street" name="street" type="text" maxlength = "100" class="large" value =  "<%=street%>">
 									</div>
 									<div class="clear"></div>
 								</div>
@@ -308,7 +342,7 @@
 									<label>State</label>
 									<div class="field-box">
 										<input id="state" name="state" type="text"
-											maxlength = "15" class="large">
+											maxlength = "15" class="large" value =  "<%=state%>">
 									</div>
 									<div class="clear"></div>
 								</div>
@@ -317,7 +351,7 @@
 									<label>City</label>
 									<div class="field-box">
 										<input id="city" name="city" type="text"
-											maxlength = "20" class="large">
+											maxlength = "20" class="large" value =  "<%=city%>">
 									</div>
 									<div class="clear"></div>
 								</div>
@@ -326,7 +360,7 @@
 									<label>Direction</label>
 									<div class="field-box">
 										<input id="dir" name="dir" type="text"
-											maxlength = "1" class="large">
+											maxlength = "1" class="large" value =  "<%=direction%>">
 									</div>
 									<div class="clear"></div>
 								</div>
@@ -335,7 +369,7 @@
 									<label>Zip Code</label>
 									<div class="field-box">
 										<input id="zip" name="zip" type="text"
-											maxlength = "10" class="large">
+											maxlength = "10" class="large" value =  "<%=zip%>">
 									</div>
 									<div class="clear"></div>
 								</div>
@@ -344,7 +378,7 @@
 									<label>Country</label>
 									<div class="field-box">
 										<input id="country" name="country" type="text"
-											maxlength = "20" class="large">
+											maxlength = "20" class="large" value =  "<%=country%>">
 									</div>
 									<div class="clear"></div>
 								</div>
@@ -370,7 +404,7 @@
 								<div class="row">
 									<label>User Name</label>
 									<div class="field-box">
-										<input id="username" name="username" type="text" class="large">
+										<input id="username" name="username" type="text" class="large" value =  "<%=user%>">
 									</div>
 									<div class="clear"></div>
 								</div>
@@ -417,7 +451,7 @@
 									<label>Phone Number</label>
 									<div class="field-box">
 										<input id="phone" name="phone" type="text"
-											maxlength = "11" class="large">
+											maxlength = "11" class="large" value =  "<%=phone%>">
 									</div>
 									
 									</div>
@@ -425,7 +459,7 @@
 									<label>E-Mail Address</label>
 									<div class="field-box">
 										<input id="email" name="email" type="text"
-											maxlength = "50" class="large">
+											maxlength = "50" class="large" value =  "<%=email%>">
 									</div>
 									</div>
 								
