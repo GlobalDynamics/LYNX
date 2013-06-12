@@ -452,7 +452,7 @@
 									<label>Phone Number</label>
 									<div class="field-box">
 										<input id="phone" name="phone" type="text"
-											maxlength = "11" class="large">
+											maxlength = "10" class="large">
 									</div>
 									
 									</div>

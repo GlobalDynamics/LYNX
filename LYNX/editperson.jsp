@@ -451,7 +451,7 @@
 									<label>Phone Number</label>
 									<div class="field-box">
 										<input id="phone" name="phone" type="text"
-											maxlength = "11" class="large" value =  "<%=phone%>">
+											maxlength = "10" class="large" value =  "<%=phone%>">
 									</div>
 									
 									</div>
