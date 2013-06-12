@@ -44,4 +44,10 @@ public class AddressController extends lynx.Manager{
 			stmt.close();
 		}
 	}
+	
+	public static Address[] getAddress(int addressID)
+	{
+		return null;
+		
+	}
 }

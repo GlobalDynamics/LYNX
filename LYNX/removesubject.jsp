@@ -100,7 +100,7 @@
 							 <a href="logout.jsp"
 								class="logout">Logout</a>
 								<br>
-								<form name = "ap" id = "ap" method = "post" action = "addsubject.jsp">
+								<form name = "ap" id = "ap" method = "post" action = "removesubject.jsp">
 								
 								<div class="field-box">
 								<select id = "calendars" name = "calendars" data-placeholder="No Data" onchange="this.form.submit();" style="width:350px;" class="chzn-select" tabindex="6">
