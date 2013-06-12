@@ -117,7 +117,7 @@ public class CourseController extends lynx.Manager {
 		}
 	}
 
-	public static int getCount(countType type, int id) throws SQLException {
+	public static int getCount(countType type, int id,int sid) throws SQLException {
 		con = cpds.getConnection();
 		if (type == countType.SUBJECTS) {
 			SQL = "SELECT COUNT(*) as total_rows FROM [subject]";
@@ -133,6 +133,9 @@ public class CourseController extends lynx.Manager {
 		else if (type == countType.COURSES_FROM_SUBJECTS) {
 			SQL = "SELECT COUNT(*) as total_rows FROM course WHERE subjectID = ?";
 		}
+		else if (type == countType.COURSES_CALENDAR_STUDENT) {
+			SQL = "SELECT COUNT(*) as total_rows FROM enrollment WHERE studentID = ? AND calendarID = ?";
+		}
 
 		System.out.println(SQL);
 		PreparedStatement stmt = con.prepareStatement(SQL,
@@ -143,6 +146,11 @@ public class CourseController extends lynx.Manager {
 				|| type == countType.COURSE_ENROLLMENT_COUNT
 				||type ==countType.COURSES_FROM_SUBJECTS) {
 			stmt.setInt(1, id);
+		}
+		else if(type == countType.COURSES_CALENDAR_STUDENT)
+		{
+			stmt.setInt(1, id);
+			stmt.setInt(2,sid);
 		}
 
 		try {
@@ -202,7 +210,7 @@ public class CourseController extends lynx.Manager {
 	}
 
 	public static Subject[] getSubjects() throws SQLException {
-		int totalPeople = getCount(countType.SUBJECTS, 0);
+		int totalPeople = getCount(countType.SUBJECTS, 0,0);
 		System.out.println(totalPeople);
 		Subject[] people = new Subject[totalPeople];
 		Connection con = cpds.getConnection();
@@ -239,7 +247,7 @@ public class CourseController extends lynx.Manager {
 	}
 
 	public static Subject[] getSubjects(int calendarID) throws SQLException {
-		int totalPeople = getCount(countType.SUBJECT_CALENDAR, calendarID);
+		int totalPeople = getCount(countType.SUBJECT_CALENDAR, calendarID,0);
 		System.out.println(totalPeople);
 		Subject[] people = new Subject[totalPeople];
 		Connection con = cpds.getConnection();
@@ -277,7 +285,7 @@ public class CourseController extends lynx.Manager {
 	}
 
 	public static Course[] getCourses() throws SQLException {
-		int totalPeople = getCount(countType.COURSES, 0);
+		int totalPeople = getCount(countType.COURSES, 0,0);
 		System.out.println(totalPeople);
 		Course[] people = new Course[totalPeople];
 		Connection con = cpds.getConnection();
@@ -318,7 +326,7 @@ public class CourseController extends lynx.Manager {
 	}
 
 	public static Course[] getCourses(int calendarID) throws SQLException {
-		int totalPeople = getCount(countType.COURSES_CALENDAR, calendarID);
+		int totalPeople = getCount(countType.COURSES_CALENDAR, calendarID,0);
 		System.out.println(totalPeople);
 		Course[] people = new Course[totalPeople];
 		Connection con = cpds.getConnection();
@@ -361,7 +369,7 @@ public class CourseController extends lynx.Manager {
 	}
 	
 	public static Course[] getCoursesBySubject(int subjectID) throws SQLException {
-		int totalPeople = getCount(countType.COURSES_FROM_SUBJECTS, subjectID);
+		int totalPeople = getCount(countType.COURSES_FROM_SUBJECTS, subjectID,0);
 		System.out.println(totalPeople);
 		Course[] people = new Course[totalPeople];
 		Connection con = cpds.getConnection();
@@ -399,10 +407,52 @@ public class CourseController extends lynx.Manager {
 		}
 
 	}
+	
+	public static Course[] getCoursesByStudent(int studentID, int calendarID) throws SQLException {
+		int totalPeople = getCount(countType.COURSES_CALENDAR_STUDENT, studentID,calendarID);
+		System.out.println(totalPeople);
+		Course[] people = new Course[totalPeople];
+		Connection con = cpds.getConnection();
+
+		SQL = "SELECT c.courseID, c.name, c.shortName, c.subjectID, e.enrollmentID FROM course c\r\n" + 
+				"INNER JOIN enrollment e ON e.courseID = c.courseID\r\n" + 
+				"WHERE e.studentID = ? AND e.calendarID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, studentID);
+		stmt.setInt(2, calendarID);
+		System.out.println(SQL);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return null;
+
+			} else {
+				rs.beforeFirst();
+
+				int i = 0;
+				while (rs.next()) {
+					people[i] = new Course(rs.getInt("courseID"),
+							rs.getInt("subjectID"), rs.getString("name"),
+							rs.getString("shortName"), rs.getString("enrollmentID"));
+					i++;
+				}
+				return people;
+
+			}
+		} finally {
+			stmt.close();
+			con.close();
+			rs.close();
+
+		}
+
+	}
 
 	public static Course[] getCoursesNotEnrolled(int studentID)
 			throws SQLException {
-		int totalPeople = getCount(countType.COURSES, 0);
+		int totalPeople = getCount(countType.COURSES, 0,0);
 		System.out.println(totalPeople);
 		Course[] people = new Course[totalPeople];
 		Connection con = cpds.getConnection();
@@ -447,7 +497,7 @@ public class CourseController extends lynx.Manager {
 	public static Enrollment[] getCoursesIsEnrolled(int studentID)
 			throws SQLException {
 		int totalPeople = getCount(countType.STUDENT_ENROLLMENT_COUNT,
-				studentID);
+				studentID,0);
 		System.out.println(totalPeople);
 		Enrollment[] people = new Enrollment[totalPeople];
 		Connection con = cpds.getConnection();
@@ -495,7 +545,7 @@ public class CourseController extends lynx.Manager {
 	public static Enrollment[] getCoursesWithGrades(int studentID)
 			throws SQLException {
 		int totalPeople = getCount(countType.STUDENT_ENROLLMENT_COUNT,
-				studentID);
+				studentID,0);
 		System.out.println(totalPeople);
 		Enrollment[] people = new Enrollment[totalPeople];
 		Connection con = cpds.getConnection();

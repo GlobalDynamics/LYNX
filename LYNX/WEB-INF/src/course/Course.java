@@ -9,6 +9,7 @@ public class Course extends Manager {
 	private String shortName;
 	private int teacherID;
 	private String subjectName;
+	private String enrollmentID;
 	
 	
 	public Course(int c, int s, String n, String sname, int tid, String suname)
@@ -27,6 +28,14 @@ public class Course extends Manager {
 		name = n;
 		shortName = sname;
 	}
+	public Course(int c, int s, String n, String sname, String eid)
+	{
+		courseID = c;
+		subjectID = s;
+		name = n;
+		shortName = sname;
+		enrollmentID = eid;
+	}
 	public String getCourse()
 	{
 		return String.valueOf(courseID);
@@ -42,6 +51,10 @@ public class Course extends Manager {
 	public String getSubjectName()
 	{
 		return subjectName;
+	}
+	public String getEnroll()
+	{
+		return enrollmentID;
 	}
 	
 }

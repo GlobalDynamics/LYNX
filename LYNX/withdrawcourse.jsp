@@ -1,13 +1,27 @@
 <%@ page import="person.PersonController" %>
-<%@ page import="person.Student;" %>
+<%@ page import="person.Student" %>
+<%@ page import="schedule.CalendarController" %>
+<%@ page import="schedule.Calendar" %>
+<%@ page import="course.CourseController" %>
+<%@ page import="course.Course" %>
 <%
 	if (session.getAttribute("login") == null) {
 		response.sendRedirect("login.jsp");
 	} else {
 		String login = (String) session.getAttribute("login");
-
+		String studentID = null;
+		String calendarID = null;
 		if (login.equals("1")) {
 			String username = (String) session.getAttribute("username");
+			if((String) request.getParameter("students") != null)
+			{
+				studentID = (String) request.getParameter("students");
+			}
+			if((String) request.getParameter("calendars") != null)
+			{
+				calendarID = (String) request.getParameter("calendars");
+			}
+
 	%>
 
 	
@@ -87,6 +101,53 @@
 						<div class="links">
 							 <a href="logout.jsp"
 								class="logout">Logout</a>
+								<br>
+								<form name = "ap" id = "ap" method = "post" action = "withdrawcourse.jsp">
+								
+								<div class="field-box">
+								<select id = "calendars" name = "calendars" data-placeholder="No Data" onchange="this.form.submit();" style="width:350px;" class="chzn-select" tabindex="6">
+                                       <%
+                                       
+                                      Calendar[] calendars = CalendarController.getCalendars();
+                                       if(calendars != null)
+                                       {
+                                    	   for(Calendar value : calendars)
+                                           {
+                                    		   if(calendarID != null)
+                                    		   {
+                                    			   if(value.getID().equals(calendarID))
+                                        		   {
+                                        			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\" selected>" + value.getName() + "</option>");
+                                        		   }
+                                        		   else
+                                        		   {
+                                        			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
+                                        		   }  
+                                    		   }
+                                    		   else
+                                    		   {
+                                    			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
+                                    		   }
+                                    		  
+                                        	   
+                                           }
+                                    	   if(calendars.length ==1 || (calendars != null && calendarID == null))
+                                           {
+                                        	   calendarID = calendars[0].getID();
+                                           }
+                                       }
+                                       else
+                                       {
+                                    	  
+                                       }
+                                       
+                                      
+                                       
+                                       %>
+                                        
+                                    </select>
+                                    </div>
+                                    </form>
 						</div>
 						
 					</div>
@@ -179,8 +240,7 @@
                
             <div class="clear"></div>
             
-             <form name = "ap" id = "ap" method = "post" action = "withdrawcourse1.jsp">
-             <input type="hidden" name="type" id = "type" value="rEnroll">
+             
 						
             <div class="one-half">
             	<div class="box">
@@ -189,9 +249,12 @@
                         <div class="contents">
             			
             <div class="row">
+            <form name = "stu" id = "stu" method = "post" action = "withdrawcourse.jsp">
+             <input type="hidden" name="type" id = "type" value="rEnroll">
+             <input type="hidden" name="calendars" id = "calendars" value="<%=calendarID%>">
+
             
-            <p>Select a student to remove</p>
-                            	<label>Select a student to remove</label> <div class="field-box">
+                            	<label>Select a student</label> <div class="field-box">
                                 	<select id = "students" name = "students" data-placeholder="No Data" style="width:350px;" class="chzn-select" tabindex="6">
                                        <%
                                        
@@ -201,6 +264,10 @@
                                     	   for(Student value : test)
                                            {
                                         	   out.println("<option id = \"" + value.getStudent() + "\"  value = \"" + value.getStudent() + "\">" + value.getName() + "</option>");
+                                           }
+                                    	   if(test.length ==1 || (test != null && studentID == null))
+                                           {
+                                        	   studentID = String.valueOf(test[0].getStudent());
                                            }
                                        }
                                        
@@ -212,7 +279,46 @@
                                     </select>
                                 </div>
                                 <div class="clear"></div>
+                                 </form>
                             </div>
+                            <form name = "course" id = "course" method = "post" action = "EnrollmentController.jsp">
+                            <input type="hidden" name="type" id = "type" value="rEnroll">
+                            <input type="hidden" name="calendars" id = "calendars" value="<%=studentID%>">
+                             <div class="row">
+            
+            				<p>Select a course to remove.</p>
+                            	<label>Select a course to remove</label> <div class="field-box">
+                                	<select id = "courses" name = "courses" data-placeholder="No Data" style="width:350px;" class="chzn-select" tabindex="6">
+                                       <%
+                                       
+                                       Course[] courses = null;
+                                       if(calendarID != null && studentID != null)
+                                       {
+                                    	   courses = CourseController.getCoursesByStudent(Integer.parseInt(studentID), Integer.parseInt(calendarID));
+                                    	   if(courses != null)
+                                           {
+                                        	   for(Course value : courses)
+                                               {
+                                            	   out.println("<option id = \"" + value.getEnroll() + "\"  value = \"" + value.getEnroll() + "\">" + value.getName() + "</option>");
+                                               }
+                                           }
+                                           
+                                        	 
+                                       }
+                                       
+                                       
+                                       
+                                      
+                                       
+                                       %>
+                                        
+                                    </select>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                            
+                            
+                            
                              <div class="bar-big">
                              <%
 
@@ -229,11 +335,12 @@
                              %>
                                                          
                             </div>
+                           </form>
                              </div>
                             </div>
                             </div>
                             </div>
-                            </form>
+                          
 			
 
            
