@@ -13,8 +13,10 @@ public class Person extends Manager {
 	private String birthDate;
 	private  int personID;
 	private String username;
+	public String ethinitiy;
+	public String language;
 
-	public Person(String fname, String lname, String mname, int pID, String suf, int aID, int adID, String gnr, String date,String usr)
+	public Person(String fname, String lname, String mname, int pID, String suf, int aID, int adID, String gnr, String date,String usr, String lang, String ethin)
 	{
 		  firstName = fname;
 		  lastName = lname;
@@ -26,6 +28,8 @@ public class Person extends Manager {
 		  gender = gnr;
 		  birthDate = date;
 		  username = usr;
+		  ethinitiy = ethin;
+		  language = lang;
 	}
 	public Person(String fname, String lname, int pID)
 	{

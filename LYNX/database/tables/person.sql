@@ -9,7 +9,9 @@ BEGIN
 		firstName VARCHAR(50) NOT NULL,
 		middleName VARCHAR(50) NOT NULL,
 		suffix VARCHAR(4) NOT NULL,
-		gender VARCHAR(2) NOT NULL,
-		birthDate DATE NOT NULL
+		gender VARCHAR(5) NOT NULL,
+		birthDate DATE NOT NULL,
+		[language] VARCHAR(15) NOT NULL,
+		ethinicity VARCHAR(20) NOT NULL
 	)
 END

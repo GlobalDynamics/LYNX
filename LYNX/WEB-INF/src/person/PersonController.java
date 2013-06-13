@@ -9,8 +9,11 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import account.Authenticate;
+import org.apache.commons.lang3.text.WordUtils;
 import account.CreateAccount;
 import lynx.ITypes.*;
 
@@ -19,15 +22,24 @@ public class PersonController extends lynx.Manager {
 	private static String SQL;
 	private static ResultSet rs;
 
+	public static final String[] languageList = new String[] { "N/A",
+			"English", "Arabic", "Bengali", "Chinese", "French", "German",
+			"Hindi", "Italian", "Japanese", "Korean", "Malay", "Polish",
+			"Portuguese", "Russian", "Somali", "Spanish", "Thai", "Turkish",
+			"Urdu", "Vietnamese" };
+	public static final String[] ethinicityList = new String[] { "N/A",
+			"White, Non-Hispanic", "Black, Non-Hispanic", "Hispanic",
+			"American Indian or Native Alaskan", "Pacific Islander" };
+
 	public PersonController() throws SQLException {
 
 	}
 
 	public static void addPerson(String fname, String lname, String mname,
 			String suf, int aID, int adID, String gnr, String date,
-			String password1, String password2, String username)
-			throws SQLException, NoSuchAlgorithmException, IOException,
-			ParseException
+			String language, String ethinicity, String password1,
+			String password2, String username) throws SQLException,
+			NoSuchAlgorithmException, IOException, ParseException
 
 	{
 		int test = CreateAccount.getAccountByUserName(username);
@@ -35,18 +47,18 @@ public class PersonController extends lynx.Manager {
 		if (checkByID(CreateAccount.getAccountByUserName(username),
 				checkType.ACCOUNT) == 0) {
 			CreateAccount.createAccount(password1, password2, username);
-			
+
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
-			SQL = "INSERT INTO person(accountID,addressID,lastName,firstName,middleName,suffix,gender,birthDate) "
-					+ "VALUES(?,?,?,?,?,?,?,?)";
+			SQL = "INSERT INTO person(accountID,addressID,lastName,firstName,middleName,suffix,gender,birthDate, [language], ethinicity) "
+					+ "VALUES(?,?,?,?,?,?,?,?,?,?)";
 			PreparedStatement stmt = con.prepareStatement(SQL);
 			System.out.println(SQL);
 			stmt.setInt(1, CreateAccount.getAccountByUserName(username));
 			stmt.setInt(2, adID);
-			stmt.setString(3, lname);
-			stmt.setString(4, fname);
-			stmt.setString(5, mname);
+			stmt.setString(3,  WordUtils.capitalizeFully(lname));
+			stmt.setString(4,  WordUtils.capitalizeFully(fname));
+			stmt.setString(5,  WordUtils.capitalizeFully(mname));
 			stmt.setString(6, suf);
 			stmt.setString(7, gnr);
 			DateFormat DOB = new SimpleDateFormat("yyyy-MM-dd");
@@ -55,6 +67,8 @@ public class PersonController extends lynx.Manager {
 
 			// java.sql.Date sqlToday = new java.sql.Date(convertedDate);
 			stmt.setDate(8, convertedDate);
+			stmt.setString(9, language);
+			stmt.setString(10, ethinicity);
 			try {
 				stmt.executeUpdate();
 				con.commit();
@@ -100,8 +114,8 @@ public class PersonController extends lynx.Manager {
 	}
 
 	public static void editPerson(int personID, String fname, String lname,
-			String mname, String suf, String gnr,
-			String date, String password1, String password2, String userName)
+			String mname, String suf, String gnr, String date,String language, String ethinicity,
+			String password1, String password2, String userName)
 			throws SQLException, NoSuchAlgorithmException, IOException,
 			ParseException
 
@@ -110,13 +124,13 @@ public class PersonController extends lynx.Manager {
 				&& CreateAccount.getAccountByPersonID(personID) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
-			SQL = "UPDATE person SET lastName = ?,firstName = ?,middleName = ?,suffix = ?,gender = ?,birthDate = ? "
+			SQL = "UPDATE person SET lastName = ?,firstName = ?,middleName = ?,suffix = ?,gender = ?,birthDate = ?, ethinicity = ?, language = ? "
 					+ "WHERE personID = ?";
 			PreparedStatement stmt = con.prepareStatement(SQL);
 			System.out.println(SQL);
-			stmt.setString(1, lname);
-			stmt.setString(2, fname);
-			stmt.setString(3, mname);
+			stmt.setString(1, WordUtils.capitalizeFully(lname));
+			stmt.setString(2, WordUtils.capitalizeFully(fname));
+			stmt.setString(3, WordUtils.capitalizeFully(mname));
 			stmt.setString(4, suf);
 			stmt.setString(5, gnr);
 			DateFormat DOB = new SimpleDateFormat("yyyy-MM-dd");
@@ -124,8 +138,10 @@ public class PersonController extends lynx.Manager {
 					.getTime());
 			;
 			stmt.setDate(6, convertedDate);
-			stmt.setInt(7, personID);
-			
+			stmt.setString(7, ethinicity);
+			stmt.setString(8, language);
+			stmt.setInt(9, personID);
+
 			try {
 				stmt.executeUpdate();
 				con.commit();
@@ -153,68 +169,178 @@ public class PersonController extends lynx.Manager {
 		}
 
 	}
-	
-	public static String validateData(int fname,int lname, int mname, int suf, int gen, String date) throws ParseException
+	public static List<String> getSelectList(String type) throws SQLException
 	{
-	
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		SQL = "SELECT data FROM metaData WHERE [type] = ?";
+		List<String> list = new ArrayList<String>();
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setString(1, type);
+		try {
+			rs = stmt.executeQuery();
+		} finally {
+			if (!rs.isBeforeFirst()) {
+				stmt.close();
+				con.close();
+			} else {
+				rs.beforeFirst();
+				while (rs.next())
+				{									
+					list.add(rs.getString("data"));				
+				}
+				stmt.close();
+				con.close();
+				rs.close();
+				
 
-		if(fname <= 50 && lname <= 50 && mname <50 && suf <= 4 && gen <=2  && fname > 0 && lname > 0 && mname > 0 && suf > 0 && gen > 0 && isValidDate(date.replace("-", "")))
-		{
+			}
+		}
+		return list;
+	
+		
+		
+	}
+
+	public static String validateData(int fname, int lname, int mname, String suf,
+			String gen, String date, String language, String country,
+			String ethinicity) throws ParseException, SQLException {
+
+		if (fname <= 50 && lname <= 50 && mname < 50  
+				&& fname > 0 && lname > 0 && mname > 0
+				&& isValidDate(date.replace("-", ""))
+				&& validateMeta(language,"language") && validateMeta(country,"country")
+				&& validateMeta(ethinicity,"ethinicity")
+				&& validateMeta(suf,"suffix")
+				&& validateMeta(gen,"gender")) {
 			return "true";
 		}
-		return "The demographic infomation is either to long or to short";
+		return "The demographic infomation is invalid. ";
+	}
+
+	public static boolean isValidLanguage(String lang) {
+		if (Arrays.asList(languageList).contains(lang))
+			return true;
+
+		return false;
+
+	}
+
+	public static boolean isValidEthinicity(String ethinicity) {
+		if (Arrays.asList(ethinicityList).contains(ethinicity))
+			return true;
+		return false;
+	}
+
+	public static boolean isValidCountry(String country) throws SQLException
+
+	{
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		SQL = "SELECT data FROM metaData WHERE data = ? AND [type] = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		System.out.println(SQL);
+		stmt.setString(1, country);
+		stmt.setString(2, "country");
+		try {
+			rs = stmt.executeQuery();
+		} finally {
+			if (!rs.isBeforeFirst()) {
+				stmt.close();
+				con.close();
+
+				return false;
+			} else {
+				stmt.close();
+				con.close();
+				rs.close();
+
+			}
+		}
+		return true;
 	}
 	
+	public static boolean validateMeta(String data, String type) throws SQLException
+
+	{
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		SQL = "SELECT data FROM metaData WHERE data = ? AND [type] = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		System.out.println(SQL);
+		stmt.setString(1, data);
+		stmt.setString(2, type);
+		try {
+			rs = stmt.executeQuery();
+		} finally {
+			if (!rs.isBeforeFirst()) {
+				stmt.close();
+				con.close();
+
+				return false;
+			} else {
+				stmt.close();
+				con.close();
+				rs.close();
+
+			}
+		}
+		return true;
+	}
+
 	public static boolean isValidDate(String dateString) {
 		System.out.println(dateString);
-	    if (dateString == null || dateString.length() != "yyyyMMdd".length()) {
-	    	System.out.println("invalid");
-	        return false;
-	    }
+		if (dateString == null || dateString.length() != "yyyyMMdd".length()) {
+			System.out.println("invalid");
+			return false;
+		}
 
-	    int date;
-	    try {
-	        date = Integer.parseInt(dateString);
-	    } catch (NumberFormatException e) {
-	        return false;
-	    }
+		int date;
+		try {
+			date = Integer.parseInt(dateString);
+		} catch (NumberFormatException e) {
+			return false;
+		}
 
-	    int year = date / 10000;
-	    int month = (date % 10000) / 100;
-	    int day = date % 100;
+		int year = date / 10000;
+		int month = (date % 10000) / 100;
+		int day = date % 100;
 
-	    // leap years calculation not valid before 1581
-	    boolean yearOk = (year >= 1581) && (year <= 2500);
-	    boolean monthOk = (month >= 1) && (month <= 12);
-	    boolean dayOk = (day >= 1) && (day <= daysInMonth(year, month));
+		// leap years calculation not valid before 1581
+		boolean yearOk = (year >= 1581) && (year <= 2500);
+		boolean monthOk = (month >= 1) && (month <= 12);
+		boolean dayOk = (day >= 1) && (day <= daysInMonth(year, month));
 
-	    return (yearOk && monthOk && dayOk);
+		return (yearOk && monthOk && dayOk);
 	}
-	
+
 	private static int daysInMonth(int year, int month) {
-	    int daysInMonth;
-	    switch (month) {
-	        case 1: // fall through
-	        case 3: // fall through
-	        case 5: // fall through
-	        case 7: // fall through
-	        case 8: // fall through
-	        case 10: // fall through
-	        case 12:
-	            daysInMonth = 31;
-	            break;
-	        case 2:
-	            if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
-	                daysInMonth = 29;
-	            } else {
-	                daysInMonth = 28;
-	            }
-	            break;
-	        default:
-	            // returns 30 even for nonexistant months 
-	            daysInMonth = 30;
-	    }
-	    return daysInMonth;
+		int daysInMonth;
+		switch (month) {
+		case 1: // fall through
+		case 3: // fall through
+		case 5: // fall through
+		case 7: // fall through
+		case 8: // fall through
+		case 10: // fall through
+		case 12:
+			daysInMonth = 31;
+			break;
+		case 2:
+			if (((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
+				daysInMonth = 29;
+			} else {
+				daysInMonth = 28;
+			}
+			break;
+		default:
+			
+			daysInMonth = 30;
+		}
+		return daysInMonth;
 	}
 
 	private static int checkByID(int id, checkType type) throws SQLException {
@@ -236,7 +362,7 @@ public class PersonController extends lynx.Manager {
 		stmt.setInt(1, id);
 		try {
 			rs = stmt.executeQuery();
-			con.commit();
+
 		} finally {
 			if (!rs.isBeforeFirst()) {
 				stmt.close();
@@ -274,9 +400,7 @@ public class PersonController extends lynx.Manager {
 			SQL = "SELECT COUNT(*) as total_rows FROM person p\r\n"
 					+ "WHERE NOT EXISTS (SELECT personID FROM student s WHERE s.personID = p.personID)\r\n"
 					+ "AND NOT EXISTS (SELECT personID FROM teacher t WHERE t.personID = p.personID)";
-		}
-		else if(type == countType.ACCOUNTS)
-		{
+		} else if (type == countType.ACCOUNTS) {
 			SQL = "SELECT COUNT(*) as total_rows FROM accounts";
 		}
 
@@ -560,7 +684,7 @@ public class PersonController extends lynx.Manager {
 	public static Person getPerson(int personID) throws SQLException {
 		Connection con = cpds.getConnection();
 		con.setAutoCommit(false);
-		SQL = "SELECT person.personID, person.accountID,firstName,lastName,middleName,suffix,gender,birthDate, a.username, person.addressID FROM person \r\n"
+		SQL = "SELECT person.personID, person.accountID,firstName,lastName,middleName,suffix,gender,birthDate, ethinicity, language, a.username, person.addressID FROM person \r\n"
 				+ "INNER JOIN accounts a ON a.personID = person.personID\r\n"
 				+ "WHERE person.personID = ?";
 		PreparedStatement stmt = con.prepareStatement(SQL,
@@ -578,8 +702,9 @@ public class PersonController extends lynx.Manager {
 				return new Person(rs.getString("firstName"),
 						rs.getString("lastName"), rs.getString("middleName"),
 						rs.getInt("personID"), rs.getString("suffix"),
-						rs.getInt("accountID"), rs.getInt("addressID"), rs.getString("gender"),
-						rs.getString("birthDate"), rs.getString("username"));
+						rs.getInt("accountID"), rs.getInt("addressID"),
+						rs.getString("gender"), rs.getString("birthDate"),
+						rs.getString("username"), rs.getString("language"), rs.getString("ethinicity"));
 
 			}
 		} finally {

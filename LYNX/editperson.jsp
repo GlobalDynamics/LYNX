@@ -3,6 +3,7 @@
 <%@ page import="person.AddressController" %>
 <%@ page import="person.Address" %>
 <%@ page import="person.Person" %>
+<%@ page import = "java.util.List" %>
 <%
 	if (session.getAttribute("login") == null) {
 		response.sendRedirect("login.jsp");
@@ -27,10 +28,17 @@
 		String house = "";
 		
 		String apt = "";
+		String ethinicity = null;
+		String language = null;
 		
 		String phone = null;
 		String email = "";
-
+		
+		List<String> countryList = null;
+		List<String> languageList = null;
+		List<String> ethinList = null;
+		List<String> suffixList = null;
+		List<String> genderList = null;
 		if (login.equals("1")) {
 			String username = (String) session.getAttribute("username");
 			if(request.getParameter("type") != null)
@@ -49,6 +57,9 @@
 					 birth = temp.getBirth();
 					 user = temp.getUser();
 					 
+					 ethinicity = temp.ethinitiy;
+					 language = temp.language;
+					 
 					 
 					 //Address
 					 
@@ -62,8 +73,12 @@
 					direction = ad.direction;
 					phone = ad.phone;
 					email = ad.email;
-					 
-					 
+					
+					 countryList = PersonController.getSelectList("country");
+					 languageList =  PersonController.getSelectList("language");
+					 ethinList =  PersonController.getSelectList("ethinicity");
+					 suffixList = PersonController.getSelectList("suffix");
+					 genderList = PersonController.getSelectList("gender");
 					//PersonController.editPerson(personID,fname,  lname,  mname,  suf, 1, 1, gen, birth,password1,password2);
 				}
 			}
@@ -83,53 +98,45 @@
 
 	<title>SIS Main Page</title>
 
-	<link rel="stylesheet"
-		href="css/dash/ui-lightness/jquery-ui-1.8.18.custom.css"
-		type="text/css" media="screen" />
-	<link rel="stylesheet" href="css/dash/jquery.jgrowl.css" type="text/css" />
-	<link rel="stylesheet" href="css/dash/jquery.jqplot.css" type="text/css" />
-	<link rel="stylesheet" href="css/dash/icons.css" type="text/css" />
-	<link rel="stylesheet" href="css/dash/forms.css" type="text/css" />
-	<link rel="stylesheet" href="css/dash/tables.css" type="text/css" />
-	<link rel="stylesheet" href="css/dash/ui.css" type="text/css" />
-	<link rel="stylesheet" href="css/dash/style.css" type="text/css" />
-	<link rel="stylesheet" href="css/dash/responsiveness.css"
-		type="text/css" />
+<link rel="stylesheet" href="css/dash/ui-lightness/jquery-ui-1.8.18.custom.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="css/dash/validationEngine.jquery.css" type="text/css"/>
+<link rel="stylesheet" href="css/dash/icons.css" type="text/css" />
+<link rel="stylesheet" href="css/dash/forms.css" type="text/css" />
+<link rel="stylesheet" href="css/dash/tables.css" type="text/css" />
+<link rel="stylesheet" href="css/dash/ui.css" type="text/css" />
+<link rel="stylesheet" href="css/dash/style.css" type="text/css" />
+<link rel="stylesheet" href="css/dash/responsiveness.css" type="text/css" />
 
-	<!-- jQuery -->
-	<script src="scripts/jquery-1.8.2.js"></script>
-	<script
-		src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
-	<!-- jqPlot -->
-	<script type="text/javascript" src="scripts/jquery.jqplot.min.js"></script>
-	<script type="text/javascript"
-		src="scripts/plugins/jqplot.barRenderer.min.js"></script>
-	<script type="text/javascript"
-		src="scripts/plugins/jqplot.highlighter.min.js"></script>
-	<script type="text/javascript"
-		src="scripts/plugins/jqplot.cursor.min.js"></script>
-	<script type="text/javascript"
-		src="scripts/plugins/jqplot.pointLabels.min.js"></script>
-	<script type="text/javascript"
-		src="scripts/plugins/jqplot.pieRenderer.min.js"></script>
-	<script type="text/javascript"
-		src="scripts/plugins/jqplot.donutRenderer.min.js"></script>
-	<!-- jgrowl -->
-	<script type="text/javascript" src="scripts/jquery.jgrowl.min.js"></script>
-	<!-- Knob -->
-	<script type="text/javascript" src="scripts/jquery.knob.js"></script>
-	<!-- WYSIHTML5 -->
-	<script type="text/javascript" src="scripts/jquery.wysihtml5.js"></script>
-	<!-- SparkLine -->
-	<script type="text/javascript" src="scripts/jquery.sparkline.js"></script>
+<!-- jQuery -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+<!-- Spinner -->
+<script type="text/javascript" src="scripts/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="scripts/jquery.ui.spinner.js"></script>
+<!-- Validation engine -->
+<script type="text/javascript" src="scripts/languages/jquery.validationEngine-en.js" charset="utf-8"></script>
+<script type="text/javascript" src="scripts/jquery.validationEngine.js"></script>
+<!-- Knob -->
+<script type="text/javascript" src="scripts/jquery.knob.js"></script>
+<!-- Masked inputs -->
+<script type="text/javascript" src="scripts/jquery.masked-inputs.js"></script>
+<!-- Chosen -->
+<script type="text/javascript" src="scripts/jquery.chosen.js"></script>
+<!-- Draggable Slider -->
+<script type="text/javascript" src="scripts/jquery.slider.js"></script>
+<!-- WYSIHTML5 -->
+<script type="text/javascript" src="scripts/jquery.wysihtml5.js"></script>
+<!-- iPhone Style Checkbox -->
+<script type="text/javascript" src="scripts/jquery.iphonecheckbox.js"></script>
+<!-- Minicolors -->
+<script type="text/javascript" src="scripts/jquery.minicolors.js"></script>
 
-	<script type="text/javascript" src="scripts/custom.js"></script>
+<!-- Caffeine custom JS -->
+<script type="text/javascript" src="scripts/custom.js"></script>
 
-
-
-	<!--[if IE]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
-	<!--[if lte IE 7]> <script src="scripts/IE8.js" type="text/javascript"></script> <![endif]-->
-	<!--[if lt IE 7]> <link rel="stylesheet" type="text/css" media="all" href="css/ie6.css"/> <![endif]-->
+<!--[if IE]> <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script> <![endif]--> 
+<!--[if lte IE 7]> <script src="scripts//IE8.js" type="text/javascript"></script> <![endif]--> 
+<!--[if lt IE 7]> <link rel="stylesheet" type="text/css" media="all" href="css/dash/ie6.css"/> <![endif]--> 
 
 	</head>
 
@@ -273,25 +280,124 @@
                                 <div class="clear"></div>
                             </div>
                             
-                            
                             <div class="row">
-                            	<label>Suffix</label> <div class="field-box"><input id = "suffix" name = "suffix" type="text" class="tiny" value =  "<%=suf%>"> </div>
+                            	<label>Suffix</label> <div class="field-box">
+                                	<select id = "suffix" name = "suffix">
+                                		<%
+                                     if(suffixList != null)
+                                     {
+                                    	 for (int i=0; i<suffixList.size(); i++)
+                                         {
+                                    		 String current = suffixList.get(i);
+                                    		 if(current.equals(suf))
+                                    		 {
+                                    			 out.println("<option value = \"" + current + "\" selected>" + current + "</option>");
+                                    		 }
+                                    		 else
+                                    		 {
+                                    			 out.println("<option value = \"" + current + "\">" + current + "</option>");
+                                    		 }
+                                    		
+                                         
+                                         } 
+                                     }
+                                    	%>
+                                	 </select>
+                                </div>
                                 <div class="clear"></div>
                             </div>
+
                             
                             <div class="row">
-                            	<label>Gender</label> <div class="field-box"><input id = "gender" name = "gender" type="text" class="tiny" value =  "<%=gen%>"> </div>
+                            	<label>Gender</label> <div class="field-box">
+                                	<select id = "gender" name = "gender">
+                                    	<%
+                                     if(genderList != null)
+                                     {
+                                    	 for (int i=0; i<genderList.size(); i++)
+                                         {
+                                    		 String current = genderList.get(i);
+                                    		 if(current.equals(gen))
+                                    		 {
+                                    			 out.println("<option value = \"" + current + "\" selected>" + current + "</option>");
+                                    		 }
+                                    		 else
+                                    		 {
+                                    			 out.println("<option value = \"" + current + "\">" + current + "</option>");
+                                    		 }
+
+                                    		
+                                         
+                                         } 
+                                     }
+                                    	%>
+                                    </select>
+                                </div>
                                 <div class="clear"></div>
                             </div>
                        
                               <div class="row">
                                 <label>Birthdate</label> 
                                 <div class="field-box">
-                                	<span class="icon entypo calendar for-input"></span>
-                                    <input name = "birth" id = "birth" type="text" class="w-icon medium validate[required, custom[date],past[2013/03/27]]" value =  "<%=birth%>">
+                                	
+                                    <input name = "birth" id = "birth" type="text" class="validate[required, custom[date],past[2013/03/27]]" value =  "<%=birth%>">
                                 </div>
                                 <div class="clear"></div>
                             </div>
+                            <div class="row">
+                            	<label>Primary Language</label> <div class="field-box">
+                                	<select id = "language" name = "language">
+                                    	<%
+                                     if(languageList != null)
+                                     {
+                                    	 for (int i=0; i<languageList.size(); i++)
+                                         {
+                                    		 String current = languageList.get(i);
+                                    		 if(current.equals(language))
+                                    		 {
+                                    			 out.println("<option value = \"" + current + "\" selected>" + current + "</option>");
+                                    		 }
+                                    		 else
+                                    		 {
+                                    			 out.println("<option value = \"" + current + "\">" + current + "</option>");
+                                    		 }
+                                    		
+                                         
+                                         } 
+                                     }
+                                    	%>
+                                    </select>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                            
+                            <div class="row">
+                            	<label>Ethinicity</label> <div class="field-box">
+                                	<select id = "ethinicity" name = "ethinicity">
+                                    	<%
+                                     if(ethinList != null)
+                                     {
+                                    	 for (int i=0; i<ethinList.size(); i++)
+                                         {
+                                    		 String current = ethinList.get(i);
+                                    		 if(current.equals(ethinicity))
+                                    		 {
+                                    			 out.println("<option value = \"" + current + "\" selected>" + current + "</option>");
+                                    		 }
+                                    		 else
+                                    		 {
+                                    			 out.println("<option value = \"" + current + "\">" + current + "</option>");
+                                    		 }
+                                    		
+                                         
+                                         } 
+                                     }
+                                    	%>
+                                    </select>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                     		 
                             
                             
                         </div>
@@ -375,13 +481,37 @@
 								</div>
 								
 								<div class="row">
-									<label>Country</label>
-									<div class="field-box">
-										<input id="country" name="country" type="text"
-											maxlength = "20" class="large" value =  "<%=country%>">
-									</div>
-									<div class="clear"></div>
-								</div>
+                            	<label>Country</label> <div class="field-box">
+                                	<select id = "country" name = "country" data-placeholder="Your Country" style="width:350px;" class="chzn-select" tabindex="6">
+                                     
+                                     <%
+                                     if(countryList != null)
+                                     {
+                                    	 for (int i=0; i<countryList.size(); i++)
+                                         {
+                                    		 String current = countryList.get(i);
+                                    		 if(current.equals(country))
+                                    		 {
+                                    			 out.println("<option value = \"" + current + "\"selected>" + current + "</option>");
+                                    		 }
+                                    		 else
+                                    		 {
+                                    			 out.println("<option value = \"" + current + "\">" + current + "</option>");
+                                    		 }
+                                    		
+                                         
+                                         } 
+                                     }
+                                     
+                                     
+                                     %>
+
+									</select>
+                                        
+                                   
+                                </div>
+                                 <div class="clear"></div>
+                                </div>
 								
 					
 					</div>

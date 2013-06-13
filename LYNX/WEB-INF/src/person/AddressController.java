@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.commons.lang3.text.WordUtils;
+
 public class AddressController extends lynx.Manager {
 	private static Connection con;
 	private static String SQL;
@@ -36,13 +38,13 @@ public class AddressController extends lynx.Manager {
 		PreparedStatement stmt = con.prepareStatement(SQL,
 				Statement.RETURN_GENERATED_KEYS);
 		System.out.println(SQL);
-		stmt.setString(1, street);
+		stmt.setString(1, WordUtils.capitalizeFully(street));
 		stmt.setString(2, zip);
-		stmt.setString(3, city);
-		stmt.setString(4, country);
-		stmt.setString(5, direction);
-		stmt.setString(6, state);
-		stmt.setString(7, apt);
+		stmt.setString(3, WordUtils.capitalizeFully(city));
+		stmt.setString(4, WordUtils.capitalizeFully(country));
+		stmt.setString(5, WordUtils.capitalizeFully(direction));
+		stmt.setString(6, WordUtils.capitalizeFully(state));
+		stmt.setString(7, WordUtils.capitalizeFully(apt));
 		stmt.setString(8, house);
 		stmt.setString(9, phone);
 		stmt.setString(10, email);
@@ -77,13 +79,13 @@ public class AddressController extends lynx.Manager {
 				+ " WHERE addressID = ?";
 		PreparedStatement stmt = con.prepareStatement(SQL,
 				Statement.RETURN_GENERATED_KEYS);
-		stmt.setString(1, street);
+		stmt.setString(1, WordUtils.capitalizeFully(street));
 		stmt.setString(2, zip);
-		stmt.setString(3, city);
-		stmt.setString(4, country);
-		stmt.setString(5, direction);
-		stmt.setString(6, state);
-		stmt.setString(7, apt);
+		stmt.setString(3, WordUtils.capitalizeFully(city));
+		stmt.setString(4, WordUtils.capitalizeFully(country));
+		stmt.setString(5, WordUtils.capitalizeFully(direction));
+		stmt.setString(6, WordUtils.capitalizeFully(state));
+		stmt.setString(7, WordUtils.capitalizeFully(apt));
 		stmt.setString(8, house);
 		stmt.setString(9, phone);
 		stmt.setString(10, email);

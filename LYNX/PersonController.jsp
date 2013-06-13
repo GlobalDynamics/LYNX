@@ -26,6 +26,8 @@
 		String house = "";
 		
 		String apt = "";
+		String ethinicity = null;
+		String language = null;
 		
 		String phone = null;
 		String email = "";
@@ -41,6 +43,9 @@
 						 suf = (String) request.getParameter("suffix");
 						 gen = (String) request.getParameter("gender");
 						 birth = (String) request.getParameter("birth");
+						 
+						 ethinicity = (String) request.getParameter("ethinicity");
+						 language = (String) request.getParameter("language");
 						 username = request.getParameter("username");
 						 password1 = request.getParameter("password1");
 						 password2 = request.getParameter("password2");
@@ -60,13 +65,13 @@
 						
 						 phone = (String) request.getParameter("phone");
 						 email = ((String) request.getParameter("email") != null) ?(String) request.getParameter("email") : "";
-						 String personValidate = PersonController.validateData(fname.length(), lname.length(), mname.length(), suf.length(), gen.length(), birth);
+						 String personValidate = PersonController.validateData(fname.length(), lname.length(), mname.length(), suf, gen, birth, language, country,ethinicity);
 						 String secure = Security.complexityTest(password1, password2);
 						 String address = AddressController.validateAddress(street.length(), zip.length(), city.length(), country.length(), direction.length(), state.length(), apt.length(), house.length(), phone.length());
 						 if(personValidate == "true" && secure == "true" && address =="true")
 							{
 							 int addressID = AddressController.createAddress(street, zip, city, country, direction, state, apt, house, phone, email);
-							 PersonController.addPerson(fname,  lname,  mname,  suf, 1, addressID, gen, birth,password1,password2,username);
+							 PersonController.addPerson(fname,  lname,  mname,  suf, 1, addressID, gen, birth, language, ethinicity, password1,password2,username);
 							 
 							 //PersonController.editPerson(personID, fname,  lname,  mname,  suf, 1, 1, gen, birth,password1,password2,username);
 							response.sendRedirect("addperson.jsp");
@@ -95,6 +100,10 @@
 					 suf = (String) request.getParameter("suffix");
 					 gen = (String) request.getParameter("gender");
 					 birth = (String) request.getParameter("birth");
+					 
+					 ethinicity = (String) request.getParameter("ethinicity");
+					 language = (String) request.getParameter("language");
+					 
 					 username = request.getParameter("username");
 					 password1 = request.getParameter("password1");
 					 password2 = request.getParameter("password2");
@@ -115,14 +124,14 @@
 						  phone = (String) request.getParameter("phone");
 						 email = ((String) request.getParameter("email") != null) ?(String) request.getParameter("email") : "";
 					 
-					 String personValidate = PersonController.validateData(fname.length(), lname.length(), mname.length(), suf.length(), gen.length(), birth);
+					 String personValidate = PersonController.validateData(fname.length(), lname.length(), mname.length(), suf, gen, birth, language, country, ethinicity);
 					 String secure = Security.complexityTest(password1, password2);
 					 secure = (Security.isEmpty(password1, password2) || Security.complexityTest(password1, password2) == "true") ? "true":secure;
 					 String address = AddressController.validateAddress(street.length(), zip.length(), city.length(), country.length(), direction.length(), state.length(), apt.length(), house.length(), phone.length());
 					 if(personValidate == "true" && secure == "true" && address == "true")
 						{
 						 PersonController.editPerson(personID, fname, lname, mname,
-								 suf, gen,  birth,
+								 suf, gen,  birth, language, ethinicity,
 								 password1,  password2, username);
 						 CreateAccount.editAccount(personID, password1, password2, username);
 						 AddressController.editAddress(addressID, street, zip, city, country, direction, state, apt, house, phone, email);
@@ -130,7 +139,7 @@
 						}
 						else
 						{
-							session.setAttribute("error",secure + personValidate.replace("true", ""));
+							session.setAttribute("error",secure.replace("true", "") + "\n" + personValidate.replace("true", "") + address.replace("true", ""));
 							response.sendRedirect("result.jsp");
 						}
 					 
