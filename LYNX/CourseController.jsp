@@ -1,6 +1,8 @@
 <%@ page import="account.Login" %>
 <%@ page import="course.CourseController" %>
 <%@ page import="course.Grade" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Iterator" %>
 <%
 	if (session.getAttribute("login") == null) {
 		response.sendRedirect("login.jsp");
@@ -125,6 +127,30 @@
 					Grade.removeGrade(gradeID);
 					response.sendRedirect("gradepreview1.jsp");
 				}
+				
+				else if(((String) request.getParameter("type")).equals("tCourse"))
+				{
+					int nextCalendar = -1;
+					 Map parms = request.getParameterMap();  
+					if((String) request.getParameter("nextCalendar") != null)
+					{
+						nextCalendar = Integer.parseInt(request.getParameter("nextCalendar"));
+						for (Iterator iterator = parms.entrySet().iterator(); iterator.hasNext();)  {  
+						    Map.Entry entry = (Map.Entry) iterator.next();  
+						    System.out.println("parameter name:"+entry.getKey());  
+						    System.out.println("value:"+request.getParameter(entry.getKey().toString())); 
+						    
+						    if(entry.getKey().toString().contains("courseRemove"))
+						    {
+						    	CourseController.transferCourse(Integer.parseInt(request.getParameter(entry.getKey().toString())), nextCalendar);
+						    	
+						    }
+					    }  
+					}
+				   
+				    
+				}
+				
 				
 			}
 			

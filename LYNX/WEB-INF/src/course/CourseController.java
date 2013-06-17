@@ -323,9 +323,10 @@ public class CourseController extends lynx.Manager {
 		Course[] people = new Course[totalPeople];
 		Connection con = cpds.getConnection();
 
-		SQL = "SELECT c.courseID,c.subjectID,c.teacherID,c.name,c.shortName, s.name AS subjectName\r\n"
+		SQL = "SELECT c.courseID,c.subjectID,c.teacherID,c.name,c.shortName, s.name AS subjectName, ca.name AS calendarName\r\n"
 				+ "FROM course c\r\n"
-				+ "INNER JOIN [subject] s ON s.subjectID = c.subjectID \n"
+				+ "INNER JOIN [subject] s ON s.subjectID = c.subjectID \n" +
+				"INNER JOIN calendar ca ON ca.calendarID = c.calendarID \n"
 				+ "WHERE c.calendarID = ?";
 		PreparedStatement stmt = con.prepareStatement(SQL,
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -345,7 +346,7 @@ public class CourseController extends lynx.Manager {
 					people[i] = new Course(rs.getInt("courseID"),
 							rs.getInt("subjectID"), rs.getString("name"),
 							rs.getString("shortName"), rs.getInt("teacherID"),
-							rs.getString("subjectName"));
+							rs.getString("subjectName"), rs.getString("calendarName"));
 					i++;
 				}
 				return people;
@@ -739,6 +740,97 @@ public class CourseController extends lynx.Manager {
 			}
 
 		}
+	}
+	
+	public static int checkSubject(boolean byName, int subjectID, String name, int calendarID) throws SQLException
+	{
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		if(byName)
+			SQL = "SELECT subjectID,name FROM subject WHERE name = ? AND calendarID = ?";		
+		else
+			SQL = "SELECT subjectID,name FROM subject WHERE subjectID = ? AND calendarID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		System.out.println(SQL);
+		if(byName)
+			stmt.setString(1, name);
+		else
+			stmt.setInt(1, subjectID);
+			
+		stmt.setInt(2, calendarID);
+		try {
+			rs = stmt.executeQuery();
+		} finally {
+			if (!rs.isBeforeFirst()) {
+				stmt.close();
+				con.close();	
+				rs.close();
+			} else {
+				rs.first();
+				int subject = rs.getInt("subjectID");
+				stmt.close();
+				con.close();
+				rs.close();
+				return subject;
+
+			}
+		}
+		return -1;
+		
+	}
+	
+	public static void transferCourse(int courseID, int calendarID) throws SQLException
+	{
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		SQL = "SELECT c.courseID, c.subjectID, c.name, s.name as subjectNAME, c.shortName, c.teacherID FROM course c\r\n" + 
+				"INNER JOIN subject s ON s.subjectID = c.subjectID\r\n" + 
+				"WHERE courseID = ?\r\n";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, courseID);
+		try {
+			rs = stmt.executeQuery();
+		} finally {
+			if (!rs.isBeforeFirst()) {
+				stmt.close();
+				con.close();
+				rs.close();
+				
+			} else {
+				rs.first();
+				Course course = new Course(rs.getInt("courseID"), rs.getInt("subjectID"), rs.getString("name"), rs.getString("shortName"), rs.getInt("teacherID"), rs.getString("subjectName"));
+				int subjectID = checkSubject(true, Integer.parseInt(course.getSubject()),course.getSubjectName(), calendarID);
+				if(subjectID != -1)
+					createCourse(course.name, course.shortName, subjectID, course.teacherID, calendarID);
+				else
+				{
+					System.out.println("no subject name");
+					addSubject(course.subjectName, calendarID);
+					subjectID = checkSubject(true, Integer.parseInt(course.getSubject()), course.getSubjectName(), calendarID);
+					if(subjectID != -1)
+					{
+						createCourse(course.name, course.shortName, subjectID, course.teacherID, calendarID);
+					}
+					else
+					{
+						System.out.println("no subject error");
+					}
+					
+					
+				}
+					
+				
+				stmt.close();
+				con.close();
+				
+				rs.close();
+				
+			}
+
+		}
+		
 	}
 
 }

@@ -5,11 +5,12 @@ import lynx.Manager;
 public class Course extends Manager {
 	private int courseID;
 	private int subjectID;
-	private String name;
-	private String shortName;
-	private int teacherID;
-	private String subjectName;
+	public String name;
+	public String shortName;
+	public int teacherID;
+	public String subjectName;
 	private String enrollmentID;
+	public String calendarName;
 	
 	
 	public Course(int c, int s, String n, String sname, int tid, String suname)
@@ -20,6 +21,16 @@ public class Course extends Manager {
 		shortName  = sname;
 		teacherID = tid;
 		subjectName = suname;
+	}
+	public Course(int c, int s, String n, String sname, int tid, String suname, String cname)
+	{
+		courseID = c;
+		subjectID = s;
+		name = n;
+		shortName  = sname;
+		teacherID = tid;
+		subjectName = suname;
+		calendarName = cname;
 	}
 	public Course(int c, int s, String n, String sname)
 	{
