@@ -3,7 +3,7 @@ package course;
 import lynx.Manager;
 
 public class Course extends Manager {
-	private int courseID;
+	public int courseID;
 	private int subjectID;
 	public String name;
 	public String shortName;

@@ -139,13 +139,14 @@
 						    Map.Entry entry = (Map.Entry) iterator.next();  
 						    System.out.println("parameter name:"+entry.getKey());  
 						    System.out.println("value:"+request.getParameter(entry.getKey().toString())); 
-						    
+						    int subjectTransfer = Integer.parseInt(request.getParameter("subjects"));
 						    if(entry.getKey().toString().contains("courseRemove"))
 						    {
-						    	CourseController.transferCourse(Integer.parseInt(request.getParameter(entry.getKey().toString())), nextCalendar);
+						    	CourseController.transferCourse(Integer.parseInt(request.getParameter(entry.getKey().toString())), nextCalendar, subjectTransfer);
 						    	
 						    }
 					    }  
+						response.sendRedirect("transfercourse.jsp");
 					}
 				   
 				    

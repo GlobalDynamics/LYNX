@@ -780,7 +780,45 @@ public class CourseController extends lynx.Manager {
 		
 	}
 	
-	public static void transferCourse(int courseID, int calendarID) throws SQLException
+	public static boolean checkCourse(boolean byName, int courseID, String name, int calendarID, int subjectID) throws SQLException
+	{
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		if(byName)
+			SQL = "SELECT courseID,name, subjectID FROM course WHERE name = ? AND calendarID = ? AND subjectID = ?";		
+		else
+			SQL = "SELECT courseID,name, subjectID FROM course WHERE courseID = ? AND calendarID = ? AND subjectID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		System.out.println(SQL);
+		if(byName)
+			stmt.setString(1, name);
+		else
+			stmt.setInt(1, courseID);
+			
+		stmt.setInt(2, calendarID);
+		stmt.setInt(3, subjectID);
+		try {
+			rs = stmt.executeQuery();
+		} finally {
+			if (!rs.isBeforeFirst()) {
+				stmt.close();
+				con.close();	
+				rs.close();
+				return false;
+			} else {
+				rs.first();
+				stmt.close();
+				con.close();
+				rs.close();
+
+			}
+		}
+		return true;
+		
+	}
+	
+	public static void transferCourse(int courseID, int calendarID, int subjectTransfer) throws SQLException
 	{
 		con = cpds.getConnection();
 		con.setAutoCommit(false);
@@ -801,15 +839,22 @@ public class CourseController extends lynx.Manager {
 			} else {
 				rs.first();
 				Course course = new Course(rs.getInt("courseID"), rs.getInt("subjectID"), rs.getString("name"), rs.getString("shortName"), rs.getInt("teacherID"), rs.getString("subjectName"));
-				int subjectID = checkSubject(true, Integer.parseInt(course.getSubject()),course.getSubjectName(), calendarID);
+				int subjectID = checkSubject(false, subjectTransfer,course.getSubjectName(), calendarID);
+				boolean courseCheck = checkCourse(true, course.courseID, course.name,calendarID, subjectTransfer);
 				if(subjectID != -1)
-					createCourse(course.name, course.shortName, subjectID, course.teacherID, calendarID);
+					{
+						if(!courseCheck)
+							createCourse(course.name, course.shortName, subjectID, course.teacherID, calendarID);
+							
+						
+					}
+					
 				else
 				{
 					System.out.println("no subject name");
 					addSubject(course.subjectName, calendarID);
-					subjectID = checkSubject(true, Integer.parseInt(course.getSubject()), course.getSubjectName(), calendarID);
-					if(subjectID != -1)
+					subjectID = checkSubject(false, subjectTransfer, course.getSubjectName(), calendarID);
+					if(subjectID != -1 && !courseCheck)
 					{
 						createCourse(course.name, course.shortName, subjectID, course.teacherID, calendarID);
 					}

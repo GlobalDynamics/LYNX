@@ -155,4 +155,41 @@ public class CalendarController extends Manager {
 		}
 
 	}
+	
+	public static Calendar[] getCalendarsNotByID(int calendarID) throws SQLException {
+		int totalPeople = getCalendarCount();
+		System.out.println(totalPeople);
+		Calendar[] people = new Calendar[totalPeople-1];
+		Connection con = cpds.getConnection();
+
+		SQL = "SELECT calendarID,name,startDate,endDate FROM calendar WHERE calendarID <> ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, calendarID);
+		System.out.println(SQL);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return null;
+
+			} else {
+				rs.beforeFirst();
+
+				int i = 0;
+				while (rs.next()) {
+					people[i] = new Calendar(rs.getString("name"), rs.getString("startDate"), rs.getString("endDate"), rs.getInt("calendarID"));
+					i++;
+				}
+				return people;
+
+			}
+		} finally {
+			stmt.close();
+			con.close();
+			rs.close();
+
+		}
+
+	}
 }
