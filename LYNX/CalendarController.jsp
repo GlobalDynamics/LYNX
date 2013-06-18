@@ -24,6 +24,15 @@
 					CalendarController.removeCalendar(calendarID);
 					response.sendRedirect("removecalendar.jsp");
 				}
+				else if(((String) request.getParameter("type")).equals("eCalendar"))
+				{
+					int calendarID = Integer.parseInt(request.getParameter("calendars"));
+					String name = (String) request.getParameter("cname");
+					String start = (String) request.getParameter("start");
+					String end = (String) request.getParameter("end");
+					CalendarController.editCalendar(calendarID,name,start,end);
+					response.sendRedirect("editcalendar.jsp");
+				}
 				
 			}
 			

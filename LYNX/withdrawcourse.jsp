@@ -232,9 +232,9 @@
             <div class="three-fourths breadcrumb">
             	<span><a href="#" class="icon entypo home"></a></span>
                 <span class="middle"></span>
-                <span><a href="#">Enrollment</a></span>
+                <span>Enrollment</span>
                 <span class="middle"></span>
-                <span><a href="#">Withdraw a Student</a></span>
+                <span>Withdraw a Student</span>
                 <span class="end"></span>
             </div>
                

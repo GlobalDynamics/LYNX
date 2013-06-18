@@ -172,9 +172,9 @@
             <div class="three-fourths breadcrumb">
             	<span><a href="#" class="icon entypo home"></a></span>
                 <span class="middle"></span>
-                <span><a href="#">Students</a></span>
+                <span>Students</span>
                 <span class="middle"></span>
-                <span><a href="#">Edit a Teacher</a></span>
+                <span>Edit a Teacher</span>
                 <span class="end"></span>
             </div>
                

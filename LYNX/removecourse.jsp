@@ -232,9 +232,9 @@
             <div class="three-fourths breadcrumb">
             	<span><a href="#" class="icon entypo home"></a></span>
                 <span class="middle"></span>
-                <span><a href="#">Courses</a></span>
+                <span>Courses</span>
                 <span class="middle"></span>
-                <span><a href="#">Remove a Course</a></span>
+                <span>Remove a Course</span>
                 <span class="end"></span>
             </div>
                

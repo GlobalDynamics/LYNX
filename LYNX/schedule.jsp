@@ -181,7 +181,7 @@
 				<!-- Breadcrumb -->
 				<div class="three-fourths breadcrumb">
 					<span><a href="#" class="icon entypo home"></a></span> <span
-						class="middle"></span> <span><a href="#">Enrollment</a></span> <span class="middle"></span> <span><a href="#">Schedule</a></span>
+						class="middle"></span> <span>Enrollment</span> <span class="middle"></span> <span>Schedule</span>
 					<span class="end"></span>
 				</div>
 				<!-- /Breadcrumb -->

@@ -204,9 +204,9 @@
 			<div class="three-fourths breadcrumb">
             	<span><a href="#" class="icon entypo home"></a></span>
                 <span class="middle"></span>
-                <span><a href="#">Calendar</a></span>
+                <span>Calendar</span>
                 <span class="middle"></span>
-                <span><a href="#">Add a calendar</a></span>
+                <span>Add a calendar</span>
                 <span class="end"></span>
             </div>
             <div class="clear"></div>

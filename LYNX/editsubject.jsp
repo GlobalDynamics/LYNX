@@ -237,8 +237,8 @@
 			<!-- Breadcrumb -->
 			<div class="three-fourths breadcrumb">
 				<span><a href="#" class="icon entypo home"></a></span> <span
-					class="middle"></span> <span><a href="#">Courses</a></span> <span
-					class="middle"></span> <span><a href="#">Edit a Subject</a></span>
+					class="middle"></span> <span>Courses</span> <span
+					class="middle"></span> <span>Edit a Subject</span>
 				<span class="end"></span>
 			</div>
 

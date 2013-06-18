@@ -154,9 +154,9 @@
 			<div class="three-fourths breadcrumb">
             	<span><a href="#" class="icon entypo home"></a></span>
                 <span class="middle"></span>
-                <span><a href="#">People</a></span>
+                <span>People</span>
                 <span class="middle"></span>
-                <span><a href="#">Add a Person</a></span>
+                <span>Add a Person</span>
                 <span class="end"></span>
             </div>
             <div class="clear"></div>

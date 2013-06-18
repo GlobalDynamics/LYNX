@@ -171,9 +171,9 @@
             <div class="three-fourths breadcrumb">
             	<span><a href="#" class="icon entypo home"></a></span>
                 <span class="middle"></span>
-                <span><a href="#">Grades</a></span>
+                <span>Grades</span>
                 <span class="middle"></span>
-                <span><a href="#">Manage Grades</a></span>
+                <span>Manage Grades</span>
                 <span class="end"></span>
             </div>
                

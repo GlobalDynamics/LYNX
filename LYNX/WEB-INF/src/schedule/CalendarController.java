@@ -46,6 +46,31 @@ public class CalendarController extends Manager {
 
 	}
 	
+	public static void editCalendar(int calendarID, String name, String start, String end)
+			throws SQLException, ParseException {
+
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		SQL = "UPDATE calendar SET name = ?, startDate = ?, endDate = ? WHERE calendarID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL);
+		System.out.println(SQL);
+		DateFormat DOB = new SimpleDateFormat("yyyy-MM-dd");
+		java.sql.Date startDate = new java.sql.Date(DOB.parse(start).getTime());
+		java.sql.Date endDate = new java.sql.Date(DOB.parse(end).getTime());
+		stmt.setString(1, name);
+		stmt.setDate(2, startDate);
+		stmt.setDate(3, endDate);
+		stmt.setInt(4, calendarID);
+		try {
+			stmt.executeUpdate();
+			con.commit();
+		} finally {
+			con.close();
+			stmt.close();
+		}
+
+	}
+	
 	public static void removeCalendar(int calendarID)
 			throws SQLException, ParseException {
 		
@@ -181,6 +206,41 @@ public class CalendarController extends Manager {
 					people[i] = new Calendar(rs.getString("name"), rs.getString("startDate"), rs.getString("endDate"), rs.getInt("calendarID"));
 					i++;
 				}
+				return people;
+
+			}
+		} finally {
+			stmt.close();
+			con.close();
+			rs.close();
+
+		}
+
+	}
+	
+	public static Calendar getCalendarsByID(int calendarID) throws SQLException {
+		int totalPeople = getCalendarCount();
+		System.out.println(totalPeople);
+		Calendar people = null;
+		Connection con = cpds.getConnection();
+
+		SQL = "SELECT calendarID,name,startDate,endDate FROM calendar WHERE calendarID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, calendarID);
+		System.out.println(SQL);
+		try {
+			rs = stmt.executeQuery();
+
+			if (!rs.isBeforeFirst()) {
+				return null;
+
+			} else {
+				rs.first();
+
+				int i = 0;
+				people = new Calendar(rs.getString("name"), rs.getString("startDate"), rs.getString("endDate"), rs.getInt("calendarID"));
+
 				return people;
 
 			}
