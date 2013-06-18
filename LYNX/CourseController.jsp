@@ -17,14 +17,15 @@
 				{
 					String name = (String) request.getParameter("sname");
 					int calendarID = Integer.parseInt(request.getParameter("calendars"));
-					if(CourseController.validateSubject(name.length()) ==1)
+					boolean subject = CourseController.checkSubject(true, -1, name, calendarID) == -1 ? false: true;
+					if((CourseController.validateSubject(name.length()) ==1) && !subject)
 					{
 						CourseController.addSubject(name,calendarID);
 						response.sendRedirect("addsubject.jsp");
 					}
 					else
 					{
-						session.setAttribute("error", "Invalid data was entered.");
+						session.setAttribute("error", "Invalid data was entered or the subject already exists.");
 						response.sendRedirect("result.jsp");
 					}
 				}
@@ -39,15 +40,16 @@
 				{
 					int subjectID = Integer.parseInt(request.getParameter("subjects"));
 					String name = (String) request.getParameter("sname");
-					
-					if(CourseController.validateSubject(name.length()) ==1)
+					int calendarID = Integer.parseInt(request.getParameter("calendars"));
+					boolean subject = CourseController.checkSubject(true, -1, name, calendarID) == -1 ? false: true;
+					if(CourseController.validateSubject(name.length()) ==1 && !subject)
 					{
 						CourseController.editSubject(subjectID,name);
 						response.sendRedirect("editsubject.jsp");
 					}
 					else
 					{
-						session.setAttribute("error", "Invalid data was entered.");
+						session.setAttribute("error", "Invalid data was entered or the subject already exists.");
 						response.sendRedirect("result.jsp");
 					}
 				}
