@@ -140,9 +140,18 @@
 						    System.out.println("parameter name:"+entry.getKey());  
 						    System.out.println("value:"+request.getParameter(entry.getKey().toString())); 
 						    int subjectTransfer = Integer.parseInt(request.getParameter("subjects"));
+						    String duplicate = request.getParameter("duplicate");
 						    if(entry.getKey().toString().contains("courseRemove"))
 						    {
-						    	CourseController.transferCourse(Integer.parseInt(request.getParameter(entry.getKey().toString())), nextCalendar, subjectTransfer);
+						    	if(duplicate != null)
+						    	{
+						    		CourseController.transferCourse(Integer.parseInt(request.getParameter(entry.getKey().toString())), nextCalendar, subjectTransfer, true);
+						    	}
+						    	else
+						    	{
+						    		CourseController.transferCourse(Integer.parseInt(request.getParameter(entry.getKey().toString())), nextCalendar, subjectTransfer, false);
+						    	}
+						    	
 						    	
 						    }
 					    }  

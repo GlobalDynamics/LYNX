@@ -17,8 +17,7 @@
 				calendarID = (String) request.getParameter("calendars");
 			}
 			if ((String) request.getParameter("nextCalendar") != null) {
-				nextCalendar = (String) request
-						.getParameter("nextCalendar");
+				nextCalendar = (String) request.getParameter("nextCalendar");
 			}
 %>
 
@@ -250,6 +249,8 @@
 						<div class="contents">
 			<form name="change" id="change" method="post"
 								action="transfercourse.jsp">
+								<input type="hidden" name="calendars" id="calendars"
+					value="<%=calendarID%>">
 								<div class="row">
 									<div class="clear"></div>
 
@@ -259,21 +260,35 @@
 											onchange="this.form.submit();" data-placeholder="No Data"
 											style="width: 350px;" class="chzn-select" tabindex="6">
 											<%
-											Calendar[] test1 = (calendarID != null ? CalendarController.getCalendarsNotByID(Integer.parseInt(calendarID)): null);
-												if (test1 != null && calendarID != null) {
-															for (Calendar value : test1) {
-
-																out.println("<option id = \"" + value.getID()
-																		+ "\" value = \"" + value.getID() + "\">"
-																		+ value.getName() + "</option>");
-															}
-															if (test1.length == 1
-																	|| (test1 != null && nextCalendar == null)) {
-																nextCalendar = test1[0].getID();
-															}
-															
-															
+											Calendar[] test1 = CalendarController.getCalendarsNotByID(Integer.parseInt(calendarID));
+											if (test1 != null) {
+												for (Calendar value : test1) {
+													if (nextCalendar != null) {
+														if (value.getID().equals(nextCalendar)) {
+															out.println("<option id = \""
+																	+ value.getID() + "\"  value = \""
+																	+ value.getID() + "\" selected>"
+																	+ value.getName() + "</option>");
+														} else {
+															out.println("<option id = \""
+																	+ value.getID() + "\"  value = \""
+																	+ value.getID() + "\">"
+																	+ value.getName() + "</option>");
 														}
+													} else {
+														out.println("<option id = \"" + value.getID()
+																+ "\"  value = \"" + value.getID()
+																+ "\">" + value.getName() + "</option>");
+													}
+
+												}
+												if (test1.length == 1
+														|| (test1 != null && nextCalendar == null)) {
+													nextCalendar = test1[0].getID();
+												}
+											} else {
+
+											}
 												
 											%>
 
@@ -351,6 +366,13 @@
 
 									<div class="clear"></div>
 								</div>
+							</div>
+							
+							<div class = "row">
+								<label>Duplicate subjects</label> <div class="field-box"><input id = "duplicate" name = "duplicate" type="checkbox" /> </div>
+								<div class="clear"></div>
+								<p>If this option is checked, instead of moving course to the selected subject, a 
+								subject with the name of the checked courses subject will be created</p>
 							</div>
 
 							<div class="bar-big">

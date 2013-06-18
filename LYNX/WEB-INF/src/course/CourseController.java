@@ -818,7 +818,7 @@ public class CourseController extends lynx.Manager {
 		
 	}
 	
-	public static void transferCourse(int courseID, int calendarID, int subjectTransfer) throws SQLException
+	public static void transferCourse(int courseID, int calendarID, int subjectTransfer, boolean duplicate) throws SQLException
 	{
 		con = cpds.getConnection();
 		con.setAutoCommit(false);
@@ -841,32 +841,54 @@ public class CourseController extends lynx.Manager {
 				Course course = new Course(rs.getInt("courseID"), rs.getInt("subjectID"), rs.getString("name"), rs.getString("shortName"), rs.getInt("teacherID"), rs.getString("subjectName"));
 				int subjectID = checkSubject(false, subjectTransfer,course.getSubjectName(), calendarID);
 				boolean courseCheck = checkCourse(true, course.courseID, course.name,calendarID, subjectTransfer);
-				if(subjectID != -1)
-					{
-						if(!courseCheck)
-							createCourse(course.name, course.shortName, subjectID, course.teacherID, calendarID);
-							
-						
+				if (!duplicate) {
+					if (subjectID != -1) {
+						if (!courseCheck)
+							createCourse(course.name, course.shortName,
+									subjectID, course.teacherID, calendarID);
+
 					}
-					
+
+					else {
+						System.out.println("no subject name");
+						addSubject(course.subjectName, calendarID);
+						subjectID = checkSubject(false, subjectTransfer,
+								course.getSubjectName(), calendarID);
+						if (subjectID != -1 && !courseCheck) {
+							createCourse(course.name, course.shortName,
+									subjectID, course.teacherID, calendarID);
+						} else {
+							System.out.println("no subject error");
+						}
+
+					}
+				}
 				else
 				{
-					System.out.println("no subject name");
-					addSubject(course.subjectName, calendarID);
-					subjectID = checkSubject(false, subjectTransfer, course.getSubjectName(), calendarID);
-					if(subjectID != -1 && !courseCheck)
-					{
-						createCourse(course.name, course.shortName, subjectID, course.teacherID, calendarID);
+					subjectID = checkSubject(true, subjectTransfer,course.getSubjectName(), calendarID);
+					courseCheck = checkCourse(true, course.courseID, course.name,calendarID, subjectID);
+					if (subjectID != -1) {
+						if (!courseCheck)
+							createCourse(course.name, course.shortName,
+									subjectID, course.teacherID, calendarID);
+
 					}
 					else
 					{
-						System.out.println("no subject error");
+						System.out.println("no subject name");
+						addSubject(course.subjectName, calendarID);
+						subjectID = checkSubject(true, subjectTransfer,
+								course.getSubjectName(), calendarID);
+						courseCheck = checkCourse(true, course.courseID, course.name,calendarID, subjectID);
+						if (subjectID != -1 && !courseCheck) {
+							createCourse(course.name, course.shortName,
+									subjectID, course.teacherID, calendarID);
+						} else {
+							System.out.println("no subject error");
+						}
 					}
 					
-					
 				}
-					
-				
 				stmt.close();
 				con.close();
 				
