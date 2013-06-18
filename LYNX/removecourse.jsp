@@ -1,4 +1,8 @@
 <%@ page import="course.CourseController" %>
+<%@ page import="schedule.CalendarController" %>
+<%@ page import="schedule.Calendar" %>
+<%@ page import="course.Subject"%>
+<%@ page import="course.CourseController"%>
 <%@ page import="course.Course;" %>
 <%
 	if (session.getAttribute("login") == null) {
@@ -6,8 +10,18 @@
 	} else {
 		String login = (String) session.getAttribute("login");
 
+		String calendarID = null;
+		String subjectID = null;
 		if (login.equals("1")) {
 			String username = (String) session.getAttribute("username");
+			if((String) request.getParameter("calendars") != null)
+					{
+						calendarID = (String) request.getParameter("calendars");
+					}
+			if((String) request.getParameter("subjects") != null)
+			{
+				subjectID = (String) request.getParameter("subjects");
+			}
 	%>
 
 	
@@ -87,6 +101,53 @@
 						<div class="links">
 							 <a href="logout.jsp"
 								class="logout">Logout</a>
+								<br>
+								<form name = "ap" id = "ap" method = "post" action = "removecourse.jsp">
+								
+								<div class="field-box">
+								<select id = "calendars" name = "calendars" data-placeholder="No Data" onchange="this.form.submit();" style="width:350px;" class="chzn-select" tabindex="6">
+                                       <%
+                                       
+                                      Calendar[] calendars = CalendarController.getCalendars();
+                                       if(calendars != null)
+                                       {
+                                    	   for(Calendar value : calendars)
+                                           {
+                                    		   if(calendarID != null)
+                                    		   {
+                                    			   if(value.getID().equals(calendarID))
+                                        		   {
+                                        			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\" selected>" + value.getName() + "</option>");
+                                        		   }
+                                        		   else
+                                        		   {
+                                        			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
+                                        		   }  
+                                    		   }
+                                    		   else
+                                    		   {
+                                    			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
+                                    		   }
+                                    		  
+                                        	   
+                                           }
+                                    	   if(calendars.length ==1 || (calendars != null && calendarID == null))
+                                           {
+                                        	   calendarID = calendars[0].getID();
+                                           }
+                                       }
+                                       else
+                                       {
+                                    	  
+                                       }
+                                       
+                                      
+                                       
+                                       %>
+                                        
+                                    </select>
+                                    </div>
+                                    </form>
 						</div>
 						
 					</div>
@@ -179,46 +240,130 @@
                
             <div class="clear"></div>
             
-             <form name = "ap" id = "ap" method = "post" action = "CourseController.jsp">
-						<input type="hidden" name="type" id = "type" value="rCourse">
+             
             <div class="one-half">
             	<div class="box">
                 	<div class="inner">
                     	<div class="titlebar"><span>Remove a Course</span></div>
                         <div class="contents">
+                        
+                        
+             <form name = "subject" id = "subject" method = "post" action = "removecourse.jsp">
+								<input type="hidden" name="calendars" id = "calendars" value="<%=calendarID%>">
+								
+								 <div class="row">
+
+									<p>Select a subject for the course</p>
+									<label>Select a subject for the course</label>
+									<div class="field-box">
+										<select id="subjects" name="subjects"
+											data-placeholder="No Data" style="width: 350px;"
+											class="chzn-select" onchange="this.form.submit();" tabindex="6">
+											<%
+												Subject[] test1 = null;
+												if(calendarID != null)
+												{
+													test1 = CourseController.getSubjects(Integer.parseInt(calendarID));
+													if (test1 != null) {
+														for (Subject value : test1) {
+															
+															if(subjectID != null)
+															{
+																if(value.getSubject().equals(subjectID))
+																{
+																	out.println("<option id = \"" + value.getSubject()
+																			+ "\"  value = \"" + value.getSubject()
+																			+ "\"selected>" + value.getName() + "</option>");
+																}
+																else
+																{
+																	out.println("<option id = \"" + value.getSubject()
+																			+ "\"  value = \"" + value.getSubject()
+																			+ "\">" + value.getName() + "</option>");
+																}
+															}
+															else
+															{
+																out.println("<option id = \"" + value.getSubject()
+																		+ "\"  value = \"" + value.getSubject()
+																		+ "\">" + value.getName() + "</option>");
+															}
+															
+															
+														}
+														if(test1.length ==1 || (test1 != null && subjectID == null))
+				                                           {
+				                                        	   subjectID = test1[0].getSubject();
+				                                           }
+													} else {
+														
+													}
+												}
+												
+											%>
+
+										</select>
+
+										<div class="clear"></div>
+									</div>
+									</div>
+									</form>    
+									
+			<form name = "course" id = "course" method = "post" action = "CourseController.jsp">
+						<input type="hidden" name="type" id = "type" value="rCourse">  
+               
             			
             <div class="row">
-            
-            <p>Select a course to remove. All enrollments for this course will also be removed.</p>
-                            	<label>Select a course to remove</label> <div class="field-box">
-                                	<select id = "courses" name = "courses" data-placeholder="No Data" style="width:350px;" class="chzn-select" tabindex="6">
-                                       <%
-                                       
-                                       Course[] test = CourseController.getCourses();
-                                       if(test != null)
-                                       {
-                                    	   for(Course value : test)
-                                           {
-                                        	   out.println("<option id = \"" + value.getCourse() + "\"  value = \"" + value.getCourse() + "\">" + value.getName() + "</option>");
-                                           }
-                                       }
-                                       else
-                                       {
-                                    	   out.println("<p>There are no people to link to students");
-                                       }
-                                       
-                                      
-                                       
-                                       %>
-                                        
-                                    </select>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
+								<div class="titlebar">
+									<span class="icon awesome white table"></span> <span
+										class="w-icon">Courses</span>
+								</div>
+								<table>
+									<thead>
+										<tr>
+											<th scope="col">Check</th>
+											<th scope="col">Course</th>
+											<th scope="col">Subject</th>
+											<th scope="col">Calendar</th>
+										</tr>
+									</thead>
+									<tbody>
+
+
+										<%
+											Course[] courses = null;
+													if (calendarID != null) {
+														courses = CourseController.getCoursesBySubject(Integer
+																.parseInt(subjectID));
+														if (courses != null) {
+															for (Course value : courses) {
+																out.println("<tr>");
+																out.println("<td><label></label> <div class=\"field-box\"><input name = \"courseRemove"
+																		+ value.getCourse()
+																		+ "\" value = \""
+																		+ value.getCourse()
+																		+ "\" type=\"checkbox\" /> </div></td>");
+																out.println("<td>" + value.getName() + "</td>");
+																out.println("<td>" + value.getSubjectName()
+																		+ "</td>");
+																out.println("<td>" + value.calendarName
+																		+ "</td>");
+																out.println("</tr>");
+															}
+														} else {
+
+														}
+													}
+										%>
+
+									</tbody>
+								</table>
+								<div class="clear"></div>
+							</div>
                              <div class="bar-big">
                              <%
 
-                                       if(test != null)
+                                       if(courses != null)
                                        {
                                     	   
                                     	   %>
@@ -234,11 +379,13 @@
                              %>
                                                          
                             </div>
+                            
+                            </form>
                              </div>
                             </div>
                             </div>
                             </div>
-                            </form>
+                            
 			
 
            

@@ -400,7 +400,7 @@
 							<div class="row">
 								<div class="titlebar">
 									<span class="icon awesome white table"></span> <span
-										class="w-icon">Schedule</span>
+										class="w-icon">Courses</span>
 								</div>
 								<table>
 									<thead>

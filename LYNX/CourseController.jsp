@@ -75,9 +75,25 @@
 				
 				else if(((String) request.getParameter("type")).equals("rCourse"))
 				{
-					int courseID = Integer.parseInt(request.getParameter("courses"));
-					CourseController.removeCourse(courseID);
+					//int courseID = Integer.parseInt(request.getParameter("courses"));
+					//CourseController.removeCourse(courseID);
+					//response.sendRedirect("removecourse.jsp");
+					Map parms = request.getParameterMap();  
+					
+					for (Iterator iterator = parms.entrySet().iterator(); iterator.hasNext();)  {  
+					    Map.Entry entry = (Map.Entry) iterator.next();  
+					    System.out.println("parameter name:"+entry.getKey());  
+					    System.out.println("value:"+request.getParameter(entry.getKey().toString())); 
+					    if(entry.getKey().toString().contains("courseRemove"))
+					    {
+					    	int courseID = Integer.parseInt(request.getParameter(entry.getKey().toString()));
+					    	CourseController.removeCourse(courseID);
+							
+					    }
+				    }  
 					response.sendRedirect("removecourse.jsp");
+					
+					
 				}
 				
 				else if(((String) request.getParameter("type")).equals("eCourse"))

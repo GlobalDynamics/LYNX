@@ -369,7 +369,10 @@ public class CourseController extends lynx.Manager {
 		Course[] people = new Course[totalPeople];
 		Connection con = cpds.getConnection();
 
-		SQL = "SELECT  c.courseID,c.name, c.shortName, c.subjectID  FROM course c\r\n"
+		SQL = "SELECT c.courseID,c.subjectID,c.teacherID,c.name,c.shortName, s.name AS subjectName, ca.name AS calendarName\r\n"
+				+ "FROM course c\r\n"
+				+ "INNER JOIN [subject] s ON s.subjectID = c.subjectID \n" +
+				"INNER JOIN calendar ca ON ca.calendarID = c.calendarID \n"
 				+ "WHERE c.subjectID = ?";
 		PreparedStatement stmt = con.prepareStatement(SQL,
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -388,7 +391,8 @@ public class CourseController extends lynx.Manager {
 				while (rs.next()) {
 					people[i] = new Course(rs.getInt("courseID"),
 							rs.getInt("subjectID"), rs.getString("name"),
-							rs.getString("shortName"));
+							rs.getString("shortName"), rs.getInt("teacherID"),
+							rs.getString("subjectName"), rs.getString("calendarName"));
 					i++;
 				}
 				return people;
