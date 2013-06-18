@@ -327,7 +327,6 @@
 										data-placeholder="No Data" style="width: 350px;"
 										class="chzn-select" tabindex="6">
 										<%
-										System.out.println("test" + test1.toString());
 										Subject[] test = null;
 										if (nextCalendar != null) {
 											test = CourseController.getSubjects(Integer

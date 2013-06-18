@@ -297,11 +297,8 @@
 									</div>
 
 									<div class="clear"></div>
-								</div>
-
-
-							</div>
-							<div class="bar-big">
+									
+									<div class="bar-big">
 								<%
 									if (test != null) {
 								%>
@@ -314,6 +311,11 @@
 								%>
 
 							</div>
+								</div>
+
+
+							</div>
+							
 						</div>
 					</div>
 				
