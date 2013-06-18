@@ -1,3 +1,7 @@
 <%@page import="java.util.*" %>
 
-<%session.invalidate();%>
+<%session.invalidate();
+
+response.sendRedirect("login.jsp");
+
+%>

@@ -5,6 +5,14 @@
 <%@ page import="account.Login" %>
 <%@ page import="lynx.Manager" %>
 <%@ page import="account.CreateAccount;" %>
+
+<%
+if (session.getAttribute("login") != null)
+{
+	response.sendRedirect("main.jsp");
+}
+
+%>
 <html>
 <head>
 <title>Simple Login Form</title>
