@@ -5,7 +5,7 @@
 <%@ page import="schedule.Calendar" %>
 <%@ page import="schedule.CalendarController" %>
 <%@ page import="course.Subject" %>
-<%@ page import="course.Course;" %>
+<%@ page import="course.Course" %>
 <%
 	if (session.getAttribute("login") == null) {
 		response.sendRedirect("login.jsp");
@@ -122,43 +122,9 @@
 								<div class="field-box">
 								<select id = "calendars" name = "calendars" data-placeholder="No Data" onchange="this.form.submit();" style="width:350px;" class="chzn-select" tabindex="6">
                                        <%
-          
-                                      Calendar[] calendars = CalendarController.getCalendars();
-                                       if(calendars != null)
-                                       {
-                                    	   for(Calendar value : calendars)
-                                           {
-                                    		   if(calendarID != null)
-                                    		   {
-                                    			   if(value.getID().equals(calendarID))
-                                        		   {
-                                        			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\" selected>" + value.getName() + "</option>");
-                                        		   }
-                                        		   else
-                                        		   {
-                                        			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
-                                        		   }  
-                                    		   }
-                                    		   else
-                                    		   {
-                                    			   out.println("<option id = \"" + value.getID() + "\"  value = \"" + value.getID() + "\">" + value.getName() + "</option>");
-                                    		   }
-                                    		  
-                                        	   
-                                           }
-                                    	   if(calendars.length ==1 || (calendars != null && calendarID == null))
-                                           {
-                                        	   calendarID = calendars[0].getID();
-                                           }
-                                       }
-                                       else
-                                       {
-                                    	   
-                                       }
-                                       
-                                      
-                                       
+                                       Calendar[] calendars = CalendarController.getCalendars();
                                        %>
+                                       <%@ include file="calendarModule.jsp" %>
                                         
                                     </select>
                                     </div>
