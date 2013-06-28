@@ -27,9 +27,9 @@ public class Manager {
 		cpds.setJdbcUrl(con);
 		cpds.setUser(userName);
 		cpds.setPassword(password);
-		cpds.setMinPoolSize(20);
+		cpds.setMinPoolSize(40);
 		cpds.setAcquireIncrement(20);
-		cpds.setInitialPoolSize(20);
+		cpds.setInitialPoolSize(40);
 		Connection con = null;
 		try {
 			con = cpds.getConnection();

@@ -10,6 +10,7 @@
 			{
 				session.setAttribute("login","1");
 				session.setAttribute("username",username);
+				session.setAttribute("accountID", "1");
 				response.sendRedirect("main.jsp");
 			}
 			else
