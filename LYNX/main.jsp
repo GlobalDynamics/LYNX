@@ -13,15 +13,18 @@
 
 		String pageName = uri.substring(uri.lastIndexOf("/")+1);
 
+
 		boolean permission = PermissionsManager.checkPermission(Integer.parseInt(accountID), pageName, "read");
 		if (login.equals("1")) {
 			if(!permission)
 			{
 				session.setAttribute("error", "You do not have permission to access this page.");
 				response.sendRedirect("result.jsp");
+				return;
 				
 			}
 			String username = (String) session.getAttribute("username");
+			
 			
 		
 	%>
@@ -74,7 +77,7 @@
 	<!-- jgrowl -->
 	<script type="text/javascript" src="scripts/jquery.jgrowl.min.js"></script>
 	<!-- Knob -->
-	<script type="text/javascript" src="scripts/jquery.knob.js"></script>
+	
 	<!-- WYSIHTML5 -->
 	<script type="text/javascript" src="scripts/jquery.wysihtml5.js"></script>
 	<!-- SparkLine -->
@@ -115,13 +118,7 @@
 						
 					</div>
 				</section>
-				<section id="responsive-nav">
-					<select id="nav_select">
-						<option value="">Navigate</option>
-						<option value="main.jsp">Dashboard</option>
-						<option value="form-elements.html">Form Elements</option>
-					</select>
-				</section>
+				
 			</header>
 			<!-- /Header -->
 
@@ -135,42 +132,7 @@
 
 				<!-- Nav menu -->
 				<ul class="nav">
-				<%
-				List<Category> categories = Pages.getCats();
-				for(Category value: categories)
-				{
-					boolean perm = Pages.hasAccessiblePages(Integer.parseInt(value.alternateID), Integer.parseInt(accountID));
-					if(perm && !value.name.contains("Dash"))
-					{
-							
-							out.println("<li><a href=\"" + value.url + "\">" + value.name+ "</a>");
-							out.println("<ul class=\"submenu\">");
-						
-							
-						System.out.println(value.name);
-						List<Page> pages = Pages.getPages(true, Integer.parseInt(value.alternateID),  Integer.parseInt(accountID));
-						if(pages != null)
-						{
-							for(Page nextPage: pages)
-							{
-								
-								out.println("<li><a href=\"" + nextPage.url+ "\">" + nextPage.title + "</a></li>");
-								System.out.println(nextPage.name);
-								
-							}
-						}
-						out.println("</ul></li>");
-						
-					}		
-					else if(value.name.contains("Dash"))
-					{
-						out.println("<li class=\"active\"><a href=\"main.jsp\">Dashboard</a></li>");
-					}
-					
-				}
-			
-				
-				%>
+				<%@ include file="permissionNavigation.jsp" %>
 <!-- 					<li class="active"><a href="main.jsp">Dashboard</a></li> -->
 					
 <!-- 					<li><a href="#">Students</a> -->

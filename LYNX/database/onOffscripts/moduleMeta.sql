@@ -14,10 +14,13 @@ BEGIN
 	(6,'Edit a Subject','Course Module','editsubject.jsp' , 1),
 	(3,'Edit a Teacher','Teacher Module','editteacher.jsp' , 1),
 	(8,'Enroll in Courses','Enrollment Module','enrollcourse.jsp' , 1),
+	(8,'Withdraw from Course','Enrollment Module','withdrawcourse.jsp' , 1),
+	(8,'Show Schedule','Enrollment Module','schedule.jsp' , 1),
 	(7,'None','Grades Module','entergrade.jsp' , 0),
 	(7,'Add Grades','Grades Module','gradepreview.jsp' , 1),
 	(7,'Remove Grades','Grades Module','gradepreview1.jsp' , 1),
 	(7,'None','Grades Module','grades.jsp' , 0),
+	(6,'Transfer Courses', 'Course Module' ,'transfercourse.jsp' , 1),
 	(9,'Remove a Calendar', 'Calendar Module','removecalendar.jsp' , 1),
 	(6,'Remove a Course', 'Course Module' ,'removecourse.jsp' , 1),
 	(7,'None','Grades Module','removegrade.jsp' , 0),
@@ -25,6 +28,6 @@ BEGIN
 	(2,'Remove a Student', 'Student Module' ,'removestudent.jsp' , 1),
 	(6,'Remove a Subject','Course Module','removesubject.jsp' , 1),
 	(3,'Remove a Teacher','Teacher Module','removeteacher.jsp' , 1),
-	(-1,'None', 'NA', 'main.jsp' , 1)
+	(1,'None', 'NA', 'main.jsp' , 1)
 END
 

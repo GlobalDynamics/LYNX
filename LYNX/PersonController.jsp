@@ -4,10 +4,11 @@
 <%@ page import="person.PersonController" %>
 <%@ page import="person.AddressController" %>
 <%
-	if (session.getAttribute("login") == null) {
+	if (session.getAttribute("login") == null || session.getAttribute("accountID") ==  null) {
 		response.sendRedirect("login.jsp");
 	} else {
 		String login = (String) session.getAttribute("login");
+		String accountID = (String) session.getAttribute("accountID");
 		String fname = null; 
 		String lname = null; 
 		String mname = null; 

@@ -3,16 +3,29 @@
 <%@ page import="schedule.Calendar" %>
 <%@ page import="course.Subject"%>
 <%@ page import="course.CourseController"%>
-<%@ page import="course.Course;" %>
+<%@ page import="course.Course" %>
 <%
-	if (session.getAttribute("login") == null) {
+	if (session.getAttribute("login") == null || session.getAttribute("accountID") ==  null) {
 		response.sendRedirect("login.jsp");
 	} else {
 		String login = (String) session.getAttribute("login");
+		String accountID = (String) session.getAttribute("accountID");
 
 		String calendarID = null;
 		String subjectID = null;
+		String uri = request.getRequestURI();
+
+		String pageName = uri.substring(uri.lastIndexOf("/")+1);
+
+		boolean permission = PermissionsManager.checkPermission(Integer.parseInt(accountID), pageName, "read");
 		if (login.equals("1")) {
+			if(!permission)
+			{
+				session.setAttribute("error", "You do not have permission to access this page.");
+				response.sendRedirect("result.jsp");
+				return;
+				
+			}
 			String username = (String) session.getAttribute("username");
 			if((String) request.getParameter("calendars") != null)
 					{
@@ -152,13 +165,7 @@
 						
 					</div>
 				</section>
-            <section id="responsive-nav">
-                <select id="nav_select">
-                	<option value="">Navigate</option>
-                	<option value="main.jsp">Dashboard</option>
-                    <option value="form-elements.html">Form Elements</option>
-                </select>
-            </section>
+            
         </header> <!-- /Header -->
         
         <div class="clear"></div>		
@@ -171,55 +178,7 @@
 
 				<!-- Nav menu -->
 				<ul class="nav">
-					<li class="active"><a href="main.jsp">Dashboard</a></li>
-					
-					<li><a href="#">Students</a>
-						<ul class="submenu">
-							<li><a href="addstudent.jsp">Add a Student</a></li>
-							<li><a href="editstudent.jsp">Edit a Student</a></li>
-							<li><a href="removestudent.jsp">Remove a Student</a></li>
-						</ul></li>
-					<li><a href="#">Teachers</a>
-						<ul class="submenu">
-							<li><a href="addteacher.jsp">Add a Teacher</a></li>
-							<li><a href="editteacher.jsp">Edit a teacher</a></li>
-							<li><a href="removeteacher.jsp">Remove a teacher</a></li>
-						</ul></li>
-					<li><a href="#">People</a>
-						<ul class="submenu">
-							<li><a href="addperson.jsp">Add a Person</a></li>
-							<li><a href="epreview.jsp">Edit a Person</a></li>
-							<li><a href="removeperson.jsp">Remove Person</a></li> <li><a href="link.jsp">Link Accounts</a></li>
-						</ul></li>
-
-					<li><a href="#">Courses</a>
-						<ul class="submenu">
-							<li><a href="addcourse.jsp">Add a Course</a></li>
-							<li><a href="editcourse.jsp">Edit a course</a></li>
-							<li><a href="transfercourse.jsp">Transfer Course</a></li>
-							<li><a href="removecourse.jsp">Remove course</a></li>
-							<li><a href="addsubject.jsp">Add a subject</a></li>
-							<li><a href="editsubject.jsp">Edit a subject</a></li>
-							<li><a href="removesubject.jsp">Remove a subject</a></li>
-							
-						</ul></li>
-					<li><a href="#">Grades</a> 
- <ul class = "submenu"> 
-  <li><a href="gradepreview.jsp">Add Grades</a></li> 
-  <li><a href="gradepreview1.jsp">Remove Grades</a></li> 
-  </ul></li> 
-  <li><a href="#">Enrollment</a>
-						<ul class="submenu">
-							<li><a href="enrollcourse.jsp">Enroll in Course</a></li>
-							<li><a href="withdrawcourse.jsp">Withdraw from Course</a></li>
-							<li><a href="schedule.jsp">Show Schedule</a></li>
-						</ul></li>
-					<li><a href="#">Calendar</a>
-						<ul class="submenu">
-							<li><a href="addcalendar.jsp">Add Calendar</a></li>
-							<li><a href="removecalendar.jsp">Remove Calendar</a></li>
-							<li><a href="editcalendar.jsp">Edit Calendar</a></li>
-						</ul></li>
+					<%@ include file="permissionNavigation.jsp" %>
 				</ul>
 				<!-- /Nav menu -->
 

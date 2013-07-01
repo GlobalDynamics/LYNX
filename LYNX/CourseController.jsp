@@ -4,10 +4,11 @@
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Iterator" %>
 <%
-	if (session.getAttribute("login") == null) {
+	if (session.getAttribute("login") == null || session.getAttribute("accountID") ==  null) {
 		response.sendRedirect("login.jsp");
 	} else {
 		String login = (String) session.getAttribute("login");
+		String accountID = (String) session.getAttribute("accountID");
 		String fname = null; 
 		String lname = null; 
 		if (login.equals("1")) {

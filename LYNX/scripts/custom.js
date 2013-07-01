@@ -66,20 +66,20 @@ jQuery(window).load(function() {
 			});
 		}
 		
-		if (jQuery('.knob').length) {
-			jQuery('.knob').each(function() {
-				var t = jQuery(this);
-				var e = t;
-				var v = parseInt(e.attr('data-value'), 10);
-				
-				e.data('counter', '');
-				e.val(0);
-		
-				var $counter = e;
-				e.animateNumber(v, 20, function() { e.change(); });
-				
-			});
-		}
+//		if (jQuery('.knob').length) {
+//			jQuery('.knob').each(function() {
+//				var t = jQuery(this);
+//				var e = t;
+//				var v = parseInt(e.attr('data-value'), 10);
+//				
+//				e.data('counter', '');
+//				e.val(0);
+//		
+//				var $counter = e;
+//				e.animateNumber(v, 20, function() { e.change(); });
+//				
+//			});
+//		}
 		
 		// CHART 1
 		if (jQuery('#chart1').length) {
@@ -391,34 +391,34 @@ jQuery(document).ready(function() {
 	
 	// Knob widgets
 	
-	jQuery(".knob").each(function() {
-		jQuery(this).val(0);
-		jQuery(this).knob({
-			class : 'widget-knob',
-			draw : function () {
-				var a = this.angle(this.cv)  		// Angle
-					, sa = this.startAngle          // Previous start angle
-					, sat = this.startAngle         // Start angle
-					, ea                            // Previous end angle
-					, eat = sat + a                 // End angle
-					, r = 1;
-				this.g.lineWidth = this.lineWidth;
-				this.o.cursor
-					&& (sat = eat - 0.3)
-					&& (eat = eat + 0.3);
-				this.g.beginPath();
-				this.g.strokeStyle = r ? this.o.fgColor : this.fgColor ;
-				this.g.arc(this.xy, this.xy, this.radius - this.lineWidth*1.5, sat, eat, false);
-				this.g.stroke();
-				this.g.lineWidth = 2;
-				this.g.beginPath();
-				this.g.strokeStyle = this.o.fgColor;
-				this.g.arc( this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
-				this.g.stroke();
-				return false;
-			}
-		});
-	});
+//	jQuery(".knob").each(function() {
+//		jQuery(this).val(0);
+//		jQuery(this).knob({
+//			class : 'widget-knob',
+//			draw : function () {
+//				var a = this.angle(this.cv)  		// Angle
+//					, sa = this.startAngle          // Previous start angle
+//					, sat = this.startAngle         // Start angle
+//					, ea                            // Previous end angle
+//					, eat = sat + a                 // End angle
+//					, r = 1;
+//				this.g.lineWidth = this.lineWidth;
+//				this.o.cursor
+//					&& (sat = eat - 0.3)
+//					&& (eat = eat + 0.3);
+//				this.g.beginPath();
+//				this.g.strokeStyle = r ? this.o.fgColor : this.fgColor ;
+//				this.g.arc(this.xy, this.xy, this.radius - this.lineWidth*1.5, sat, eat, false);
+//				this.g.stroke();
+//				this.g.lineWidth = 2;
+//				this.g.beginPath();
+//				this.g.strokeStyle = this.o.fgColor;
+//				this.g.arc( this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+//				this.g.stroke();
+//				return false;
+//			}
+//		});
+//	});
 	
 	// Mask
 	if (jQuery('input.mask').length) {
