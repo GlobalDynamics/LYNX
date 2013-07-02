@@ -37,30 +37,32 @@ public class Security extends lynx.Manager {
 	{
 		con = cpds.getConnection();
 		con.setAutoCommit(false);
-		SQL = "SELECT username,accountID from account WHERE username = ?";
-		PreparedStatement stmt = con.prepareStatement(SQL);
+		SQL = "SELECT username,accountID from accounts WHERE username = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		System.out.println(SQL);
 		stmt.setString(1, username);
 		try {
-			try {
 				rs = stmt.executeQuery();
 
-				if (!rs.isBeforeFirst()) {
-					return 0;
-
-				} else {
-					rs.first();
-					return rs.getInt("total_rows");
-				}
-
-			} finally {
+			}
+		 finally {
+			if (!rs.isBeforeFirst()) {
 				con.close();
 				stmt.close();
+				rs.close();
+			} else {
+				rs.first();
+				String user = rs.getString("accountID");
+				con.close();
+				stmt.close();
+				rs.close();
+				return user;
 			}
-		} finally {
 			con.close();
 			stmt.close();
+			rs.close();
 		}
-		return null;
+		return "";
 	}
 }

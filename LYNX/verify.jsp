@@ -1,4 +1,5 @@
 <%@ page import="account.Login" %>
+<%@ page import="account.Security" %>
 <%@ page import="account.CreateAccount;" %>
 <%	
 
@@ -8,9 +9,11 @@
             String logged =  Login.login(password, username);
 			if (logged.equals("1"))
 			{
+				String accountID = Security.getAccountID(username);
 				session.setAttribute("login","1");
 				session.setAttribute("username",username);
-				session.setAttribute("accountID", "1");
+				System.out.println(accountID);
+				session.setAttribute("accountID", accountID);
 				response.sendRedirect("main.jsp");
 			}
 			else
