@@ -199,12 +199,36 @@
 				<!-- Breadcrumb -->
 				<div class="three-fourths breadcrumb">
 					<span><a href="#" class="icon entypo home"></a></span> <span
-						class="middle"></span> <span><a href="#">Admin
-							Template</a></span> <span class="middle"></span> <span>Dashboard</span>
+						class="middle"></span><span>Administration</span><span class="middle"></span><span>Usergroups</span>
 					<span class="end"></span>
 				</div>
 				<!-- /Breadcrumb -->
-
+				<form name = "ap" id = "ap" method = "post" action = "PermissionsController.jsp">
+						<input type="hidden" name="type" id = "type" value="aGroup">
+            <div class="full-width">
+            	<div class="box">
+                	<div class="inner">
+                    	<div class="titlebar"><span>Add a Usergroup</span></div>
+                        <div class="contents">
+            			
+            			<div class="row">
+									
+										<label>New Usergroup  Name:</label>
+										<div class="field-box">
+											<input id="uname" name="uname" type="text" maxlength = "50" class="large">
+										</div>
+										<div class="clear"></div>
+									</div>
+                            <div class="bar-big">
+                        	<input type="submit" value="Submit">
+                            <input type="reset" value="Reset">
+                            
+                        </div>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+                            </form>
 			
 
 				<div class="clear"></div>

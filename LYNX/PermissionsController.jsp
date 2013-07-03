@@ -1,0 +1,34 @@
+<%@ page import="account.Login" %>
+<%@ page import="groups.UserGroups" %>
+<%
+	if (session.getAttribute("login") == null) {
+		response.sendRedirect("login.jsp");
+	} else {
+		String login = (String) session.getAttribute("login");
+		if (login.equals("1")) {
+			if(request.getParameter("type") != null)
+			{
+				if(((String) request.getParameter("type")).equals("aGroup"))
+				{
+					String usergroupName = request.getParameter("uname");
+					if(UserGroups.checkGroup(usergroupName) != 1)
+					{
+						UserGroups.addGroup(usergroupName);
+						response.sendRedirect("usergroups.jsp");
+					}
+					else
+					{
+						session.setAttribute("error","Group already exists.");
+						response.sendRedirect("result.jsp");
+					}
+				
+				
+			}
+	
+			
+		} else {
+			response.sendRedirect("login.jsp");
+		}
+	}
+}
+	%>
