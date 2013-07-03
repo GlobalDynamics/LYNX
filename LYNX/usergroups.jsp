@@ -1,6 +1,7 @@
 <%@ page import="account.Security" %>
 <%@ page import="groups.PermissionsManager" %>
-<%@ page import="groups.Pages" %>
+<%@ page import="groups.UserGroups" %>
+<%@ page import="groups.Group" %>
 <%@ page import="groups.Page" %>
 <%@ page import="groups.Category" %>
 <%@ page import="java.util.List" %>
@@ -203,6 +204,61 @@
 					<span class="end"></span>
 				</div>
 				<!-- /Breadcrumb -->
+				<div class="full-width">
+            	<div class="box">
+                	<div class="inner">
+                    	<div class="titlebar"><span>Add a Usergroup</span></div>
+                        <div class="contents">
+            			
+            			 <div class="row">
+								<div class="titlebar">
+									<span class="icon awesome white table"></span> <span
+										class="w-icon">User Groups</span>
+								</div>
+								<table>
+									<thead>
+										<tr>
+											
+											<th scope="col">Name</th>
+											<th scope="col">Active</th>
+										</tr>
+									</thead>
+									<tbody>
+
+
+										<%
+										List<Group> groups = UserGroups.getGroups();
+													
+
+														if (groups != null) {
+															for (Group value : groups) {
+																out.println("<tr>");
+																out.println("<td>" + value.name + "</td>");
+																out.println("<td>" + value.active
+																		+ "</td>");
+																out.println("</tr>");
+															}
+														} else {
+
+														}
+													
+										%>
+
+									</tbody>
+								</table>
+								<div class="clear"></div>
+							</div>
+                            <div class="bar-big">
+                        	<input type="submit" value="Submit">
+                            <input type="reset" value="Reset">
+                            
+                        </div>
+                            </div>
+                            </div>
+                            </div>
+                            </div>
+				
+				
 				<form name = "ap" id = "ap" method = "post" action = "PermissionsController.jsp">
 						<input type="hidden" name="type" id = "type" value="aGroup">
             <div class="full-width">
