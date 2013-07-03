@@ -95,18 +95,18 @@ public class Pages extends Manager {
 		
 	}
 	
-	public static boolean hasAccessiblePages(int divisionID, int accountID) throws SQLException
+	public static boolean hasAccessiblePages(int divisionID, int usergroupID) throws SQLException
 	{
 		con = cpds.getConnection();
 		con.setAutoCommit(false);
 		SQL = "SELECT * FROM permissions p\r\n" + 
 				"CROSS JOIN division d\r\n" + 
 				"INNER JOIN module m ON m.divisionID = d.divisionID AND m.moduleID = p.moduleID\r\n" + 
-				"WHERE d.divisionID = ? AND p.accessType  > 0 and m.active = 1 AND p.accountID = ?";
+				"WHERE d.divisionID = ? AND p.accessType  > 0 and m.active = 1 AND p.usergroupID = ?";
 		PreparedStatement stmt = con.prepareStatement(SQL,
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);	
 		stmt.setInt(1, divisionID);
-		stmt.setInt(2, accountID);
+		stmt.setInt(2, usergroupID);
 		System.out.println(divisionID);
 		try {
 			rs = stmt.executeQuery();

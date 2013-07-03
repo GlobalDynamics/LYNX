@@ -19,7 +19,7 @@ public class PermissionsManager extends Manager {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
 			
-			SQL = "SELECT accountID,moduleID,userGroup, accessType FROM permissions WHERE accountID = ? AND moduleID = ?";		
+			SQL = "SELECT accountID,moduleID,usergroupID, accessType FROM permissions WHERE usergroupID = ? AND moduleID = ?";		
 			System.out.println(accountID);
 			System.out.println(module);
 			System.out.println(requestingType);

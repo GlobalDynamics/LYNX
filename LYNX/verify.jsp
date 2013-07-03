@@ -9,11 +9,11 @@
             String logged =  Login.login(password, username);
 			if (logged.equals("1"))
 			{
-				String accountID = Security.getAccountID(username);
+				String usergroupID = Security.getGroupID(username);
 				session.setAttribute("login","1");
 				session.setAttribute("username",username);
-				System.out.println(accountID);
-				session.setAttribute("accountID", accountID);
+				System.out.println(usergroupID);
+				session.setAttribute("accountID", usergroupID);
 				response.sendRedirect("main.jsp");
 			}
 			else

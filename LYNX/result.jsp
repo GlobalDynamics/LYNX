@@ -1,13 +1,14 @@
-
+<%@ page import="account.Security" %>
 <%
 	if (session.getAttribute("login") == null || session.getAttribute("accountID") ==  null) {
 		response.sendRedirect("login.jsp");
 	} else {
 		String login = (String) session.getAttribute("login");
-		String accountID = (String) session.getAttribute("accountID");
+		String username = (String) session.getAttribute("username");
+		String accountID = Security.getGroupID(username);
 
 		if (login.equals("1")) {
-			String username = (String) session.getAttribute("username");
+			
 	%>
 
 	<!DOCTYPE html>

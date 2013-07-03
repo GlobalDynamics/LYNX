@@ -1,3 +1,4 @@
+<%@ page import="account.Security" %>
 <%@ page import="account.Login" %>
 <%@ page import="person.PersonController" %>
 <%@ page import="person.AddressController" %>
@@ -9,7 +10,8 @@
 		response.sendRedirect("login.jsp");
 	} else {
 		String login = (String) session.getAttribute("login");
-		String accountID = (String) session.getAttribute("accountID");
+		String username = (String) session.getAttribute("username");
+		String accountID = Security.getGroupID(username);
 		String fname = null;
 		String lname = null;
 		String mname = null;
@@ -53,7 +55,7 @@
 				return;
 				
 			}
-			String username = (String) session.getAttribute("username");
+			
 			if(request.getParameter("type") != null)
 			{
 				if(((String) request.getParameter("type")).equals("ePerson"))

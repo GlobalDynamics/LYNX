@@ -1,3 +1,4 @@
+<%@ page import="account.Security" %>
 <%@ page import = "java.util.List" %>
 <%@ page import = "person.PersonController" %>
 <%
@@ -5,7 +6,8 @@
 		response.sendRedirect("login.jsp");
 	} else {
 		String login = (String) session.getAttribute("login");
-		String accountID = (String) session.getAttribute("accountID");
+		String username = (String) session.getAttribute("username");
+		String accountID = Security.getGroupID(username);
 
 		String uri = request.getRequestURI();
 
@@ -20,7 +22,7 @@
 				return;
 				
 			}
-			String username = (String) session.getAttribute("username");
+			
 			List<String> countryList = null;
 			List<String> languageList = null;
 			List<String> ethinList = null;

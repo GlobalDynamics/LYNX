@@ -65,4 +65,37 @@ public class Security extends lynx.Manager {
 		}
 		return "";
 	}
+	
+	public static String getGroupID(String username) throws SQLException
+	{
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		SQL = "SELECT username,accountID, usergroupID from accounts WHERE username = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		System.out.println(SQL);
+		stmt.setString(1, username);
+		try {
+				rs = stmt.executeQuery();
+
+			}
+		 finally {
+			if (!rs.isBeforeFirst()) {
+				con.close();
+				stmt.close();
+				rs.close();
+			} else {
+				rs.first();
+				String user = rs.getString("usergroupID");
+				con.close();
+				stmt.close();
+				rs.close();
+				return user;
+			}
+			con.close();
+			stmt.close();
+			rs.close();
+		}
+		return "";
+	}
 }

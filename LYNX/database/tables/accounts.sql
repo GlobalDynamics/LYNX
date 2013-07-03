@@ -4,6 +4,7 @@ BEGIN
 	(
 		accountID INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 		personID INT NOT NULL,
+		usergroupID INT NOT NULL,
 		username VARCHAR(20),
 		hash VARCHAR(500),
 		salt VARCHAR(50),

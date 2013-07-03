@@ -1,3 +1,4 @@
+<%@ page import="account.Security" %>
 <%@ page import="account.Login" %>
 <%@ page import="schedule.CalendarController" %>
 <%
@@ -5,7 +6,8 @@
 		response.sendRedirect("login.jsp");
 	} else {
 		String login = (String) session.getAttribute("login");
-		String accountID = (String) session.getAttribute("accountID");
+		String username = (String) session.getAttribute("username");
+		String accountID = Security.getGroupID(username);
 		String fname = null; 
 		String lname = null; 
 		if (login.equals("1")) {

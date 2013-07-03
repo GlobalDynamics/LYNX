@@ -28,6 +28,8 @@ BEGIN
 	(2,'Remove a Student', 'Student Module' ,'removestudent.jsp' , 1),
 	(6,'Remove a Subject','Course Module','removesubject.jsp' , 1),
 	(3,'Remove a Teacher','Teacher Module','removeteacher.jsp' , 1),
+	(10,'Permissions','Permissions Module','permissions.jsp' , 1),
+	(10,'User Groups','Permissions Module','usergroups.jsp' , 1),
 	(1,'None', 'NA', 'main.jsp' , 1)
 END
 

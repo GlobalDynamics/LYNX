@@ -1,3 +1,4 @@
+<%@ page import="account.Security" %>
 <%@ page import="course.CourseController" %>
 <%@ page import="schedule.CalendarController" %>
 <%@ page import="schedule.Calendar" %>
@@ -9,7 +10,8 @@
 		response.sendRedirect("login.jsp");
 	} else {
 		String login = (String) session.getAttribute("login");
-		String accountID = (String) session.getAttribute("accountID");
+		String username = (String) session.getAttribute("username");
+		String accountID = Security.getGroupID(username);
 
 		String calendarID = null;
 		String subjectID = null;
@@ -26,7 +28,7 @@
 				return;
 				
 			}
-			String username = (String) session.getAttribute("username");
+			
 			if((String) request.getParameter("calendars") != null)
 					{
 						calendarID = (String) request.getParameter("calendars");

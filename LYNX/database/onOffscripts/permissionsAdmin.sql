@@ -1,6 +1,6 @@
 IF NOT EXISTS (SELECT 1 FROM permissions)
 BEGIN
-	INSERT INTO permissions (moduleID,accountID, userGroup, accessType) 
+	INSERT INTO permissions (moduleID,accountID, usergroupID, accessType) 
 	VALUES (1,1, 1, 3),  
 	(2,1, 1, 3),  
 	(3,1, 1, 3),  
@@ -28,5 +28,7 @@ BEGIN
 	(25,1, 1, 3),
 	(26,1, 1, 3),
 	(27,1, 1, 3),
-	(28,1, 1, 3)
+	(28,1, 1, 3),
+	(29,1, 1, 3),
+	(30,1, 1, 3)
 END

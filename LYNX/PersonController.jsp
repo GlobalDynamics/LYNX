@@ -8,7 +8,6 @@
 		response.sendRedirect("login.jsp");
 	} else {
 		String login = (String) session.getAttribute("login");
-		String accountID = (String) session.getAttribute("accountID");
 		String fname = null; 
 		String lname = null; 
 		String mname = null; 

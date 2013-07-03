@@ -9,5 +9,6 @@ BEGIN
 	(6,'Courses','#',1),
 	(7,'Grades','#',1),
 	(8,'Enrollment','#',1),
-	(9,'Calendar','#',1)
+	(9,'Calendar','#',1),
+	(10,'Administration','#',1)
 END
