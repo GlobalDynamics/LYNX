@@ -38,7 +38,7 @@ public class PersonController extends lynx.Manager {
 	public static void addPerson(String fname, String lname, String mname,
 			String suf, int aID, int adID, String gnr, String date,
 			String language, String ethinicity, String password1,
-			String password2, String username) throws SQLException,
+			String password2, String username, String group) throws SQLException,
 			NoSuchAlgorithmException, IOException, ParseException
 
 	{
@@ -46,7 +46,7 @@ public class PersonController extends lynx.Manager {
 		System.out.println(test);
 		if (checkByID(CreateAccount.getAccountByUserName(username),
 				checkType.ACCOUNT) == 0) {
-			CreateAccount.createAccount(password1, password2, username);
+			CreateAccount.createAccount(password1, password2, username, Integer.parseInt(group));
 
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
@@ -115,7 +115,7 @@ public class PersonController extends lynx.Manager {
 
 	public static void editPerson(int personID, String fname, String lname,
 			String mname, String suf, String gnr, String date,String language, String ethinicity,
-			String password1, String password2, String userName)
+			String password1, String password2, String userName, String group)
 			throws SQLException, NoSuchAlgorithmException, IOException,
 			ParseException
 

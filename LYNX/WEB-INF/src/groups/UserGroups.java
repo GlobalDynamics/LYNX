@@ -151,4 +151,39 @@ public class UserGroups extends Manager {
 		return null;
 		
 }
+	
+	public static List<Group> getAllGroups() throws SQLException
+	{
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		SQL = "SELECT * FROM usergroups";	
+		
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);		
+		List<Group> groups = new ArrayList<Group>();
+		try {
+			rs = stmt.executeQuery();
+		}
+		finally
+		{
+			
+			if (!rs.isBeforeFirst()) {
+				stmt.close();
+				con.close();	
+				rs.close();
+			} else {
+				rs.beforeFirst();
+				while (rs.next())
+					groups.add(new Group(rs.getString("name"), rs.getString("active"), rs.getString("usergroupID")));
+				stmt.close();
+				con.close();	
+				rs.close();
+				return groups;
+				
+				
+			}
+		}		
+		return null;
+		
+}
 }

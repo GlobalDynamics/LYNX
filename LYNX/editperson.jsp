@@ -5,6 +5,8 @@
 <%@ page import="person.Address" %>
 <%@ page import="person.Person" %>
 <%@ page import = "java.util.List" %>
+<%@ page import="groups.UserGroups" %>
+<%@ page import="groups.Group" %>
 <%
 	if (session.getAttribute("login") == null || session.getAttribute("accountID") ==  null) {
 		response.sendRedirect("login.jsp");
@@ -517,6 +519,24 @@
 									</div>
 									<div class="clear"></div>
 								</div>
+								
+								<div class="row">
+                            	<label>User Group</label> <div class="field-box">
+                                	<select id = "group" name = "group">
+                                    	<%
+                                    	List<Group> groups = UserGroups.getAllGroups();
+                                     if(groups != null)
+                                     {
+                                    	 for (Group value : groups) {
+                                    		 out.println("<option value = \"" + value.groupID + "\">" + value.name + "</option>");
+                                    	 }
+                                    	 
+                                     }
+                                    	%>
+                                    </select>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
 								
 					
 						

@@ -28,7 +28,7 @@
 		String apt = "";
 		String ethinicity = null;
 		String language = null;
-		
+		String group = null;
 		String phone = null;
 		String email = "";
 		if (login.equals("1")) {
@@ -47,8 +47,9 @@
 						 ethinicity = (String) request.getParameter("ethinicity");
 						 language = (String) request.getParameter("language");
 						 username = request.getParameter("username");
-						 password1 = request.getParameter("password1");
-						 password2 = request.getParameter("password2");
+						 password1 = (String) request.getParameter("password1");
+						 password2 = (String) request.getParameter("password2");
+						 group = (String) request.getParameter("group");
 						 
 						 //Address
 						 
@@ -71,7 +72,7 @@
 						 if(personValidate == "true" && secure == "true" && address =="true")
 							{
 							 int addressID = AddressController.createAddress(street, zip, city, country, direction, state, apt, house, phone, email);
-							 PersonController.addPerson(fname,  lname,  mname,  suf, 1, addressID, gen, birth, language, ethinicity, password1,password2,username);
+							 PersonController.addPerson(fname,  lname,  mname,  suf, 1, addressID, gen, birth, language, ethinicity, password1,password2,username, group);
 							 
 							 //PersonController.editPerson(personID, fname,  lname,  mname,  suf, 1, 1, gen, birth,password1,password2,username);
 							response.sendRedirect("addperson.jsp");
@@ -107,6 +108,7 @@
 					 username = request.getParameter("username");
 					 password1 = request.getParameter("password1");
 					 password2 = request.getParameter("password2");
+					 group = (String) request.getParameter("group");
 					 
 					 //Address
 					 
@@ -132,8 +134,8 @@
 						{
 						 PersonController.editPerson(personID, fname, lname, mname,
 								 suf, gen,  birth, language, ethinicity,
-								 password1,  password2, username);
-						 CreateAccount.editAccount(personID, password1, password2, username);
+								 password1,  password2, username, group);
+						 CreateAccount.editAccount(personID, password1, password2, username, Integer.parseInt(group));
 						 AddressController.editAddress(addressID, street, zip, city, country, direction, state, apt, house, phone, email);
 						response.sendRedirect("epreview.jsp");
 						}
