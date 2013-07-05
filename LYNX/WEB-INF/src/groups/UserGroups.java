@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,27 @@ public class UserGroups extends Manager {
 
 	}
 	
+	public static void removeGroup(int groupID) throws SQLException,
+	ParseException {
+
+	if (checkGroupByID(groupID) != 0) {
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		SQL = "DELETE FROM usergroups WHERE usergroupID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL);
+		System.out.println(SQL);
+		stmt.setInt(1, groupID);
+		try {
+			stmt.executeUpdate();
+			con.commit();
+		} finally {
+			con.close();
+			stmt.close();
+		}
+	}
+	
+	}
+	
 	public static int checkGroup(String name) throws SQLException
 	{
 		
@@ -46,6 +68,35 @@ public class UserGroups extends Manager {
 			PreparedStatement stmt = con.prepareStatement(SQL);
 			System.out.println(SQL);
 			stmt.setString(1, name);
+			try {
+				rs = stmt.executeQuery();
+				con.commit();
+			} finally {
+				if (!rs.isBeforeFirst()) {
+					stmt.close();
+					con.close();
+					return 0;
+				} else {
+					stmt.close();
+					con.close();
+					rs.close();
+				}
+
+			}
+
+			return 1;
+		
+	}
+	public static int checkGroupByID(int ID) throws SQLException
+	{
+		
+
+			con = cpds.getConnection();
+			con.setAutoCommit(false);
+			SQL = "SELECT usergroupID FROM usergroups WHERE usergroupID = ?";
+			PreparedStatement stmt = con.prepareStatement(SQL);
+			System.out.println(SQL);
+			stmt.setInt(1, ID);
 			try {
 				rs = stmt.executeQuery();
 				con.commit();
@@ -88,7 +139,7 @@ public class UserGroups extends Manager {
 			} else {
 				rs.beforeFirst();
 				while (rs.next())
-					groups.add(new Group(rs.getString("name"), rs.getString("active")));
+					groups.add(new Group(rs.getString("name"), rs.getString("active"), rs.getString("usergroupID")));
 				stmt.close();
 				con.close();	
 				rs.close();

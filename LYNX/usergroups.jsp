@@ -204,6 +204,8 @@
 					<span class="end"></span>
 				</div>
 				<!-- /Breadcrumb -->
+				<form name = "rgroup" id = "rgroup" method = "post" action = "PermissionsController.jsp">
+						<input type="hidden" name="type" id = "type" value="rGroup">
 				<div class="full-width">
             	<div class="box">
                 	<div class="inner">
@@ -218,7 +220,7 @@
 								<table>
 									<thead>
 										<tr>
-											
+											<th scope="col">Delete</th>
 											<th scope="col">Name</th>
 											<th scope="col">Active</th>
 										</tr>
@@ -233,6 +235,11 @@
 														if (groups != null) {
 															for (Group value : groups) {
 																out.println("<tr>");
+																out.println("<td><label></label> <div class=\"field-box\"><input name = \"groupRemove"
+																		+ value.groupID
+																		+ "\" value = \""
+																		+ value.groupID
+																		+ "\" type=\"checkbox\" /> </div></td>");
 																out.println("<td>" + value.name + "</td>");
 																out.println("<td>" + value.active
 																		+ "</td>");
@@ -257,6 +264,7 @@
                             </div>
                             </div>
                             </div>
+                            </form>
 				
 				
 				<form name = "ap" id = "ap" method = "post" action = "PermissionsController.jsp">

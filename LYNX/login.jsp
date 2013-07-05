@@ -8,8 +8,12 @@
 
 <%
 if (session.getAttribute("login") != null)
+	
 {
-	response.sendRedirect("main.jsp");
+	if(session.getAttribute("login").equals("1"))
+	{
+		response.sendRedirect("main.jsp");
+	}
 }
 
 %>

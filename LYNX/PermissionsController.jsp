@@ -1,5 +1,7 @@
 <%@ page import="account.Login" %>
 <%@ page import="groups.UserGroups" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.Iterator" %>
 <%
 	if (session.getAttribute("login") == null) {
 		response.sendRedirect("login.jsp");
@@ -24,6 +26,23 @@
 				
 				
 			}
+				else if(((String) request.getParameter("type")).equals("rGroup"))
+				{
+					Map params = request.getParameterMap();  
+					
+					for (Iterator iterator = params.entrySet().iterator(); iterator.hasNext();)  {  
+					    Map.Entry entry = (Map.Entry) iterator.next();  
+					    System.out.println("parameter name:"+entry.getKey());  
+					    System.out.println("value:"+request.getParameter(entry.getKey().toString())); 
+					    if(entry.getKey().toString().contains("groupRemove"))
+					    {
+					    	int groupID = Integer.parseInt(request.getParameter(entry.getKey().toString()));
+					    	UserGroups.removeGroup(groupID);
+							
+					    }
+				    }  
+					response.sendRedirect("usergroups.jsp");
+				}
 	
 			
 		} else {
