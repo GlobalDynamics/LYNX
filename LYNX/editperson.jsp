@@ -21,6 +21,7 @@
 		String gen = null;
 		String birth = null;
 		String user = null;
+		String group = null;
 		int personID = -1;
 		int addressID = -1;
 		
@@ -73,6 +74,7 @@
 					 gen = temp.getGender();
 					 birth = temp.getBirth();
 					 user = temp.getUser();
+					 group = temp.group;
 					 
 					 ethinicity = temp.ethinitiy;
 					 language = temp.language;
@@ -528,7 +530,10 @@
                                      if(groups != null)
                                      {
                                     	 for (Group value : groups) {
-                                    		 out.println("<option value = \"" + value.groupID + "\">" + value.name + "</option>");
+                                    		 if(value.groupID.equals(group))
+                                    			 out.println("<option value = \"" + value.groupID + "\"selected>" + value.name + "</option>");
+                                    		 else
+                                    			 out.println("<option value = \"" + value.groupID + "\">" + value.name + "</option>");
                                     	 }
                                     	 
                                      }

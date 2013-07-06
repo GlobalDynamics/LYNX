@@ -15,8 +15,9 @@ public class Person extends Manager {
 	private String username;
 	public String ethinitiy;
 	public String language;
+	public String group;
 
-	public Person(String fname, String lname, String mname, int pID, String suf, int aID, int adID, String gnr, String date,String usr, String lang, String ethin)
+	public Person(String fname, String lname, String mname, int pID, String suf, int aID, int adID, String gnr, String date,String usr, String lang, String ethin, String group)
 	{
 		  firstName = fname;
 		  lastName = lname;
@@ -30,6 +31,7 @@ public class Person extends Manager {
 		  username = usr;
 		  ethinitiy = ethin;
 		  language = lang;
+		  this.group = group;
 	}
 	public Person(String fname, String lname, int pID)
 	{

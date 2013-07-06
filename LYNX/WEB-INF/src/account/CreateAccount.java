@@ -32,10 +32,10 @@ public class CreateAccount extends lynx.Manager {
 			stmt.setInt(1, -1);
 			stmt.setInt(2, usergroupID);
 			stmt.setString(3, username);
-			stmt.setString(4, finalpass[0]);
-			stmt.setString(5, finalpass[1]);
+			stmt.setString(4, finalpass[0].toString());
+			stmt.setString(5, finalpass[1].toString());
 			try {
-				stmt.executeUpdate(SQL);
+				stmt.executeUpdate();
 			} finally {
 				con.close();
 				stmt.close();
