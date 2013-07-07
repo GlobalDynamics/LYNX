@@ -25,6 +25,7 @@
 		int personID = -1;
 		int addressID = -1;
 		
+		
 		String street = null;
 		String state = null;
 		String city = null;
@@ -522,6 +523,8 @@
 									<div class="clear"></div>
 								</div>
 								
+								<input type="hidden" name="currentGroup" id = "currentGroup" value="<%=group%>">
+								
 								<div class="row">
                             	<label>User Group</label> <div class="field-box">
                                 	<select id = "group" name = "group">
@@ -531,7 +534,7 @@
                                      {
                                     	 for (Group value : groups) {
                                     		 if(value.groupID.equals(group))
-                                    			 out.println("<option value = \"" + value.groupID + "\"selected>" + value.name + "</option>");
+                                    		 	out.println("<option value = \"" + value.groupID + "\"selected>" + value.name + "</option>");
                                     		 else
                                     			 out.println("<option value = \"" + value.groupID + "\">" + value.name + "</option>");
                                     	 }

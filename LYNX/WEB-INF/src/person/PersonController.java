@@ -140,7 +140,7 @@ public class PersonController extends lynx.Manager {
 	public static void editPerson(int personID, String fname, String lname,
 			String mname, String suf, String gnr, String date, String language,
 			String ethinicity, String password1, String password2,
-			String userName, String group) throws SQLException,
+			String userName, int currentGroup, int group) throws SQLException,
 			NoSuchAlgorithmException, IOException, ParseException
 
 	{
@@ -168,7 +168,31 @@ public class PersonController extends lynx.Manager {
 
 			try {
 				stmt.executeUpdate();
-				con.commit();
+				if(!(currentGroup == group))
+				{
+					if(currentGroup == 2)
+					{
+						unlinkStudent(currentGroup, true);
+					}
+					else if(currentGroup == 3)
+					{
+						removeTeacher(currentGroup, true);
+					}
+					if (group == 2) {
+
+						
+							linkToStudent(personID);
+							System.out.println(personID);
+						
+
+					} else if (group == 3) {
+						
+							addTeacher(personID);
+							System.out.println(personID);		
+					}
+				}
+					
+				
 			} finally {
 				con.close();
 				stmt.close();
@@ -778,14 +802,17 @@ public class PersonController extends lynx.Manager {
 		}
 	}
 
-	public static void unlinkStudent(int studentID) throws SQLException,
+	public static void unlinkStudent(int studentID, boolean usePerson) throws SQLException,
 			NoSuchAlgorithmException, IOException
 
 	{
 		if (checkByID(studentID, checkType.STUDENT) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
-			SQL = "DELETE FROM student WHERE studentID = ?";
+			if(usePerson)
+				SQL = "DELETE FROM student WHERE personID = ?";
+			else
+				SQL = "DELETE FROM student WHERE studentID = ?";
 			PreparedStatement stmt = con.prepareStatement(SQL);
 			System.out.println(SQL);
 			stmt.setInt(1, studentID);
@@ -799,6 +826,7 @@ public class PersonController extends lynx.Manager {
 
 		}
 	}
+	
 
 	public static void updateLink(int studentID, int personID)
 			throws SQLException, NoSuchAlgorithmException, IOException
@@ -840,6 +868,7 @@ public class PersonController extends lynx.Manager {
 					+ "WHERE personID = ?";
 			PreparedStatement stmt = con.prepareStatement(SQL);
 			System.out.println(SQL);
+			System.out.println(personID);
 			stmt.setInt(1, personID);
 			try {
 				stmt.executeUpdate();
@@ -852,14 +881,17 @@ public class PersonController extends lynx.Manager {
 		}
 	}
 
-	public static void removeTeacher(int teacherID) throws SQLException,
+	public static void removeTeacher(int teacherID, boolean usePerson) throws SQLException,
 			NoSuchAlgorithmException, IOException
 
 	{
 		if (checkByID(teacherID, checkType.TEACHER) != 0) {
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
-			SQL = "DELETE FROM teacher WHERE teacherID = ?";
+			if(usePerson)
+				SQL = "DELETE FROM teacher WHERE personID = ?";
+			else
+				SQL = "DELETE FROM teacher WHERE teacherID = ?";
 			PreparedStatement stmt = con.prepareStatement(SQL);
 			System.out.println(SQL);
 			stmt.setInt(1, teacherID);

@@ -19,7 +19,7 @@
 				else if(((String) request.getParameter("type")).equals("rTeacher"))
 				{
 					int teacherID = Integer.parseInt(request.getParameter("teachers"));
-					PersonController.removeTeacher(teacherID);
+					PersonController.removeTeacher(teacherID, false);
 					response.sendRedirect("removeteacher.jsp");
 				}
 				

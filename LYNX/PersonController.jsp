@@ -29,6 +29,7 @@
 		String ethinicity = null;
 		String language = null;
 		String group = null;
+		String currentGroup = null;
 		String phone = null;
 		String email = "";
 		if (login.equals("1")) {
@@ -109,6 +110,7 @@
 					 password1 = request.getParameter("password1");
 					 password2 = request.getParameter("password2");
 					 group = (String) request.getParameter("group");
+					 currentGroup = (String) request.getParameter("currentGroup");
 					 
 					 //Address
 					 
@@ -134,7 +136,7 @@
 						{
 						 PersonController.editPerson(personID, fname, lname, mname,
 								 suf, gen,  birth, language, ethinicity,
-								 password1,  password2, username, group);
+								 password1,  password2, username, Integer.parseInt(currentGroup), Integer.parseInt(group));
 						 CreateAccount.editAccount(personID, password1, password2, username, Integer.parseInt(group));
 						 AddressController.editAddress(addressID, street, zip, city, country, direction, state, apt, house, phone, email);
 						response.sendRedirect("epreview.jsp");
