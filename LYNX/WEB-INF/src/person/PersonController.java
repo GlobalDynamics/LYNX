@@ -416,6 +416,10 @@ public class PersonController extends lynx.Manager {
 			SQL = "SELECT count(*) over (partition by 1) total_rows FROM student WHERE studentID = ?";
 		} else if (type == checkType.TEACHER) {
 			SQL = "SELECT count(*) over (partition by 1) total_rows FROM teacher WHERE teacherID = ?";
+		} else if (type == checkType.PERSON_STUDENT) {
+			SQL = "SELECT count(*) over (partition by 1) total_rows FROM student WHERE personID = ?";
+		} else if (type == checkType.PERSON_TEACHER) {
+			SQL = "SELECT count(*) over (partition by 1) total_rows FROM teacher WHERE personID = ?";
 		}
 
 		PreparedStatement stmt = con.prepareStatement(SQL);
@@ -807,7 +811,18 @@ public class PersonController extends lynx.Manager {
 			NoSuchAlgorithmException, IOException
 
 	{
-		if (checkByID(studentID, checkType.STUDENT) != 0) {
+		
+		if(usePerson)
+		{
+			if (checkByID(studentID, checkType.PERSON_STUDENT) == 0) 
+				return;
+		}
+		else
+		{
+			if (checkByID(studentID, checkType.STUDENT) == 0) 
+				return;
+		}
+		
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
 			if(usePerson)
@@ -825,7 +840,7 @@ public class PersonController extends lynx.Manager {
 				stmt.close();
 			}
 
-		}
+		
 	}
 	
 
@@ -886,7 +901,17 @@ public class PersonController extends lynx.Manager {
 			NoSuchAlgorithmException, IOException
 
 	{
-		if (checkByID(teacherID, checkType.TEACHER) != 0) {
+		if(usePerson)
+		{
+			if (checkByID(teacherID, checkType.PERSON_TEACHER) == 0) 
+				return;
+		}
+		else
+		{
+			if (checkByID(teacherID, checkType.TEACHER) == 0) 
+				return;
+		}
+
 			con = cpds.getConnection();
 			con.setAutoCommit(false);
 			if(usePerson)
@@ -904,7 +929,7 @@ public class PersonController extends lynx.Manager {
 				stmt.close();
 			}
 
-		}
+		
 	}
 
 	public static void editTeacher(int teacherID, int personID)

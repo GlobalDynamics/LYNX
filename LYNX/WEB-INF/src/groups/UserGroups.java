@@ -1,5 +1,7 @@
 package groups;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +9,9 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+
+import account.Authenticate;
+import account.Security;
 
 import lynx.Manager;
 
@@ -186,4 +191,22 @@ public class UserGroups extends Manager {
 		return null;
 		
 }
+	
+	public static void updateuserGroup(int groupID, int personID) throws SQLException {
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		SQL = "UPDATE accounts SET usergroupID = ? WHERE personID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, groupID);
+		stmt.setInt(2, personID);
+		try {
+			stmt.executeUpdate();
+			con.commit();
+		} finally {
+			con.close();
+			stmt.close();
+		}
+
+	}
 }

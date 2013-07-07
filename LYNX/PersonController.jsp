@@ -1,6 +1,7 @@
 <%@ page import="account.Login" %>
 <%@ page import="account.Security" %>
 <%@ page import="account.CreateAccount" %>
+<%@ page import="groups.UserGroups" %>
 <%@ page import="person.PersonController" %>
 <%@ page import="person.AddressController" %>
 <%
@@ -138,6 +139,8 @@
 								 suf, gen,  birth, language, ethinicity,
 								 password1,  password2, username, Integer.parseInt(currentGroup), Integer.parseInt(group));
 						 CreateAccount.editAccount(personID, password1, password2, username, Integer.parseInt(group));
+						 if(secure =="true")
+						 	UserGroups.updateuserGroup(Integer.parseInt(group), personID);
 						 AddressController.editAddress(addressID, street, zip, city, country, direction, state, apt, house, phone, email);
 						response.sendRedirect("epreview.jsp");
 						}
