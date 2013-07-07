@@ -168,15 +168,16 @@ public class PersonController extends lynx.Manager {
 
 			try {
 				stmt.executeUpdate();
+				con.commit();
 				if(!(currentGroup == group))
 				{
 					if(currentGroup == 2)
 					{
-						unlinkStudent(currentGroup, true);
+						unlinkStudent(personID, true);
 					}
 					else if(currentGroup == 3)
 					{
-						removeTeacher(currentGroup, true);
+						removeTeacher(personID, true);
 					}
 					if (group == 2) {
 
