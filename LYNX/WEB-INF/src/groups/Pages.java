@@ -95,6 +95,41 @@ public class Pages extends Manager {
 		
 	}
 	
+	public static List<String> getModules() throws SQLException
+	{
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+
+		SQL = "SELECT Distinct name FROM module";		
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);	
+		List<String> categories = new ArrayList<String>();
+		try {
+			rs = stmt.executeQuery();
+		}
+		finally
+		{
+			
+			if (!rs.isBeforeFirst()) {
+				stmt.close();
+				con.close();	
+				rs.close();
+			} else {
+				rs.beforeFirst();
+				while (rs.next())
+					categories.add(rs.getString("name"));	
+				stmt.close();
+				con.close();	
+				rs.close();
+				return categories;
+				
+				
+			}
+		}		
+		return null;
+		
+	}
+	
 	public static boolean hasAccessiblePages(int divisionID, int usergroupID) throws SQLException
 	{
 		con = cpds.getConnection();

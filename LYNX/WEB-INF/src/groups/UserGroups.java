@@ -31,7 +31,7 @@ public class UserGroups extends Manager {
 		System.out.println(SQL);
 		stmt.setString(1, name);
 		stmt.setBoolean(2, false);
-		stmt.setBoolean(3, false);
+		stmt.setBoolean(3, true);
 		try {
 			stmt.executeUpdate();
 			con.commit();
@@ -59,6 +59,8 @@ public class UserGroups extends Manager {
 			con.close();
 			stmt.close();
 		}
+		
+		batchGroupUpdate(groupID);
 	}
 	
 	}
@@ -200,6 +202,24 @@ public class UserGroups extends Manager {
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		stmt.setInt(1, groupID);
 		stmt.setInt(2, personID);
+		try {
+			stmt.executeUpdate();
+			con.commit();
+		} finally {
+			con.close();
+			stmt.close();
+		}
+
+	}
+	
+	public static void batchGroupUpdate(int groupID) throws SQLException {
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+		SQL = "UPDATE accounts SET usergroupID = ? WHERE usergroupID = ?";
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setInt(1, 1);
+		stmt.setInt(2, groupID);
 		try {
 			stmt.executeUpdate();
 			con.commit();

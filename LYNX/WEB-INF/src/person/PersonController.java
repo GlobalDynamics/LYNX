@@ -80,7 +80,7 @@ public class PersonController extends lynx.Manager {
 				con.commit();
 				postMod();
 				rs = stmt.getGeneratedKeys();
-				if (group.equals("2")) {
+				if (group.equals("3")) {
 
 					if (rs.next()) {
 						int personID = rs.getInt(1);
@@ -88,7 +88,7 @@ public class PersonController extends lynx.Manager {
 						System.out.println(personID);
 					}
 
-				} else if (group.equals("3")) {
+				} else if (group.equals("4")) {
 					if (rs.next()) {
 						int personID = rs.getInt(1);
 						addTeacher(personID);
@@ -171,22 +171,22 @@ public class PersonController extends lynx.Manager {
 				con.commit();
 				if(!(currentGroup == group))
 				{
-					if(currentGroup == 2)
+					if(currentGroup == 3)
 					{
 						unlinkStudent(personID, true);
 					}
-					else if(currentGroup == 3)
+					else if(currentGroup == 4)
 					{
 						removeTeacher(personID, true);
 					}
-					if (group == 2) {
+					if (group == 3) {
 
 						
 							linkToStudent(personID);
 							System.out.println(personID);
 						
 
-					} else if (group == 3) {
+					} else if (group == 4) {
 						
 							addTeacher(personID);
 							System.out.println(personID);		
@@ -537,8 +537,10 @@ public class PersonController extends lynx.Manager {
 		Connection con = cpds.getConnection();
 
 		SQL = "SELECT p.personID,p.firstName,p.lastName FROM person p \r\n"
-				+ "				WHERE NOT EXISTS (SELECT personID FROM student s WHERE s.personID = p.personID)\r\n"
-				+ "AND NOT EXISTS (SELECT personID FROM teacher t WHERE t.personID = p.personID)";
+				+ "INNER JOIN accounts a ON a.personID = p.personID " 
+				+ "WHERE NOT EXISTS (SELECT personID FROM student s WHERE s.personID = p.personID)\r\n"
+				+ "AND NOT EXISTS (SELECT personID FROM teacher t WHERE t.personID = p.personID) "
+				+ "AND a.usergroupID = 1";
 		PreparedStatement stmt = con.prepareStatement(SQL,
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		System.out.println(SQL);
