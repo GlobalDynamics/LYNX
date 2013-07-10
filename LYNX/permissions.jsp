@@ -29,6 +29,10 @@
 			}
 			String module = request.getParameter("mods");
 			String group = request.getParameter("groups");
+			if(group == null)
+				group = "2";
+			if(module == null)
+				module = "1";
 			
 			
 			
@@ -218,7 +222,7 @@
             			
             			<div class="row">
             				<form name = "ap" id = "ap" method = "post" action = "permissions.jsp">
-            				<select id = "group" name = "group" data-placeholder="Group" style="width:350px;" class="chzn-select">
+            				<select id = "group" name = "group" data-placeholder="Group" style="width:350px;" onchange="this.form.submit();" class="chzn-select">
                                     	<%
                                     List<Group> groups = UserGroups.getAllGroups();
                                      if(groups != null)
@@ -238,7 +242,7 @@
             			
             			<div class="row">
             				<form name = "ap" id = "ap" method = "post" action = "permissions.jsp">
-            				<select id = "mods" name = "mods" data-placeholder="Modules" style="width:350px;" class="chzn-select">
+            				<select id = "mods" name = "mods" data-placeholder="Modules" style="width:350px;" onchange="this.form.submit();" class="chzn-select">
                                     	<%
                                     List<String> modules = Pages.getModules();
                                      if(modules != null)
