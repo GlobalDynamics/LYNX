@@ -51,6 +51,74 @@ public class PermissionsManager extends Manager {
 			return false;
 		}
 		
+		public static List<Permission> getPermissions(int usergroupID, int divisionID) throws SQLException
+		{
+			con = cpds.getConnection();
+			con.setAutoCommit(false);
+			SQL = "SELECT * FROM permissions p\r\n" + 
+					"INNER JOIN module m ON m.divisionID = ? ANd p.moduleID = m.moduleID\r\n" + 
+					"WHERE usergroupID = ?";
+			PreparedStatement stmt = con.prepareStatement(SQL,
+					ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			stmt.setInt(1, divisionID);
+			stmt.setInt(2, usergroupID);
+			try
+			{
+				rs = stmt.executeQuery();
+			}
+			finally
+			{
+				List<Permission> perms = new ArrayList<Permission>();
+				if (!rs.isBeforeFirst()) {
+					stmt.close();
+					con.close();	
+					rs.close();
+				} else {
+					rs.beforeFirst();
+					while (rs.next())
+					{
+						int permissionType = rs.getInt("accessType");
+						int read = 0;
+						int write = 0;
+						int full = 0;
+						int none = 1;
+						if(permissionType == 1)
+						{
+							read = 1;
+							none = 0;
+							write = 0;
+							full = 0;
+						}
+							
+						else if(permissionType == 2)
+						{
+							read = 1;
+							write = 1;
+							full = 0;
+							none = 0;
+						}
+						else if(permissionType == 3)
+						{
+							read = 1;
+							write = 1;
+							full = 1;
+							none = 0;
+						}
+						perms.add(new Permission(read, write, full, none, rs.getString("title")));
+					}	
+					stmt.close();
+					con.close();	
+					rs.close();
+					return perms;
+					
+					
+				}
+				
+				
+			}
+			return null;
+		}
+		
 		private static int getModuleID(String module) throws SQLException
 		{
 			con = cpds.getConnection();

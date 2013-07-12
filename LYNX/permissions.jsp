@@ -6,6 +6,7 @@
 <%@ page import = "java.util.List" %>
 <%@ page import="groups.UserGroups" %>
 <%@ page import="groups.Group" %>
+<%@ page import="groups.Permission" %>
 <%
 	if (session.getAttribute("login") == null || session.getAttribute("accountID") ==  null) {
 		response.sendRedirect("login.jsp");
@@ -30,7 +31,7 @@
 			String module = request.getParameter("mods");
 			String group = request.getParameter("groups");
 			if(group == null)
-				group = "2";
+				group = "1";
 			if(module == null)
 				module = "1";
 			
@@ -244,12 +245,12 @@
             				<form name = "ap" id = "ap" method = "post" action = "permissions.jsp">
             				<select id = "mods" name = "mods" data-placeholder="Modules" style="width:350px;" onchange="this.form.submit();" class="chzn-select">
                                     	<%
-                                    List<String> modules = Pages.getModules();
+                                    List<Category> modules = Pages.getCats();
                                      if(modules != null)
                                      {
-                                    	 for (String value : modules) {
+                                    	 for (Category value : modules) {
                                     		 
-                                    		  out.println("<option value = \"" + value + "\">" + value + "</option>");
+                                    		  out.println("<option value = \"" + value.name + "\">" + value.name + "</option>");
                                     	 }
                                     	 
                                      }
@@ -266,6 +267,36 @@
             			</div>
             			</div>
             			</div>
+            			
+            			
+            	<div class="full-width">
+            	<div class="box">
+                	<div class="inner">
+                    	
+                        <div class="contents">
+                        	<div class="row">
+            				
+            				<select id = "perms" name = "perms" data-placeholder="Modules" style="width:350px;" onchange="this.form.submit();" class="chzn-select">
+                                    	<%
+                                    List<Permission> perms = PermissionsManager.getPermissions(Integer.parseInt(group), Integer.parseInt(module));
+                                     if(modules != null)
+                                     {
+                                    	 for (Permission value : perms) {
+                                    		 
+                                    		  out.println("<option value = \"" + value.page + "\">" + value.page + "</option>");
+                                    	 }
+                                    	 
+                                     }
+                                    	%>
+                                    </select>
+                                    
+            			</div>
+                        
+                        
+                        </div>
+                        </div>
+                        </div>
+                        </div>
 				
 				
 

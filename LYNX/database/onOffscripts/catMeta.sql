@@ -5,10 +5,9 @@ BEGIN
 	(2,'Students','#',1),
 	(3, 'Teachers','#',1),
 	(4,'People','#',1),
-	(5,'Students','#',1),
-	(6,'Courses','#',1),
-	(7,'Grades','#',1),
-	(8,'Enrollment','#',1),
-	(9,'Calendar','#',1),
-	(10,'Administration','#',1)
+	(5,'Courses','#',1),
+	(6,'Grades','#',1),
+	(7,'Enrollment','#',1),
+	(8,'Calendar','#',1),
+	(9,'Administration','#',1)
 END
