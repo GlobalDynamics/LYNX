@@ -130,6 +130,42 @@ public class Pages extends Manager {
 		
 	}
 	
+	public static List<Page> getModules(int divisionID) throws SQLException
+	{
+		con = cpds.getConnection();
+		con.setAutoCommit(false);
+
+		SQL = "SELECT  Distinct * FROM module WHERE divisionID = ?";		
+		PreparedStatement stmt = con.prepareStatement(SQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);	
+		stmt.setInt(1, divisionID);
+		List<Page> categories = new ArrayList<Page>();
+		try {
+			rs = stmt.executeQuery();
+		}
+		finally
+		{
+			
+			if (!rs.isBeforeFirst()) {
+				stmt.close();
+				con.close();	
+				rs.close();
+			} else {
+				rs.beforeFirst();
+				while (rs.next())
+					categories.add(new Page(rs.getString("name"), rs.getString("title"), rs.getString("url"), rs.getInt("active"), rs.getString("moduleID")));	
+				stmt.close();
+				con.close();	
+				rs.close();
+				return categories;
+				
+				
+			}
+		}		
+		return null;
+		
+	}
+	
 	public static boolean hasAccessiblePages(int divisionID, int usergroupID) throws SQLException
 	{
 		con = cpds.getConnection();

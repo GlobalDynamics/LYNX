@@ -223,7 +223,9 @@
             			
             			<div class="row">
             				<form name = "ap" id = "ap" method = "post" action = "permissions.jsp">
-            				<select id = "group" name = "group" data-placeholder="Group" style="width:350px;" onchange="this.form.submit();" class="chzn-select">
+            				<input type="hidden" name="mods" id = "mods" value="<%=module%>"> 
+            				<select id = "groups" name = "groups" data-placeholder="Group" style="width:350px;" onchange="this.form.submit();" class="chzn-select">
+            				
                                     	<%
                                     List<Group> groups = UserGroups.getAllGroups();
                                      if(groups != null)
@@ -231,6 +233,9 @@
                                     	 for (Group value : groups) {
                                     		 if(value.name.equals("N/A"))
                                     		 	continue;
+                                    		 
+                                    		 if(group.equals(value.groupID))
+                                    			 out.println("<option value = \"" + value.groupID + "\" selected>" + value.name + "</option>");
                                     		 else
                                     			 out.println("<option value = \"" + value.groupID + "\">" + value.name + "</option>");
                                     	 }
@@ -243,14 +248,17 @@
             			
             			<div class="row">
             				<form name = "ap" id = "ap" method = "post" action = "permissions.jsp">
+            				<input type="hidden" name="groups" id = "groups" value="<%=group%>"> 
             				<select id = "mods" name = "mods" data-placeholder="Modules" style="width:350px;" onchange="this.form.submit();" class="chzn-select">
                                     	<%
                                     List<Category> modules = Pages.getCats();
                                      if(modules != null)
                                      {
                                     	 for (Category value : modules) {
-                                    		 
-                                    		  out.println("<option value = \"" + value.name + "\">" + value.name + "</option>");
+                                    		 if(module.equals(value.alternateID))
+                                    			 out.println("<option value = \"" + value.alternateID + "\" selected>" + value.alternateID + "</option>");
+                                    		 else
+                                    			 out.println("<option value = \"" + value.alternateID + "\">" + value.alternateID + "</option>");
                                     	 }
                                     	 
                                      }
@@ -276,19 +284,66 @@
                         <div class="contents">
                         	<div class="row">
             				
-            				<select id = "perms" name = "perms" data-placeholder="Modules" style="width:350px;" onchange="this.form.submit();" class="chzn-select">
-                                    	<%
-                                    List<Permission> perms = PermissionsManager.getPermissions(Integer.parseInt(group), Integer.parseInt(module));
-                                     if(modules != null)
-                                     {
-                                    	 for (Permission value : perms) {
-                                    		 
-                                    		  out.println("<option value = \"" + value.page + "\">" + value.page + "</option>");
-                                    	 }
-                                    	 
-                                     }
-                                    	%>
-                                    </select>
+            
+                                    
+                                    
+                                    <div class="titlebar"><span class="icon awesome white table"></span> <span class="w-icon">Schedule</span></div>
+	                        <table>
+	                            <thead>
+	                                <tr>
+	                                    <th scope="col">Page</th>
+	                                    <th scope="col">Read</th>
+	                                    <th scope="col">Write</th>
+	                                    <th scope="col">Full</th>
+	                                    
+	                                </tr>
+	                            </thead>
+	                            <tbody>
+                            	 <%
+                            	 List<Permission> perms = PermissionsManager.getPermissions(Integer.parseInt(group), Integer.parseInt(module));
+                            	 		if(modules != null)
+                                       {
+                            	 			for (Permission value : perms) {
+                                           {
+                                        	   out.println("<tr>");
+                                        	   out.println("<td>" + value.page + "</td>");
+                                        	   out.println("<td><label></label> <div class=\"field-box\"><input name = \"read"
+														+ value.moduleID
+														+ "\" value = \""
+														+ value.moduleID
+														+ "\" type=\"checkbox\" ");
+                                        	   if (value.read == 1)
+                                        			out.print("checked");
+                                        	   out.print("/> </div></td>");
+                                 
+                                        	   out.println("<td><label></label> <div class=\"field-box\"><input name = \"write"
+														+ value.moduleID
+														+ "\" value = \""
+														+ value.moduleID
+														+ "\" type=\"checkbox\" ");
+                                        	   if (value.write == 1)
+                                       				out.print("checked ");
+                                        	   out.print("/> </div></td>");
+                                        	   out.println("<td><label></label> <div class=\"field-box\"><input name = \"full"
+														+ value.moduleID
+														+ "\" value = \""
+														+ value.moduleID
+														+ "\" type=\"checkbox\" ");
+                                        	   if (value.write == 1)
+                                      				out.print("checked ");
+                                       	   		out.print("/> </div></td>");
+
+                                        	   out.println("</tr>");
+                                           }
+                                       }
+                                       }
+                                       
+                                      
+                                       
+                                       %>
+                                
+                            </tbody>
+                        </table>	
                                     
             			</div>
                         

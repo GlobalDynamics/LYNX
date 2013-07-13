@@ -62,17 +62,19 @@ public class PermissionsManager extends Manager {
 					ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 			stmt.setInt(1, divisionID);
 			stmt.setInt(2, usergroupID);
+			List<Permission> perms = new ArrayList<Permission>();
 			try
 			{
 				rs = stmt.executeQuery();
 			}
 			finally
 			{
-				List<Permission> perms = new ArrayList<Permission>();
+				
 				if (!rs.isBeforeFirst()) {
 					stmt.close();
 					con.close();	
 					rs.close();
+					
 				} else {
 					rs.beforeFirst();
 					while (rs.next())
@@ -104,7 +106,8 @@ public class PermissionsManager extends Manager {
 							full = 1;
 							none = 0;
 						}
-						perms.add(new Permission(read, write, full, none, rs.getString("title")));
+						
+						perms.add(new Permission(read, write, full, none, rs.getString("title"), rs.getString("moduleID")));
 					}	
 					stmt.close();
 					con.close();	
@@ -116,7 +119,19 @@ public class PermissionsManager extends Manager {
 				
 				
 			}
-			return null;
+			
+			int read = 0;
+			int write = 0;
+			int full = 0;
+			int none = 1;
+			List<Page> modules = Pages.getModules(divisionID);
+			for(Page mod: modules)
+			{
+				perms.add(new Permission(read, write, full, none, mod.title, mod.moduleID));
+			}
+			
+			
+			return perms;
 		}
 		
 		private static int getModuleID(String module) throws SQLException
