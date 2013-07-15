@@ -1,5 +1,6 @@
 <%@ page import="account.Login" %>
 <%@ page import="groups.UserGroups" %>
+<%@ page import="groups.PermissionsManager" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.Iterator" %>
 <%
@@ -42,6 +43,40 @@
 					    }
 				    }  
 					response.sendRedirect("usergroups.jsp");
+				}
+				else if(((String) request.getParameter("type")).equals("aPermission"))
+				{
+					Map params = request.getParameterMap();  
+					
+					for (Iterator iterator = params.entrySet().iterator(); iterator.hasNext();)  {  
+					    Map.Entry entry = (Map.Entry) iterator.next();  
+					    System.out.println("parameter name:"+entry.getKey());  
+					    System.out.println("value:"+request.getParameter(entry.getKey().toString())); 
+					    if(entry.getKey().toString().contains("fullModule"))
+					    {
+					    	int usergroupID = Integer.parseInt(request.getParameter("groups1"));
+					    	int moduleID = Integer.parseInt(request.getParameter(entry.getKey().toString()));
+					    	int accessType = 3;
+					    	PermissionsManager.addPermission(moduleID, accessType, usergroupID);
+							
+					    }
+					    else if(entry.getKey().toString().contains("writeModule"))
+					    {
+					    	int usergroupID = Integer.parseInt(request.getParameter("groups1"));
+					    	int moduleID = Integer.parseInt(request.getParameter(entry.getKey().toString()));
+					    	int accessType = 2;
+					    	PermissionsManager.addPermission(moduleID, accessType, usergroupID);
+							
+					    }
+					    else if(entry.getKey().toString().contains("readModule"))
+					    {
+					    	int usergroupID = Integer.parseInt(request.getParameter("groups1"));
+					    	int moduleID = Integer.parseInt(request.getParameter(entry.getKey().toString()));
+					    	int accessType = 1;
+					    	PermissionsManager.addPermission(moduleID, accessType, usergroupID);
+							
+					    }
+				    }  
 				}
 	
 			

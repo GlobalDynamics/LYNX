@@ -51,6 +51,28 @@ public class PermissionsManager extends Manager {
 			return false;
 		}
 		
+		public static void addPermission(int moduleID, int accessType, int usergroupID)
+				throws SQLException {
+
+			con = cpds.getConnection();
+			con.setAutoCommit(false);
+			SQL = "INSERT INTO permissions (moduleID,accessType, accountID,usergroupID)\r\n" + "VALUES (?,?,?,?)";
+			PreparedStatement stmt = con.prepareStatement(SQL);
+			System.out.println(SQL);
+			stmt.setInt(1, moduleID);
+			stmt.setInt(2, accessType);
+			stmt.setInt(3, 1);
+			stmt.setInt(4, usergroupID);
+			try {
+				stmt.executeUpdate();
+				con.commit();
+			} finally {
+				con.close();
+				stmt.close();
+			}
+
+		}
+		
 		public static List<Permission> getPermissions(int usergroupID, int divisionID) throws SQLException
 		{
 			con = cpds.getConnection();

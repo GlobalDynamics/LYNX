@@ -21,7 +21,7 @@ public class Pages extends Manager {
 			SQL = "SELECT m.name, m.url, m.moduleID, m.title, m.active, p.accountID, d.divisionID FROM permissions p\r\n" + 
 					"CROSS JOIN division d\r\n" + 
 					"INNER JOIN module m ON m.divisionID = d.divisionID AND m.moduleID = p.moduleID\r\n" + 
-					"WHERE d.divisionID = ? AND p.accessType  > 0 and m.active = 1 AND p.accountID = ?";		
+					"WHERE d.divisionID = ? AND p.accessType  > 0 and m.active = 1 AND p.usergroupID = ?";		
 		else
 			SQL = "SELECT * FROM module WHERE active = 1";		
 		

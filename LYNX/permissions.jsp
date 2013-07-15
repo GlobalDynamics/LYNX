@@ -276,7 +276,9 @@
             			</div>
             			</div>
             			
-            			
+            	<form name = "perms" id = "perms" method = "post" action = "PermissionsController.jsp">
+            	<input type="hidden" name="groups1" id = "groups1" value="<%=group%>"> 
+            	  	<input type="hidden" name="type" id = "type" value="aPermission">
             	<div class="full-width">
             	<div class="box">
                 	<div class="inner">
@@ -307,7 +309,7 @@
                                            {
                                         	   out.println("<tr>");
                                         	   out.println("<td>" + value.page + "</td>");
-                                        	   out.println("<td><label></label> <div class=\"field-box\"><input name = \"read"
+                                        	   out.println("<td><label></label> <div class=\"field-box\"><input name = \"readModule"
 														+ value.moduleID
 														+ "\" value = \""
 														+ value.moduleID
@@ -316,7 +318,7 @@
                                         			out.print("checked");
                                         	   out.print("/> </div></td>");
                                  
-                                        	   out.println("<td><label></label> <div class=\"field-box\"><input name = \"write"
+                                        	   out.println("<td><label></label> <div class=\"field-box\"><input name = \"writeModule"
 														+ value.moduleID
 														+ "\" value = \""
 														+ value.moduleID
@@ -324,7 +326,7 @@
                                         	   if (value.write == 1)
                                        				out.print("checked ");
                                         	   out.print("/> </div></td>");
-                                        	   out.println("<td><label></label> <div class=\"field-box\"><input name = \"full"
+                                        	   out.println("<td><label></label> <div class=\"field-box\"><input name = \"fullModule"
 														+ value.moduleID
 														+ "\" value = \""
 														+ value.moduleID
@@ -346,12 +348,35 @@
                         </table>	
                                     
             			</div>
+            			
+            			<div class = "row">
+            			<div class="bar-big">
+                             <%
+
+                                       if(modules != null)
+                                       {
+                                    	   
+                                    	   %>
+                        	<input type="submit" value="Submit">
+                            <input type="reset" value="Reset">
+                             <%
+                                       }
+                                       else
+                                       {
+                                    	   
+                                       }
+                             
+                             %>
+                                                         
+                            </div>
+            			</div>
                         
                         
                         </div>
                         </div>
                         </div>
                         </div>
+                        </form>
 				
 				
 
